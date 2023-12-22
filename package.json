@@ -1,0 +1,48 @@
+{
+  "name": "trade_port2",
+  "scripts": {
+    "dev": "solid-start dev --port 3000",
+    "start": "solid-start start --port 3000",
+    "build": "solid-start build",
+    "lint": "eslint --fix \"**/*.{ts,tsx,js,jsx}\""
+  },
+  "type": "module",
+  "devDependencies": {
+    "@faker-js/faker": "^8.3.1",
+    "@iconify-json/mingcute": "^1.1.14",
+    "@iconify/json": "^2.2.160",
+    "@types/node": "^18.14.0",
+    "@typescript-eslint/eslint-plugin": "^5.52.0",
+    "@typescript-eslint/parser": "^5.52.0",
+    "@unocss/preset-icons": "^0.58.0",
+    "@unocss/transformer-variant-group": "^0.58.0",
+    "eslint": "^8.34.0",
+    "eslint-plugin-solid": "^0.9.4",
+    "solid-start-node": "0.3.7",
+    "typescript": "^4.9.5",
+    "unocss": "^0.58.0",
+    "vite": "^4.1.2"
+  },
+  "dependencies": {
+    "@kobalte/core": "^0.11.2",
+    "@modular-forms/solid": "^0.20.0",
+    "@solid-mediakit/trpc": "^1.0.2",
+    "@solidjs/meta": "^0.29.1",
+    "@solidjs/router": "^0.8.3",
+    "@tanstack/solid-query": "^5.0.0",
+    "@tanstack/solid-virtual": "^3.0.1",
+    "@trpc/client": "^10.41.0",
+    "@trpc/server": "^10.41.0",
+    "clsx": "^2.0.0",
+    "lucide-solid": "^0.299.0",
+    "solid-js": "^1.8.3",
+    "solid-start": "0.3.9",
+    "solid-start-trpc": "^0.0.16",
+    "tailwind-merge": "^2.1.0",
+    "undici": "5.20.0",
+    "zod": "^3.20.6"
+  },
+  "engines": {
+    "node": ">=16"
+  }
+}
