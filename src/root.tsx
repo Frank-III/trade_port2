@@ -14,6 +14,7 @@ import {
   Link,
 } from "solid-start";
 import { trpc, queryClient } from "~/utils/trpc";
+import { SolidQueryDevtools } from '@tanstack/solid-query-devtools'
 import { QueryClientProvider } from "@tanstack/solid-query";
 import "@unocss/reset/tailwind-compat.css";
 import "virtual:uno.css";
@@ -37,6 +38,7 @@ export default function Root() {
                   <FileRoutes />
                 </Routes>
               </trpc.Provider>
+              <SolidQueryDevtools initialIsOpen={false}/>
             </QueryClientProvider>
           </ErrorBoundary>
         </Suspense>

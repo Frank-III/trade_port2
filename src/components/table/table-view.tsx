@@ -1,6 +1,6 @@
 import { createSignal, For } from "solid-js";
 import { Tabs } from "@kobalte/core";
-import { useLocation } from "solid-start";
+import { useLocation, unstable_clientOnly } from "solid-start";
 import GenericSelect, { TimeSpanMap } from "./generic-select";
 import {
   ArrowDownWideNarrow,
@@ -9,8 +9,8 @@ import {
 import { CatFilterMap, CurrencyToggleGroup } from "./filter-valmaps";
 import { cn } from "~/utils/cn";
 import SniperTable from "./sniper-table";
-import TrendTable from "./trend-table";
-
+// import TrendTable from "./trend-table";
+const TrendTable = unstable_clientOnly(() => import("./trend-table"))
 const tabStyle =
   "bg-transparent border-none [&[data-selected]]:(text-offwhite underline decoration-primary decoration-2 underline-offset-10) ";
 export function TableView() {
@@ -61,7 +61,7 @@ export function TableView() {
         <div class="bg-base-font-more-receding-color h-[1px] w-full" />
       </div>
       <Tabs.Content class="" value="trending">
-        <TrendTable ts={ts} cat={cat} currency={currency}/>
+        <TrendTable ts={ts} cat={cat} currency={currency} fallback={<div>is loading</div>}/>
       </Tabs.Content>
       <Tabs.Content class="" value="minting">
         Minting
