@@ -1,4 +1,4 @@
-
+import { Accessor } from "solid-js";
 export interface Collection {
   name: string;
   avatar: string;
@@ -27,6 +27,9 @@ export interface MintingTableRow {
   kind: "solana" | "ethereum" | "sui";
 }
 
-export interface TableProps<T> {
-  data: T[];
+// TODO: derive these accessors
+export interface TableProps {
+  ts: Accessor<string>;
+  currency: Accessor<string>;
+  cat: Accessor<string>;
 }

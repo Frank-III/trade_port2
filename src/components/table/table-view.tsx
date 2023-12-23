@@ -9,6 +9,7 @@ import {
 import { CatFilterMap, CurrencyToggleGroup } from "./filter-valmaps";
 import { cn } from "~/utils/cn";
 import SniperTable from "./sniper-table";
+import TrendTable from "./trend-table";
 
 const tabStyle =
   "bg-transparent border-none [&[data-selected]]:(text-offwhite underline decoration-primary decoration-2 underline-offset-10) ";
@@ -18,6 +19,9 @@ export function TableView() {
   const [cat, setCat] = createSignal<string>("Volume");
   const [currency, setCurrency] = createSignal<string>("all");
   const [tab, setTab] = createSignal<string>(location.query["#"] ?? "trending");
+  //TODO: use something other than map
+  const tsVal = () => TimeSpanMap.get(ts())!;
+  const catVal = () => CatFilterMap.get(cat())!;
   return (
     <Tabs.Root
       aria-label="Table Nav"
@@ -57,7 +61,7 @@ export function TableView() {
         <div class="bg-base-font-more-receding-color h-[1px] w-full" />
       </div>
       <Tabs.Content class="" value="trending">
-        Trending
+        <TrendTable ts={ts} cat={cat} currency={currency}/>
       </Tabs.Content>
       <Tabs.Content class="" value="minting">
         Minting

@@ -1,56 +1,64 @@
-import { TableProps, TrendingTableRow} from "./types";
-import { createSignal, For, createEffect, onMount, onCleanup} from "solid-js";
+import { TableProps, TrendingTableRow } from "./types";
+import { createSignal, For, createEffect, onMount, onCleanup, Show } from "solid-js";
 import { trpc } from "~/utils/trpc";
 import {
   Table,
   TableBody,
-  TableCaption,
+  // TableCaption,
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from "~/components/generic-table/table-style";
 
-
 // function TrendingRowView(item: TrendingTableRow) {
-//   return 
+//   return
 // }
-export default function TrendTable(props: TableProps<TrendingTableRow>) {
+export default function TrendTable(props: TableProps) {
+  // const query = trpc.nftRouter.trending.useInfiniteQuery(
+  //   () => ({
+  //     limit: 20,
+  //     cursor: null,
+  //   }),
+  //   {
+  //     getNextPageParam: (lastPage) => lastPage.nextCursor,
+  //     initialCursor: 0,
+  //     getPreviousPageParam: (firstPage) => firstPage.prevCursor,
+  //   },
+  // );
   const [lastScrollY, setLastScrollY] = createSignal(window.scrollY);
   let tableHeaderRef: HTMLTableRowElement | undefined;
-  const fetchNext = () => {};
-  const fetchPrev = () => {};
   const handleScroll = () => {
     // logic here: if scroll down to the bottom, fetch next page, if scroll up to the table header(as we would make header stick at top), fetch prev page
-    const currentScrollY = window.scrollY
+    const currentScrollY = window.scrollY;
     if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
-      fetchNext()
+      // fetchNext();
+      console.log("fetch next");
+      // query.fetchNextPage()
     } else {
       if (currentScrollY < lastScrollY()) {
         const rect = tableHeaderRef?.getBoundingClientRect();
         if (rect && rect.top < 0) {
-          console.log('fetch prev')
-          fetchPrev()
+          console.log("fetch prev");
+          // query.fetchPreviousPage()
         }
       }
     }
     setLastScrollY(window.scrollY);
   };
   createEffect(() => {
-    window.addEventListener('scroll', handleScroll);
-  })
+    window.addEventListener("scroll", handleScroll);
+  });
 
-  //TODO: onMount would set the default data (but maybe do it with suspense?)
+  // //TODO: onMount would set the default data (but maybe do it with suspense?)
 
-
-  onCleanup(() => {
-    window.removeEventListener('scroll', handleScroll);
-  })
+  // onCleanup(() => {
+  //   window.removeEventListener("scroll", handleScroll);
+  // });
   // trpc.
   return (
     <Table>
       <TableHeader>
-        let tableHeaderRef: HTMLTableRowElement;
         <TableRow class="sticky" ref={tableHeaderRef}>
           <TableHead class="w-[100px]">COLLECTION</TableHead>
           <TableHead>FLOOR</TableHead>
@@ -59,9 +67,11 @@ export default function TrendTable(props: TableProps<TrendingTableRow>) {
         </TableRow>
       </TableHeader>
       <TableBody>
-        <For each={props.data}>
+        {/* TODO: fix this type thing */}
+        {/* <Show when={query.status === "success"} fallback=>
+        <For each={query.data as unknown as TrendingTableRow[] }>
           {(item, idx) => (
-            <TableRow>
+            <TableRow id={idx.toString()}>
               <TableCell class="w-[100px]">
                 <div class="flex flex-row items-center space-x-3">
                   <img
@@ -97,6 +107,7 @@ export default function TrendTable(props: TableProps<TrendingTableRow>) {
             </TableRow>
           )}
         </For>
+        </Show> */}
       </TableBody>
     </Table>
   );

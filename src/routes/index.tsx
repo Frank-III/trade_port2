@@ -7,7 +7,7 @@ import Nav from "~/components/nav";
 import { TableView } from "~/components/table/table-view";
 
 const Home: VoidComponent = () => {
-  const params = useParams();
+  // const params = useParams();
   const hello = trpc.example.hello.useQuery(() => ({ name: "from tRPC" }));
   return (
     <main>
