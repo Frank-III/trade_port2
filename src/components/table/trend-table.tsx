@@ -10,18 +10,31 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/generic-table/table-style";
-import { create } from "domain";
 
 
 // function TrendingRowView(item: TrendingTableRow) {
 //   return 
 // }
 export default function TrendTable(props: TableProps<TrendingTableRow>) {
-  const fetchMore = () => {};
+  const [lastScrollY, setLastScrollY] = createSignal(window.scrollY);
+  let tableHeaderRef: HTMLTableRowElement | undefined;
+  const fetchNext = () => {};
+  const fetchPrev = () => {};
   const handleScroll = () => {
+    // logic here: if scroll down to the bottom, fetch next page, if scroll up to the table header(as we would make header stick at top), fetch prev page
+    const currentScrollY = window.scrollY
     if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
-      fetchMore()
+      fetchNext()
+    } else {
+      if (currentScrollY < lastScrollY()) {
+        const rect = tableHeaderRef?.getBoundingClientRect();
+        if (rect && rect.top < 0) {
+          console.log('fetch prev')
+          fetchPrev()
+        }
+      }
     }
+    setLastScrollY(window.scrollY);
   };
   createEffect(() => {
     window.addEventListener('scroll', handleScroll);
@@ -37,7 +50,8 @@ export default function TrendTable(props: TableProps<TrendingTableRow>) {
   return (
     <Table>
       <TableHeader>
-        <TableRow>
+        let tableHeaderRef: HTMLTableRowElement;
+        <TableRow class="sticky" ref={tableHeaderRef}>
           <TableHead class="w-[100px]">COLLECTION</TableHead>
           <TableHead>FLOOR</TableHead>
           <TableHead>MARKET CAP</TableHead>
