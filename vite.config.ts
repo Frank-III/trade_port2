@@ -4,7 +4,7 @@ import { defineConfig } from "vite";
 
 export default defineConfig(() => {
   return {
-    plugins: [UnoCSS(), solid({ ssr: false })],
+    plugins: [UnoCSS(), solid({ ssr: true })],
     ssr: {
       noExternal: ["@kobalte/core", "@internationalized/message"],
     },
