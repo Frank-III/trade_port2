@@ -23,10 +23,6 @@ import {
 import { TableRowSkeleton } from "./table-skeleton";
 
 export default function TrendTable(props: TableProps) {
-	// const query = trpc.nftRouter.trending.useQuery(() => ({
-	// 	limit: 20,
-	// 	cursor: null,
-	// }));
 	const query = trpc.nftRouter.trending.useInfiniteQuery(
 		() => ({
 			limit: 20,
@@ -69,9 +65,9 @@ export default function TrendTable(props: TableProps) {
 	});
 
 	return (
-		<Table class=" mx-auto mb-0">
-			<TableHeader class="font-normal text-base">
-				<TableRow class="sticky" ref={tableHeaderRef} >
+		<Table class="mx-auto mb-0 overflow-visible">
+			<TableHeader class="sticky z-2 sticky z-2 top-0">
+				<TableRow ref={tableHeaderRef} >
 					<TableHead class="w-[100px]">COLLECTION</TableHead>
 					<TableHead>FLOOR</TableHead>
 					<TableHead>MARKET CAP</TableHead>

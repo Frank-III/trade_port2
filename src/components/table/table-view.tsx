@@ -25,7 +25,7 @@ export function TableView() {
   return (
     <Tabs.Root
       aria-label="Table Nav"
-      class="h-[100%] p-0"
+      class="h-[100%] p-0 overflow-y-auto overflow-x-hidden"
       value={tab()}
       onChange={setTab}
     >
