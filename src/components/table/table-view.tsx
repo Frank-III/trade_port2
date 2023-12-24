@@ -25,7 +25,7 @@ export function TableView() {
   return (
     <Tabs.Root
       aria-label="Table Nav"
-      class="h-[50px] p-0"
+      class="h-[100%] p-0"
       value={tab()}
       onChange={setTab}
     >
@@ -43,6 +43,7 @@ export function TableView() {
             </Tabs.Trigger>
           </div>
           <div class="inline-flex space-x-5">
+            <CurrencyToggleGroup val={currency} setVal={setCurrency} />
             <GenericSelect<number>
               valMap={TimeSpanMap}
               val={ts}
@@ -55,7 +56,6 @@ export function TableView() {
               setVal={setCat}
               labelIcon={<ArrowDownWideNarrow />}
             />
-            <CurrencyToggleGroup val={currency} setVal={setCurrency} />
           </div>
         </Tabs.List>
         <div class="bg-base-font-more-receding-color h-[1px] w-full" />

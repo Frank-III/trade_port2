@@ -28,9 +28,11 @@ const Home: VoidComponent = () => {
           <div class="mt-[60px]" />
         </section>
       </div>
-      <div class="mx-auto flex max-w-[100%] flex-col items-center justify-center gap-3 px-3 py-1">
+      <div class="w-full">
+      <div class="mx-auto flex max-w-[1200px] flex-col items-center justify-center gap-3 px-3 py-1">
         <p>{hello.data ?? "Loading tRPC query"}</p>
         <TableView />
+      </div>
       </div>
     </main>
   );

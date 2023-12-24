@@ -20,16 +20,13 @@ import {
 	TableHeader,
 	TableRow,
 } from "~/components/generic-table/table-style";
-
-function TableFallback() {}
+import { TableRowSkeleton } from "./table-skeleton";
 
 export default function TrendTable(props: TableProps) {
-	// const query = trpc.nftRouter.trending.useQuery(
-	//   () => ({
-	//     limit: 20,
-	//     cursor: null,
-	//   }),
-	// )
+	// const query = trpc.nftRouter.trending.useQuery(() => ({
+	// 	limit: 20,
+	// 	cursor: null,
+	// }));
 	const query = trpc.nftRouter.trending.useInfiniteQuery(
 		() => ({
 			limit: 20,
@@ -65,8 +62,6 @@ export default function TrendTable(props: TableProps) {
 		window.addEventListener("scroll", handleScroll);
 	});
 
-  createEffect(() => {console.log(query)})
-
 	//TODO: onMount would set the default data (but maybe do it with suspense?)
 
 	onCleanup(() => {
@@ -74,22 +69,27 @@ export default function TrendTable(props: TableProps) {
 	});
 
 	return (
-		<Table>
+		<Table class=" mx-auto mb-0">
 			<TableHeader class="font-normal text-base">
-				<TableRow class="sticky" ref={tableHeaderRef}>
+				<TableRow class="sticky" ref={tableHeaderRef} >
 					<TableHead class="w-[100px]">COLLECTION</TableHead>
 					<TableHead>FLOOR</TableHead>
 					<TableHead>MARKET CAP</TableHead>
-					<TableHead class="text-right">VOLUME</TableHead>
+					<TableHead>VOLUME</TableHead>
+					<TableHead >VOLUME USD</TableHead>
+					<TableHead >SALES</TableHead>
+					<TableHead class="text-right">AVERAGE</TableHead>
 				</TableRow>
 			</TableHeader>
 			<TableBody>
-				<Suspense>
+				<Suspense fallback={<TableRowSkeleton limits={20}/>}>
 					<Switch>
-						<Match when={query.data}>
-							<For each={query.data?.items}>
+						<Match when={query.isSuccess}>
+							<For each={query.data?.pages}>
+								{(page) => (
+								<For each={page.items}>
 								{(item, idx) => (
-									<TableRow id={idx.toString()} class="font-normal text-sm">
+									<TableRow id={idx.toString()} class="">
 										<TableCell class="w-[100px]">
 											<div class="flex flex-row items-center space-x-3">
 												<img
@@ -98,31 +98,48 @@ export default function TrendTable(props: TableProps) {
 													alt="nft collection avatar"
 												/>
 												<div class="flex flex-col">
-													<div class="text-base-font-more-receding-color">
+													<div class="text-table">
 														{item.collection.name}
 													</div>
-													<div class="text-base-font-more-receding-color text-xs">
+													<div class="text-table">
 														{item.collection.supply}
 													</div>
 												</div>
 											</div>
 										</TableCell>
 										<TableCell>
-											<div class="text-base-font-more-receding-color">
+											<div class="text-table">
 												{item.floor} SOL
 											</div>
 										</TableCell>
 										<TableCell>
-											<div class="text-base-font-more-receding-color">
+											<div class="text-table">
 												{item.market_cap} SOL
 											</div>
 										</TableCell>
 										<TableCell class="text-right">
-											<div class="text-base-font-more-receding-color">
+											<div class="text-table">
 												{item.volume} NFTs
 											</div>
 										</TableCell>
+										<TableCell class="text-right">
+											<div class="text-table">
+												{item.volume_usd} NFTs
+											</div>
+										</TableCell>
+										<TableCell class="text-right">
+											<div class="text-table">
+												{item.sales} NFTs
+											</div>
+										</TableCell>
+										<TableCell class="text-right">
+											<div class="text-table">
+												{item.average} NFTs
+											</div>
+										</TableCell>
 									</TableRow>
+								)}
+								</For>
 								)}
 							</For>
 						</Match>
