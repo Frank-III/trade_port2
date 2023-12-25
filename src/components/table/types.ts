@@ -17,7 +17,7 @@ export interface TrendingTableRow {
 }
 
 export interface MintingTableRow {
-  collction: Collection;
+  collection: Collection;
   launched: Date;
   mint_price: number;
   floor: number;

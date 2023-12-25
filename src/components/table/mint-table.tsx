@@ -1,4 +1,4 @@
-import { TableProps, type TrendingTableRow } from "./types";
+import { type MintingTableRow, TableProps } from "./types";
 import {
 	createSignal,
 	For,
@@ -11,6 +11,7 @@ import {
 	Switch,
 } from "solid-js";
 import { trpc } from "~/utils/trpc";
+import { Image } from "@kobalte/core";
 import {
 	Table,
 	TableBody,
@@ -20,11 +21,10 @@ import {
 	TableHeader,
 	TableRow,
 } from "~/components/generic-table/table-style";
-import { Image } from "@kobalte/core";
 import { TableRowSkeleton } from "./table-skeleton";
 
-export default function TrendTable(props: TableProps) {
-	const query = trpc.nftRouter.trending.useInfiniteQuery(
+export default function MintTable(props: TableProps) {
+	const query = trpc.nftRouter.minting.useInfiniteQuery(
 		() => ({
 			limit: 20,
 			cursor: null,
@@ -67,15 +67,15 @@ export default function TrendTable(props: TableProps) {
 
 	return (
 		<Table class="mx-auto mb-0 overflow-visible">
-			<TableHeader class="sticky z-2 sticky z-2 top-0">
+			<TableHeader class="sticky z-2 top-0">
 				<TableRow ref={tableHeaderRef}>
-					<TableHead class="w-[100px]">COLLECTION</TableHead>
+					<TableHead class="sticky z-2 w-[100px]">COLLECTION</TableHead>
+					<TableHead>LAUNCHED</TableHead>
+					<TableHead>MINT PRICE</TableHead>
 					<TableHead>FLOOR</TableHead>
-					<TableHead>MARKET CAP</TableHead>
-					<TableHead>VOLUME</TableHead>
-					<TableHead>VOLUME USD</TableHead>
-					<TableHead>SALES</TableHead>
-					<TableHead class="text-right">AVERAGE</TableHead>
+					<TableHead>MINT VOL</TableHead>
+					<TableHead>MINT VOL USD</TableHead>
+					<TableHead class="text-right">NUM MINTS</TableHead>
 				</TableRow>
 			</TableHeader>
 			<TableBody>
@@ -85,10 +85,10 @@ export default function TrendTable(props: TableProps) {
 							<For each={query.data?.pages}>
 								{(page) => (
 									<For each={page.items}>
-										{(item: TrendingTableRow, idx) => (
+										{(item: MintingTableRow, idx) => (
 											<TableRow id={idx.toString()} class="">
 												<TableCell class="w-[100px]">
-													<div class="flex flex-row items-center space-x-3 text-table">
+													<div class="flex flex-row items-center space-x-3">
 														<Image.Root
 															fallbackDelay={300}
 															class="h-[40px] w-[40px] "
@@ -113,22 +113,24 @@ export default function TrendTable(props: TableProps) {
 													</div>
 												</TableCell>
 												<TableCell>
-													<div class="text-table">{item.floor} SOL</div>
+													<div class="text-table">
+														{item.launched.toString()} SOL
+													</div>
 												</TableCell>
 												<TableCell>
-													<div class="text-table">{item.market_cap} SOL</div>
+													<div class="text-table">{item.mint_price} SOL</div>
 												</TableCell>
 												<TableCell class="text-right">
-													<div class="text-table">{item.volume} NFTs</div>
+													<div class="text-table">{item.floor} NFTs</div>
 												</TableCell>
 												<TableCell class="text-right">
-													<div class="text-table">{item.volume_usd} NFTs</div>
+													<div class="text-table">{item.mint_vol} NFTs</div>
 												</TableCell>
 												<TableCell class="text-right">
-													<div class="text-table">{item.sales} NFTs</div>
+													<div class="text-table">{item.mint_vol_usd} NFTs</div>
 												</TableCell>
 												<TableCell class="text-right">
-													<div class="text-table">{item.average} NFTs</div>
+													<div class="text-table">{item.num_mints} NFTs</div>
 												</TableCell>
 											</TableRow>
 										)}
