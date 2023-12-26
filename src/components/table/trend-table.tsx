@@ -26,6 +26,7 @@ import { TableRowSkeleton } from "./table-skeleton";
 export default function TrendTable(props: TableProps) {
 	const query = trpc.nftRouter.trending.useInfiniteQuery(
 		() => ({
+			kind: props.currency(),
 			ts: props.ts(),
 			cat: props.cat(),
 			limit: 20,
@@ -69,9 +70,9 @@ export default function TrendTable(props: TableProps) {
 
 	return (
 		<Table class="mx-auto mb-0 overflow-visible">
-			<TableHeader class="sticky z-2 sticky z-2 top-0">
+			<TableHeader class="sticky">
 				<TableRow ref={tableHeaderRef}>
-					<TableHead class="w-[100px]">COLLECTION</TableHead>
+					<TableHead class="flex-[3_3_0]">COLLECTION</TableHead>
 					<TableHead>FLOOR</TableHead>
 					<TableHead>MARKET CAP</TableHead>
 					<TableHead>VOLUME</TableHead>
@@ -88,7 +89,10 @@ export default function TrendTable(props: TableProps) {
 								{(page) => (
 									<For each={page.items}>
 										{(item: TrendingTableRow, idx) => (
-											<TableRow id={idx.toString()} class="">
+											<TableRow
+												id={idx.toString()}
+												class="group hover:(bg-dark-gray-hover text-base-font-receding-color) "
+											>
 												<TableCell class="w-[100px]">
 													<div class="flex flex-row items-center space-x-3 text-table">
 														<Image.Root
@@ -105,7 +109,7 @@ export default function TrendTable(props: TableProps) {
 															</Image.Fallback>
 														</Image.Root>
 														<div class="flex flex-col">
-															<div class="text-table">
+															<div class="text-table group">
 																{item.collection.name}
 															</div>
 															<div class="text-table">

@@ -47,7 +47,7 @@ export function CurrencyToggleGroup(props: currencyToggleGroup) {
 						{item.name === "all" ? (
 							<div class="text-inherit text-sm">All</div>
 						) : (
-							<div class={item.icon} />
+							<div class={`${item.icon} text-[20px]`} />
 						)}
 					</div>
 				)}

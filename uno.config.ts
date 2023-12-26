@@ -22,7 +22,7 @@ export default defineConfig({
       "bg-background-body text-offwhite h-8.5 border-border hover:bg-dark-gray flex items-center justify-center gap-1.5 rounded-md border px-1.5 outline-0",
     "button-primary": "button-default bg-[#432a11] border-[#c77100]",
     "button-secondary": "button-default bg-[#2c153f] border-[#6a0ab9]",
-    "text-table": "text-base-font-more-receding-color font-normal text-sm"
+    "text-table": "text-base-font-more-receding-color font-normal text-sm "
   },
   theme: {
     colors: {

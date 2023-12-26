@@ -6,11 +6,12 @@ import { ArrowDownWideNarrow, TimerReset } from "lucide-solid";
 import { CatFilterMap, CurrencyToggleGroup } from "./filter-valmaps";
 import { cn } from "~/utils/cn";
 import SniperTable from "./sniper-table";
+import { TransitionGroup } from "solid-transition-group";
 // import TrendTable from "./trend-table";
 const TrendTable = unstable_clientOnly(() => import("./trend-table"));
 const MintTable = unstable_clientOnly(() => import("./mint-table"));
 const tabStyle =
-	"bg-transparent border-none [&[data-selected]]:(text-offwhite underline decoration-primary decoration-2 underline-offset-10) ";
+	"bg-transparent border-none [&[data-selected]]:(text-offwhite ) px-[12px]";
 export function TableView() {
 	const location = useLocation();
 	const [ts, setTS] = createSignal<string>("24 Hrs");
@@ -29,9 +30,9 @@ export function TableView() {
 			value={tab()}
 			onChange={setTab}
 		>
-			<div class="flex flex-col space-y-1">
-				<Tabs.List class="flex flex-row justify-between space-x-10">
-					<div class="text-base-font-more-receding-color inline-flex space-x-5 font-normal ">
+			<div class="flex flex-row space-y-1 pb-1 border-b-base-font-more-receding-color border-b-1 justify-between">
+				<Tabs.List class="flex flex-row relative justify-between">
+					<div class="text-base-font-more-receding-color inline-flex font-normal text-[20px]">
 						<Tabs.Trigger class={tabStyle} value="trending">
 							Trending
 						</Tabs.Trigger>
@@ -41,24 +42,24 @@ export function TableView() {
 						<Tabs.Trigger class={tabStyle} value="sniper">
 							Sniper
 						</Tabs.Trigger>
-					</div>
-					<div class="inline-flex space-x-5">
-						<CurrencyToggleGroup val={currency} setVal={setCurrency} />
-						<GenericSelect<number>
-							valMap={TimeSpanMap}
-							val={ts}
-							setVal={setTS}
-							labelIcon={<TimerReset />}
-						/>
-						<GenericSelect<string>
-							valMap={CatFilterMap}
-							val={cat}
-							setVal={setCat}
-							labelIcon={<ArrowDownWideNarrow />}
-						/>
+						<Tabs.Indicator class="tabs-indicator absolute transition transition-all transition-250 bg-primary bottom--1 h-0.5" />
 					</div>
 				</Tabs.List>
-				<div class="bg-base-font-more-receding-color h-[1px] w-full" />
+				<div class="inline-flex space-x-5">
+					<CurrencyToggleGroup val={currency} setVal={setCurrency} />
+					<GenericSelect<number>
+						valMap={TimeSpanMap}
+						val={ts}
+						setVal={setTS}
+						labelIcon={<TimerReset />}
+					/>
+					<GenericSelect<string>
+						valMap={CatFilterMap}
+						val={cat}
+						setVal={setCat}
+						labelIcon={<ArrowDownWideNarrow />}
+					/>
+				</div>
 			</div>
 			<Tabs.Content class="" value="trending">
 				<TrendTable
