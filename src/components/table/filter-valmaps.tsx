@@ -26,8 +26,8 @@ export const Currency = [
 ] as const;
 
 interface currencyToggleGroup {
-	val: Accessor<string>;
-	setVal: Setter<string>;
+	val: Accessor<"all" | "solana" | "ethereum">;
+	setVal: Setter<"all" | "solana" | "ethereum">;
 }
 
 export function CurrencyToggleGroup(props: currencyToggleGroup) {
@@ -38,15 +38,14 @@ export function CurrencyToggleGroup(props: currencyToggleGroup) {
 					// biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
 					<div
 						id={index().toString()}
-						onClick={() => props.setVal(item.name)}
+						onClick={(e: MouseEvent) => props.setVal(item.name)}
 						class={cn(
 							"text-md flex font-normal p-1 rounded-md hover:( bg-[#432a11])",
 							props.val() === item.name && "text-primary bg-[#432a11]",
 						)}
-						text-primary
 					>
 						{item.name === "all" ? (
-							<div class="text-inherit text-sm ">All</div>
+							<div class="text-inherit text-sm">All</div>
 						) : (
 							<div class={item.icon} />
 						)}

@@ -6,7 +6,9 @@ export const nftRouter = router({
   trending: procedure
     .input(
       z.object({
-        kind: z.enum(["solana", "ethereum", "sui", "all"]).default("all"),
+        kind: z.enum(["solana", "ethereum", "all"]).optional().default("all"),
+        ts: z.number().optional().default(1),
+        cat: z.string().optional().default("vol"),
         limit: z.number().min(10).max(30).default(20),
         cursor: z.number().nullish(),
       }),
@@ -35,7 +37,9 @@ export const nftRouter = router({
   minting: procedure
     .input(
       z.object({
-        kind: z.enum(["solana", "ethereum", "sui", "all"]).default("all"),
+        kind: z.enum(["solana", "ethereum", "all"]).optional().default("all"),
+        ts: z.number().optional().default(1),
+        cat: z.string().optional().default("vol"),
         limit: z.number().min(10).max(30).default(20),
         cursor: z.number().nullish(),
       }),

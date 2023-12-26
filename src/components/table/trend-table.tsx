@@ -26,6 +26,8 @@ import { TableRowSkeleton } from "./table-skeleton";
 export default function TrendTable(props: TableProps) {
 	const query = trpc.nftRouter.trending.useInfiniteQuery(
 		() => ({
+			ts: props.ts(),
+			cat: props.cat(),
 			limit: 20,
 			cursor: null,
 		}),

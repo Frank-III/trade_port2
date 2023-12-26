@@ -29,7 +29,7 @@ export interface MintingTableRow {
 
 // TODO: derive these accessors
 export interface TableProps {
-  ts: Accessor<string>;
-  currency: Accessor<string>;
+  ts: Accessor<number>;
+  currency: Accessor<"all" | "solana" | "ethereum">;
   cat: Accessor<string>;
 }

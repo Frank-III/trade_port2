@@ -26,6 +26,9 @@ import { TableRowSkeleton } from "./table-skeleton";
 export default function MintTable(props: TableProps) {
 	const query = trpc.nftRouter.minting.useInfiniteQuery(
 		() => ({
+			kind: props.currency(),
+			ts: props.ts(),
+			cat: props.cat(),
 			limit: 20,
 			cursor: null,
 		}),
@@ -69,7 +72,7 @@ export default function MintTable(props: TableProps) {
 		<Table class="mx-auto mb-0 overflow-visible">
 			<TableHeader class="sticky z-2 top-0">
 				<TableRow ref={tableHeaderRef}>
-					<TableHead class="sticky z-2 w-[100px]">COLLECTION</TableHead>
+					<TableHead class="w-[100px]">COLLECTION</TableHead>
 					<TableHead>LAUNCHED</TableHead>
 					<TableHead>MINT PRICE</TableHead>
 					<TableHead>FLOOR</TableHead>

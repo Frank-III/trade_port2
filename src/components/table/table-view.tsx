@@ -15,7 +15,9 @@ export function TableView() {
 	const location = useLocation();
 	const [ts, setTS] = createSignal<string>("24 Hrs");
 	const [cat, setCat] = createSignal<string>("Volume");
-	const [currency, setCurrency] = createSignal<string>("all");
+	const [currency, setCurrency] = createSignal<"all" | "solana" | "ethereum">(
+		"all",
+	);
 	const [tab, setTab] = createSignal<string>(location.query["#"] ?? "trending");
 	//TODO: use something other than map
 	const tsVal = () => TimeSpanMap.get(ts())!;
@@ -60,15 +62,15 @@ export function TableView() {
 			</div>
 			<Tabs.Content class="" value="trending">
 				<TrendTable
-					ts={ts}
-					cat={cat}
+					ts={tsVal}
+					cat={catVal}
 					currency={currency}
 					fallback={<div>is loading</div>}
 				/>
 			</Tabs.Content>
 			<Tabs.Content class="" value="minting">
 				<MintTable
-					ts={ts}
+					ts={tsVal}
 					cat={cat}
 					currency={currency}
 					fallback={<div>is loading</div>}
