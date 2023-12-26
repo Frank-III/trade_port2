@@ -8,6 +8,7 @@ import { cn } from "~/utils/cn";
 import SniperTable from "./sniper-table";
 import { TransitionGroup } from "solid-transition-group";
 // import TrendTable from "./trend-table";
+const TrendTable2 = unstable_clientOnly(() => import("./trend-table2"));
 const TrendTable = unstable_clientOnly(() => import("./trend-table"));
 const MintTable = unstable_clientOnly(() => import("./mint-table"));
 const tabStyle =
@@ -26,7 +27,7 @@ export function TableView() {
   return (
     <Tabs.Root
       aria-label="Table Nav"
-      class="h-[100%] p-0 "
+      class="h-[100%] p-0 mx-auto mt-[50px] mb-0 max-w-[1200px] w-100%"
       value={tab()}
       onChange={setTab}
     >
@@ -79,7 +80,12 @@ export function TableView() {
       </Tabs.Content>
       <Tabs.Content class="" value="sniper">
         Sniper
-        <SniperTable />
+        <TrendTable2
+          ts={tsVal}
+          cat={catVal}
+          currency={currency}
+          fallback={<div>is loading</div>}
+        />
       </Tabs.Content>
     </Tabs.Root>
   );

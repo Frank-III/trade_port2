@@ -40,7 +40,7 @@ export function CurrencyToggleGroup(props: currencyToggleGroup) {
             id={index().toString()}
             onClick={() => props.setVal(item.name)}
             class={cn(
-              "text-md flex font-normal p-1 rounded-md hover:( bg-[#432a11])",
+              "text-md flex font-normal p-1 rounded-md hover:( bg-[#432a11] text-primary)",
               props.val() === item.name && "text-primary bg-[#432a11]"
             )}
           >
