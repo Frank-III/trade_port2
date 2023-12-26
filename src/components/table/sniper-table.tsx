@@ -1,5 +1,5 @@
 import { ChevronDown, ChevronUp, Search } from "lucide-solid";
-import { TableProps, TrendingTableRow} from "./types";
+import { TableProps, TrendingTableRow } from "./types";
 import { createSignal, For } from "solid-js";
 import {
   Table,
@@ -13,9 +13,6 @@ import {
 import { cn } from "~/utils/cn";
 import { Collapsible } from "@kobalte/core";
 
-
-
-
 export default function SniperTable() {
   const [rarityOpen, setRarityOpen] = createSignal<boolean>(false);
   const buttonStyle =
@@ -24,7 +21,10 @@ export default function SniperTable() {
     <div class="border-border pb-40px border-base-font-receding-color relative flex h-[cal(100%-80px)] w-[281px] flex-col overflow-auto overflow-x-hidden rounded-lg border">
       <div class="inline-flex justify-between px-3">
         Collections
-        <button class="text-primary bg-transparent text-base font-normal">
+        <button
+          class="text-primary bg-transparent text-base font-normal"
+          type="button"
+        >
           Reset
         </button>
       </div>
@@ -39,8 +39,8 @@ export default function SniperTable() {
         <span class="text-base-font-more-receding-color">Collection</span>
         <span class="text-base-font-more-receding-color">Floor</span>
       </div>
-        <button class={cn(buttonStyle, "flex justify-start")}>
-          All Collections
+      <button class={cn(buttonStyle, "flex justify-start")} type="button">
+        All Collections
       </button>
       <Collapsible.Root
         open={rarityOpen()}
@@ -51,7 +51,7 @@ export default function SniperTable() {
         <Collapsible.Trigger
           class={cn(
             buttonStyle,
-            "inline-flex items-center justify-between py-1",
+            "inline-flex items-center justify-between py-1"
           )}
         >
           <span>Rarity</span>
