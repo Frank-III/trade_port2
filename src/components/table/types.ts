@@ -33,3 +33,19 @@ export interface TableProps {
   currency: Accessor<"all" | "solana" | "ethereum">;
   cat: Accessor<string>;
 }
+
+export interface SniperState {
+  rarityOpen: boolean;
+  collection: string;
+  min?: number;
+  max?: number;
+  search?: string;
+}
+
+export interface ListOrSaleTableRow {
+  kind: "list" | "sale";
+  collection: string;
+  price: number;
+  address: string;
+  
+}
