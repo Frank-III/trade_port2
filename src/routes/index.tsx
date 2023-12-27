@@ -1,8 +1,11 @@
+import styles from "./index.module.css";
 import { type VoidComponent } from "solid-js";
+import { ArrowDownWideNarrow, TimerReset } from "lucide-solid";
 import { A, useParams } from "solid-start";
 import { trpc } from "~/utils/trpc";
 import Nav from "~/components/nav";
 import { TableView } from "~/components/table/table-view";
+import { style } from "solid-js/web";
 
 const Home: VoidComponent = () => {
   // const params = useParams();
