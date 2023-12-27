@@ -42,7 +42,7 @@ const TableRow: Component<ComponentProps<"tr">> = (props) => {
   return (
     <tr
       class={cn(
-        "hover:bg-muted/50 data-[state=selected]:bg-muted border-b transition-colors",
+        "hover:bg-muted/50 data-[state=selected]:bg-muted border-b transition-colors border-border-color",
         props.class
       )}
       {...rest}
@@ -55,7 +55,7 @@ const TableHead: Component<ComponentProps<"th">> = (props) => {
   return (
     <th
       class={cn(
-        "text-muted-foreground h-12 px-4 text-left align-middle font-medium [&:has([role=checkbox])]:pr-0",
+        "text-muted-foreground h-12 px-4 text-left align-middle font-medium [&:has([role=checkbox])]:pr-0 text-sm",
         props.class
       )}
       {...rest}
@@ -67,7 +67,10 @@ const TableCell: Component<ComponentProps<"td">> = (props) => {
   const [, rest] = splitProps(props, ["class"]);
   return (
     <td
-      class={cn("p-4 align-middle [&:has([role=checkbox])]:pr-0", props.class)}
+      class={cn(
+        "px-4 py-2 align-middle [&:has([role=checkbox])]:pr-0",
+        props.class
+      )}
       {...rest}
     />
   );
