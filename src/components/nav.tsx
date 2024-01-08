@@ -35,7 +35,7 @@ export default function Nav() {
               height={24}
               width={24}
             />
-            <span>TradePort</span>
+            <span class="lt-mdd:hidden">TradePort</span>
           </A>
           <div class="button-default text-dark-gray relative flex-1 justify-start space-x-5">
             <Search class="text-primary ml-0" />

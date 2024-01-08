@@ -47,6 +47,7 @@ export default defineConfig({
       black: "#000",
     },
     breakpoints: {
+      mdd: "950px",
       lgg: "1190px",
     },
   },

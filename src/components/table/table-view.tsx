@@ -4,9 +4,9 @@ import { useLocation, unstable_clientOnly } from "solid-start";
 import GenericSelect, { TimeSpanMap } from "./generic-select";
 import { ArrowDownWideNarrow, TimerReset } from "lucide-solid";
 import { CatFilterMap, CurrencyToggleGroup } from "./filter-valmaps";
-import { cn } from "~/utils/cn";
+// import { cn } from "~/utils/cn";
 import SniperTable from "./sniper-table";
-import { TransitionGroup } from "solid-transition-group";
+// import { TransitionGroup } from "solid-transition-group";
 // import TrendTable from "./trend-table";
 const TrendTable = unstable_clientOnly(() => import("./trend-table"));
 const MintTable = unstable_clientOnly(() => import("./mint-table"));
@@ -30,7 +30,7 @@ export function TableView() {
       value={tab()}
       onChange={setTab}
     >
-      <div class="flex flex-row space-y-1 pb-1 border-b-base-font-more-receding-color border-b-1 justify-between">
+      <div class="flex flex-row space-y-1 pb-1 border-b-base-font-more-receding-color border-b-1 justify-between border-border">
         <Tabs.List class="flex flex-row relative justify-between">
           <div class="text-base-font-more-receding-color inline-flex font-normal text-[20px]">
             <Tabs.Trigger class={tabStyle} value="trending">
