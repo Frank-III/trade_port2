@@ -6,23 +6,18 @@ import { ArrowDownWideNarrow, TimerReset } from "lucide-solid";
 import { CatFilterMap, CurrencyToggleGroup } from "./filter-valmaps";
 // import { cn } from "~/utils/cn";
 import SniperTable from "./sniper-table";
-// import { TransitionGroup } from "solid-transition-group";
+import { cat, setCat, setTS, ts } from "./signals";
 // import TrendTable from "./trend-table";
 const TrendTable = unstable_clientOnly(() => import("./trend-table"));
 const MintTable = unstable_clientOnly(() => import("./mint-table"));
+// outline-offset-6 border-b-1 border-primary
 const tabStyle =
-  "bg-transparent border-none [&[data-selected]]:(text-offwhite ) px-[12px]";
+  "bg-transparent  hover:(text-base-font-receding-color) [&[data-selected]]:(text-offwhite ) px-[12px] ";
+
 export function TableView() {
   const location = useLocation();
-  const [ts, setTS] = createSignal<string>("24 Hrs");
-  const [cat, setCat] = createSignal<string>("Volume");
-  const [currency, setCurrency] = createSignal<"all" | "solana" | "ethereum">(
-    "all"
-  );
   const [tab, setTab] = createSignal<string>(location.query["#"] ?? "trending");
   //TODO: use something other than map
-  const tsVal = () => TimeSpanMap.get(ts())!;
-  const catVal = () => CatFilterMap.get(cat())!;
   return (
     <Tabs.Root
       aria-label="Table Nav"
@@ -42,11 +37,11 @@ export function TableView() {
             <Tabs.Trigger class={tabStyle} value="sniper">
               Sniper
             </Tabs.Trigger>
-            <Tabs.Indicator class="tabs-indicator absolute transition transition-all transition-250 bg-primary bottom--1 h-0.5" />
+            <Tabs.Indicator class="tabs-indicator absolute transition transition-all transition-250 bg-primary bottom--1 h-0.5 " />
           </div>
         </Tabs.List>
         <div class="inline-flex space-x-5">
-          <CurrencyToggleGroup val={currency} setVal={setCurrency} />
+          <CurrencyToggleGroup />
           <GenericSelect<number>
             valMap={TimeSpanMap}
             val={ts}
@@ -62,20 +57,10 @@ export function TableView() {
         </div>
       </div>
       <Tabs.Content class="" value="trending">
-        <TrendTable
-          ts={tsVal}
-          cat={catVal}
-          currency={currency}
-          fallback={<div>is loading</div>}
-        />
+        <TrendTable fallback={<div>is loading</div>} />
       </Tabs.Content>
       <Tabs.Content class="" value="minting">
-        <MintTable
-          ts={tsVal}
-          cat={cat}
-          currency={currency}
-          fallback={<div>is loading</div>}
-        />
+        <MintTable fallback={<div>is loading</div>} />
       </Tabs.Content>
       <Tabs.Content class="" value="sniper">
         <SniperTable />

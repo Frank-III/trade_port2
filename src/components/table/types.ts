@@ -27,12 +27,13 @@ export interface MintingTableRow {
   kind: "solana" | "ethereum" | "sui";
 }
 
-// TODO: derive these accessors
-export interface TableProps {
-  ts: Accessor<number>;
-  currency: Accessor<"all" | "solana" | "ethereum">;
-  cat: Accessor<string>;
+export interface SearchTableRow {
+  collection: Collection,
+  floor: number;
+  volume: number;
+  volume_usd: number;
 }
+
 
 export interface SniperState {
   rarityOpen: boolean;

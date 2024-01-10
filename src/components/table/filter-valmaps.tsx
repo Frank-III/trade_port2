@@ -1,5 +1,6 @@
-import { Accessor, For, Setter } from "solid-js";
+import { For } from "solid-js";
 import { cn } from "~/utils/cn";
+import { currency, setCurrency } from "./signals";
 
 export const CatFilterMap = new Map([
   ["Volume", "vol"],
@@ -25,12 +26,7 @@ export const Currency = [
   { name: "ethereum", icon: "i-mingcute-ethereum-line" },
 ] as const;
 
-interface currencyToggleGroup {
-  val: Accessor<"all" | "solana" | "ethereum">;
-  setVal: Setter<"all" | "solana" | "ethereum">;
-}
-
-export function CurrencyToggleGroup(props: currencyToggleGroup) {
+export function CurrencyToggleGroup() {
   return (
     <div class="button-default">
       <For each={Currency}>
@@ -38,10 +34,10 @@ export function CurrencyToggleGroup(props: currencyToggleGroup) {
           // biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
           <div
             id={index().toString()}
-            onClick={() => props.setVal(item.name)}
+            onClick={() => setCurrency(item.name)}
             class={cn(
               "text-md flex font-normal p-1 rounded-md hover:( bg-[#432a11] text-primary)",
-              props.val() === item.name && "text-primary bg-[#432a11]"
+              currency() === item.name && "text-primary bg-[#432a11]"
             )}
           >
             {item.name === "all" ? (

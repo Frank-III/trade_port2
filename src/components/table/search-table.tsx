@@ -1,4 +1,4 @@
-import type { TableProps, TrendingTableRow } from "./types";
+import type { SearchTableRow } from "./types";
 import {
   createSignal,
   For,
@@ -9,22 +9,14 @@ import {
   Match,
   Switch,
   type ComponentProps,
+  onMount,
 } from "solid-js";
 import { trpc } from "~/utils/trpc";
 import { Image, Skeleton } from "@kobalte/core";
-import { cn } from "~/utils/cn";
 import { A } from "solid-start";
-import { currency, catVal, tsVal } from "./signals";
+import { currency, catVal, tsVal, search } from "./signals";
 
-const CurrencyIcons = {
-  // all: "https://cdn.lucide.dev/currency-dollar.svg",
-  solana: "i-mingcute-solana-sol-line",
-  ethereum: "i-mingcute-ethereum-line",
-  usd: "i-mingcute-currency-dollar-2-line",
-  sui: "i-mingcute-avalanche-avax-line",
-};
-
-export default function TrendTable2() {
+export default function SearchTable() {
   const query = trpc.nftRouter.trending.useInfiniteQuery(
     () => ({
       kind: currency(),
@@ -41,11 +33,20 @@ export default function TrendTable2() {
   );
   const [lastScrollY, setLastScrollY] = createSignal(window.scrollY);
   let tableHeaderRef: HTMLTableRowElement | undefined;
+  // const searchDialog = document.getElementById("searchDialog")!;
+  // const searchScroll = document.getElementById("searchScroll")!;
+  let searchDialog: HTMLElement;
+  let searchScroll: HTMLElement;
+  setLastScrollY(window.scrollY);
+
   const handleScroll = () => {
     // logic here: if scroll down to the bottom, fetch next page, if scroll up to the table header(as we would make header stick at top), fetch prev page
     const currentScrollY = window.scrollY;
+    const viewportBottom = searchScroll.scrollTop + searchScroll.clientHeight;
+    const dialogBottom = searchDialog.offsetTop + searchDialog.offsetHeight;
+    // console.log(viewportBottom, dialogBottom);
     //TODO: fix this issue(must be padding or margin)
-    if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 1) {
+    if (viewportBottom > dialogBottom - 1) {
       // fetchNext();
       console.log("fetch next");
       query.fetchNextPage();
@@ -59,33 +60,29 @@ export default function TrendTable2() {
       }
     }
   };
-  setLastScrollY(window.scrollY);
-  createEffect(() => {
-    window.addEventListener("scroll", handleScroll);
+  onMount(() => {
+    searchDialog = document.getElementById("searchDialog")!;
+    searchScroll = document.getElementById("searchScroll")!;
+
+    console.log(searchScroll);
+    searchScroll.addEventListener("scroll", handleScroll);
   });
 
   //TODO: onMount would set the default data (but maybe do it with suspense?)
 
   onCleanup(() => {
-    window.removeEventListener("scroll", handleScroll);
+    searchScroll.removeEventListener("scroll", handleScroll);
   });
 
   return (
     <div class="mx-auto h-full text-nowrap">
       {/* Table Header */}
-      <div class="sticky top-[57px] z-2 bg-background h-[32px] flex items-center justify-between border-b-[1px] p-[0_0_0_15px] border-border">
+      <div class="sticky top-[57px] z-3 bg-background h-[32px] flex items-center justify-between border-b-[1px] p-[0_0_0_15px] border-border">
         <div class="flex-[3_1_0%] text-table flex items-center">COLLECTION</div>
         <div class="flex-[1_1_0%] text-table flex items-center">FLOOR</div>
-        <div class="flex-[1_1_0%] text-table flex items-center text-nowrap">
-          MARKET CAP
-        </div>
         <div class="flex-[1_1_0%] text-table flex items-center">VOLUME</div>
         <div class="flex-[1_1_0%] text-table flex items-center text-nowrap">
           VOLUME USD
-        </div>
-        <div class="flex-[1_1_0%] text-table flex items-center">SALES</div>
-        <div class="flex-[0.8_1_0%] text-table flex items-center text-nowrap">
-          AVERAGE
         </div>
       </div>
       {/* Table Body */}
@@ -95,7 +92,7 @@ export default function TrendTable2() {
             <For each={query.data?.pages}>
               {(page) => (
                 <For each={page.items}>
-                  {(item: TrendingTableRow, idx) => (
+                  {(item: SearchTableRow, idx) => (
                     <TableRow item={item} id={idx().toString()} />
                   )}
                 </For>
@@ -111,7 +108,7 @@ export default function TrendTable2() {
   );
 }
 
-function TableRow(props: { item: TrendingTableRow } & ComponentProps<"div">) {
+function TableRow(props: { item: SearchTableRow } & ComponentProps<"div">) {
   return (
     <A href="#">
       <div class="relative flex flex items-center p-[6.5px_0px_6.5px_15px] pt-[8px] border-b-[1px] border-border-color hover:bg-background-hover">
@@ -137,17 +134,9 @@ function TableRow(props: { item: TrendingTableRow } & ComponentProps<"div">) {
             </div>
           </div>
         </div>
-        <div class="flex-[1_1_0%] text-table">
-          <div class="text-table">
-            <div class={cn(CurrencyIcons[props.item.kind], "text-15px")} />
-            {props.item.floor.toFixed(1)}
-          </div>
-        </div>
-        <div class="flex-[1_1_0%] text-table">{props.item.market_cap}</div>
+        <div class="flex-[1_1_0%] text-table">{props.item.floor}</div>
         <div class="flex-[1_1_0%] text-table">{props.item.volume}</div>
         <div class="flex-[1_1_0%] text-table">{props.item.volume_usd}</div>
-        <div class="flex-[1_1_0%] text-table">{props.item.sales}</div>
-        <div class="flex-[0.8_1_0%] text-table">{props.item.average}</div>
       </div>
     </A>
   );
@@ -188,21 +177,6 @@ export function TableRowSkeleton(props: { limits: number }) {
           <div class="flex-[1_1_0%]">
             <Skeleton.Root class="skeleton" radius={5}>
               <div class="text-table">100 NFTs</div>
-            </Skeleton.Root>
-          </div>
-          <div class="flex-[1_1_0%]">
-            <Skeleton.Root class="skeleton" radius={5}>
-              <div class="text-table">100 NFTs</div>
-            </Skeleton.Root>
-          </div>
-          <div class="flex-[1_1_0%]">
-            <Skeleton.Root class="skeleton" radius={5}>
-              <div class="text-table">100 NFTs</div>
-            </Skeleton.Root>
-          </div>
-          <div class="flex-[0.8_1_0%]">
-            <Skeleton.Root class="skeleton" radius={5}>
-              <div class="text-table">10 NFTs</div>
             </Skeleton.Root>
           </div>
         </div>

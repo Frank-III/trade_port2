@@ -1,9 +1,8 @@
-import { type MintingTableRow, TableProps } from "./types";
+import { type MintingTableRow } from "./types";
 import {
   createSignal,
   For,
   createEffect,
-  onMount,
   onCleanup,
   Show,
   Suspense,
@@ -22,13 +21,14 @@ import {
   TableRow,
 } from "~/components/generic-table/table-style";
 import { TableRowSkeleton } from "./table-skeleton";
+import { currency, catVal, tsVal } from "./signals";
 
-export default function MintTable(props: TableProps) {
+export default function MintTable() {
   const query = trpc.nftRouter.minting.useInfiniteQuery(
     () => ({
-      kind: props.currency(),
-      ts: props.ts(),
-      cat: props.cat(),
+      kind: currency(),
+      ts: tsVal(),
+      cat: catVal(),
       limit: 20,
       cursor: null,
     }),

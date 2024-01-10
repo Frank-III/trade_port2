@@ -20,8 +20,9 @@ export default defineConfig({
     "text-faded": "text-gray6:100 dark:text-gray:100",
     "button-default":
       "bg-background-body text-offwhite h-8.5 border-border hover:bg-dark-gray flex items-center justify-center gap-1.5 rounded-md border px-1.5 outline-0",
-    "button-primary": "button-default bg-[#432a11] border-[#c77100]",
-    "button-secondary": "button-default bg-[#2c153f] border-[#6a0ab9]",
+    "button-primary": "button-default bg-[#432a11] border-[#c77100] hover:bg-[#54391D]",
+    "button-secondary": "button-default bg-[#2c153f] border-[#6a0ab9] hover:bg-[#3C1861]",
+    "button-fill": "button-default bg-[#1b1b1b] border-none",
     "text-table": "text-offwhite font-normal text-sm "
   },
   theme: {
@@ -47,8 +48,10 @@ export default defineConfig({
       black: "#000",
     },
     breakpoints: {
+      smm: "500px",
       mdd: "950px",
       lgg: "1190px",
+      xll: "1330px"
     },
   },
   presets: [
