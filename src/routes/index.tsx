@@ -4,8 +4,10 @@ import { trpc } from "~/utils/trpc";
 import Nav from "~/components/nav";
 import { TableView } from "~/components/table/table-view";
 import "./index.module.css";
+import { useNavigate } from "solid-start";
 
 const Home: VoidComponent = () => {
+  const navigate = useNavigate();
   // const params = useParams();
   const hello = trpc.example.hello.useQuery(() => ({ name: "from tRPC" }));
   return (
@@ -26,7 +28,11 @@ const Home: VoidComponent = () => {
                 </span>
               </h1>
               <div class="flex flex-row lt-lgg:(justify-center) items-center text-sm font-normal mt-15px space-x-5">
-                <button class="button-primary " type="button">
+                <button
+                  class="button-primary"
+                  type="button"
+                  onClick={() => navigate("/next")}
+                >
                   Buy NFTs
                 </button>
                 <button class="button-secondary" type="button">
