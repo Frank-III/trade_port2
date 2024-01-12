@@ -15,6 +15,7 @@ import { trpc } from "~/utils/trpc";
 import { Image, Skeleton } from "@kobalte/core";
 import { A } from "solid-start";
 import { currency, catVal, tsVal, search } from "./signals";
+import { Properties } from "solid-js/web";
 
 export default function SearchTable() {
   const query = trpc.nftRouter.trending.useInfiniteQuery(
@@ -22,7 +23,7 @@ export default function SearchTable() {
       kind: currency(),
       ts: tsVal(),
       cat: catVal(),
-      limit: 20,
+      limit: 10,
       cursor: null,
     }),
     () => ({
@@ -37,34 +38,31 @@ export default function SearchTable() {
   // const searchScroll = document.getElementById("searchScroll")!;
   let searchDialog: HTMLElement;
   let searchScroll: HTMLElement;
-  setLastScrollY(window.scrollY);
 
-  const handleScroll = () => {
+  const handleScroll = (event) => {
     // logic here: if scroll down to the bottom, fetch next page, if scroll up to the table header(as we would make header stick at top), fetch prev page
-    const currentScrollY = window.scrollY;
-    const viewportBottom = searchScroll.scrollTop + searchScroll.clientHeight;
-    const dialogBottom = searchDialog.offsetTop + searchDialog.offsetHeight;
-    // console.log(viewportBottom, dialogBottom);
+    const { scrollTop, clientHeight, scrollHeight } = event.target;
+    const isAtBottom = scrollTop + clientHeight >= scrollHeight - 1;
+
     //TODO: fix this issue(must be padding or margin)
-    if (viewportBottom > dialogBottom - 1) {
-      // fetchNext();
+    if (isAtBottom) {
+      // You've reached the bottom of the dialog
       console.log("fetch next");
       query.fetchNextPage();
     } else {
-      if (currentScrollY < lastScrollY()) {
-        const rect = tableHeaderRef?.getBoundingClientRect();
-        if (rect && rect.top < 0) {
-          console.log("fetch prev");
-          query.fetchPreviousPage();
-        }
-      }
+      // if (currentScrollY < lastScrollY()) {
+      //   const rect = tableHeaderRef?.getBoundingClientRect();
+      //   if (rect && rect.top < 0) {
+      //     console.log("fetch prev");
+      //     query.fetchPreviousPage();
+      //   }
+      // }
     }
   };
+  setLastScrollY(window.scrollY);
   onMount(() => {
     searchDialog = document.getElementById("searchDialog")!;
     searchScroll = document.getElementById("searchScroll")!;
-
-    console.log(searchScroll);
     searchScroll.addEventListener("scroll", handleScroll);
   });
 
@@ -77,7 +75,7 @@ export default function SearchTable() {
   return (
     <div class="mx-auto h-full text-nowrap">
       {/* Table Header */}
-      <div class="sticky top-[57px] z-3 bg-background h-[32px] flex items-center justify-between border-b-[1px] p-[0_0_0_15px] border-border">
+      <div class="bg-background h-[32px] flex items-center justify-between border-t-[1px] border-b-[1px] p-[0_0_0_15px] border-border">
         <div class="flex-[3_1_0%] text-table flex items-center">COLLECTION</div>
         <div class="flex-[1_1_0%] text-table flex items-center">FLOOR</div>
         <div class="flex-[1_1_0%] text-table flex items-center">VOLUME</div>
@@ -86,24 +84,26 @@ export default function SearchTable() {
         </div>
       </div>
       {/* Table Body */}
-      <Suspense fallback={<TableRowSkeleton limits={20} />}>
-        <Switch>
-          <Match when={query.data}>
-            <For each={query.data?.pages}>
-              {(page) => (
-                <For each={page.items}>
-                  {(item: SearchTableRow, idx) => (
-                    <TableRow item={item} id={idx().toString()} />
-                  )}
-                </For>
-              )}
-            </For>
-            <Show when={query.isFetchingNextPage}>
-              <TableRowSkeleton limits={20} />
-            </Show>
-          </Match>
-        </Switch>
-      </Suspense>
+      <div class="overflow-y-scroll overflow-x-hidden h-[calc(100%-32px)] lt-lg:h-[calc(80vh-88px)]">
+        <Suspense fallback={<TableRowSkeleton limits={10} />}>
+          <Switch>
+            <Match when={query.data}>
+              <For each={query.data?.pages}>
+                {(page) => (
+                  <For each={page.items}>
+                    {(item: SearchTableRow, idx) => (
+                      <TableRow item={item} id={idx().toString()} />
+                    )}
+                  </For>
+                )}
+              </For>
+              <Show when={query.isFetchingNextPage}>
+                <TableRowSkeleton limits={10} />
+              </Show>
+            </Match>
+          </Switch>
+        </Suspense>
+      </div>
     </div>
   );
 }

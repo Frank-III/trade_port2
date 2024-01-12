@@ -1,7 +1,13 @@
 import { Select } from "@kobalte/core";
 import { ChevronUpIcon, ChevronDownIcon, TimerReset } from "lucide-solid";
-import { type Accessor, createSignal, type Setter } from "solid-js";
+import {
+  type Accessor,
+  createSignal,
+  type Setter,
+  ComponentProps,
+} from "solid-js";
 import "./select.css";
+import { cn } from "~/utils/cn";
 
 export const TimeSpanMap = new Map([
   ["24 Hrs", 1],
@@ -13,7 +19,7 @@ export const TimeSpanMap = new Map([
   ["All Time", -1],
 ]);
 
-interface GenericSelectProps<T> {
+interface GenericSelectProps<T> extends ComponentProps<"div"> {
   valMap: Map<string, T>;
   labelIcon: Element;
   val: Accessor<string>;
@@ -37,16 +43,15 @@ export default function GenericSelect<T>(props: GenericSelectProps<T>) {
           item={item_props.item}
           class="text-offwhite bg-background hover:bg-background-hover [&[data-selected]]:text-primary flex cursor-pointer list-none items-center justify-start gap-1.5 rounded-sm py-1 pl-1 pr-2 focus:outline-none"
         >
-          <Select.Icon class="rounded-full bg-zinc-800">
-            {props.labelIcon}
-          </Select.Icon>
+          <Select.Icon class="rounded-full">{props.labelIcon}</Select.Icon>
           <Select.ItemLabel class="text-offwhite text-sm font-normal">
             {item_props.item.rawValue}
           </Select.ItemLabel>
         </Select.Item>
       )}
+      class={props.class}
     >
-      <Select.Trigger class="button-default" aria-label="Time Span">
+      <Select.Trigger class="button-default" aria-label="Some Select">
         <Select.Icon class="">{props.labelIcon}</Select.Icon>
         <Select.Value<string> class="text-offwhite text-sm font-normal">
           {(state) => state.selectedOption()}

@@ -28,7 +28,7 @@ export const Currency = [
 
 export function CurrencyToggleGroup() {
   return (
-    <div class="button-default">
+    <div class="button-default rounded-8px">
       <For each={Currency}>
         {(item, index) => (
           // biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
@@ -36,14 +36,17 @@ export function CurrencyToggleGroup() {
             id={index().toString()}
             onClick={() => setCurrency(item.name)}
             class={cn(
-              "text-md flex font-normal p-1 rounded-md hover:( bg-[#432a11] text-primary)",
-              currency() === item.name && "text-primary bg-[#432a11]"
+              "text-md flex font-normal p-1 rounded-md hover:(bg-background-hover)",
+              currency() === item.name &&
+                "text-primary bg-[#432a11] hover:(text-primary bg-[#432a11])"
             )}
           >
             {item.name === "all" ? (
-              <div class="text-inherit text-sm">All</div>
+              <div class="text-inherit text-sm font-normal cursor-pointer">
+                ALL
+              </div>
             ) : (
-              <div class={`${item.icon} text-[20px]`} />
+              <div class={`${item.icon} text-[20px] cursor-pointer`} />
             )}
           </div>
         )}
