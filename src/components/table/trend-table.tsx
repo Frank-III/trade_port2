@@ -1,4 +1,4 @@
-import type { TableProps, TrendingTableRow } from "./types";
+import type { TrendingTableRow } from "./types";
 import {
   createSignal,
   For,
@@ -58,8 +58,8 @@ export default function TrendTable2() {
         }
       }
     }
+    setLastScrollY(window.scrollY);
   };
-  setLastScrollY(window.scrollY);
   createEffect(() => {
     window.addEventListener("scroll", handleScroll);
   });
@@ -73,20 +73,21 @@ export default function TrendTable2() {
   return (
     <div class="mx-auto h-full text-nowrap">
       {/* Table Header */}
-      <div class="sticky top-[57px] z-2 bg-background h-[32px] flex items-center justify-between border-b-[1px] p-[0_0_0_15px] border-border">
+      <div
+        ref={tableHeaderRef}
+        class="sticky top-[57px] z-2 bg-background h-[32px] flex items-center justify-between border-b-[1px] p-[0_0_0_15px] border-border "
+      >
         <div class="flex-[3_1_0%] text-table flex items-center">COLLECTION</div>
         <div class="flex-[1_1_0%] text-table flex items-center">FLOOR</div>
-        <div class="flex-[1_1_0%] text-table flex items-center text-nowrap">
+        <div class="flex-[1_1_0%] text-table flex items-center text-wrap">
           MARKET CAP
         </div>
         <div class="flex-[1_1_0%] text-table flex items-center">VOLUME</div>
-        <div class="flex-[1_1_0%] text-table flex items-center text-nowrap">
+        <div class="flex-[1_1_0%] text-table flex items-center text-wrap">
           VOLUME USD
         </div>
         <div class="flex-[1_1_0%] text-table flex items-center">SALES</div>
-        <div class="flex-[0.8_1_0%] text-table flex items-center text-nowrap">
-          AVERAGE
-        </div>
+        <div class="flex-[0.8_1_0%] text-table flex items-center ">AVERAGE</div>
       </div>
       {/* Table Body */}
       <Suspense fallback={<TableRowSkeleton limits={20} />}>
@@ -143,11 +144,21 @@ function TableRow(props: { item: TrendingTableRow } & ComponentProps<"div">) {
             {props.item.floor.toFixed(1)}
           </div>
         </div>
-        <div class="flex-[1_1_0%] text-table">{props.item.market_cap}</div>
-        <div class="flex-[1_1_0%] text-table">{props.item.volume}</div>
-        <div class="flex-[1_1_0%] text-table">{props.item.volume_usd}</div>
-        <div class="flex-[1_1_0%] text-table">{props.item.sales}</div>
-        <div class="flex-[0.8_1_0%] text-table">{props.item.average}</div>
+        <div class="flex-[1_1_0%] text-table items-center">
+          {props.item.market_cap}
+        </div>
+        <div class="flex-[1_1_0%] text-table items-center">
+          {props.item.volume}
+        </div>
+        <div class="flex-[1_1_0%] text-table items-center">
+          {props.item.volume_usd}
+        </div>
+        <div class="flex-[1_1_0%] text-table items-center">
+          {props.item.sales}
+        </div>
+        <div class="flex-[0.8_1_0%] text-table items-center">
+          {props.item.average}
+        </div>
       </div>
     </A>
   );

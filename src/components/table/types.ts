@@ -1,8 +1,10 @@
-import { Accessor } from "solid-js";
 export interface Collection {
   name: string;
   avatar: string;
   supply: number;
+  verified: boolean;
+  twitter?: string,
+  website?: string
 }
 
 export interface TrendingTableRow {

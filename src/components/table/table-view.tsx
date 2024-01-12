@@ -40,19 +40,21 @@ export function TableView() {
             <Tabs.Indicator class="tabs-indicator absolute transition transition-all transition-250 bg-primary bottom--1 h-0.5 " />
           </div>
         </Tabs.List>
-        <div class="inline-flex space-x-5">
+        <div class="inline-flex space-x-3">
           <CurrencyToggleGroup />
           <GenericSelect<number>
             valMap={TimeSpanMap}
             val={ts}
             setVal={setTS}
-            labelIcon={<TimerReset />}
+            class="lt-sm:(hidden!) "
+            labelIcon={<TimerReset size={20} class="icon-default" />}
           />
           <GenericSelect<string>
             valMap={CatFilterMap}
             val={cat}
             setVal={setCat}
-            labelIcon={<ArrowDownWideNarrow />}
+            class="lt-sm:hidden!"
+            labelIcon={<ArrowDownWideNarrow size={20} class="icon-default" />}
           />
         </div>
       </div>
