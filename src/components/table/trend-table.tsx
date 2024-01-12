@@ -14,7 +14,10 @@ import { trpc } from "~/utils/trpc";
 import { Image, Skeleton } from "@kobalte/core";
 import { cn } from "~/utils/cn";
 import { A } from "solid-start";
-import { currency, catVal, tsVal } from "./signals";
+import { currency, catVal, tsVal, ts, setTS, setCat, cat } from "./signals";
+import { CatFilterMap, TimeSpanMap } from "./filter-valmaps";
+import { ArrowDownWideNarrow, TimerReset } from "lucide-solid";
+import GenericSelect from "./generic-select";
 
 const CurrencyIcons = {
   // all: "https://cdn.lucide.dev/currency-dollar.svg",
@@ -75,7 +78,7 @@ export default function TrendTable2() {
       {/* Table Header */}
       <div
         ref={tableHeaderRef}
-        class="sticky top-[57px] z-2 bg-background h-[32px] flex items-center justify-between border-b-[1px] p-[0_0_0_15px] border-border "
+        class="sticky top-[57px] z-2 bg-background h-[32px] flex items-center justify-between border-b-[1px] p-[0_0_0_15px] border-border lt-smm:hidden"
       >
         <div class="flex-[3_1_0%] text-table flex items-center">COLLECTION</div>
         <div class="flex-[1_1_0%] text-table flex items-center">FLOOR</div>
@@ -88,6 +91,20 @@ export default function TrendTable2() {
         </div>
         <div class="flex-[1_1_0%] text-table flex items-center">SALES</div>
         <div class="flex-[0.8_1_0%] text-table flex items-center ">AVERAGE</div>
+      </div>
+      <div class="hidden lt-smm:flex flex-row border-b-[1px] p-[0_0_5px_15px] border-border justify-end mt-5px space-x-5px">
+        <GenericSelect<number>
+          valMap={TimeSpanMap}
+          val={ts}
+          setVal={setTS}
+          labelIcon={<TimerReset size={20} class="icon-default" />}
+        />
+        <GenericSelect<string>
+          valMap={CatFilterMap}
+          val={cat}
+          setVal={setCat}
+          labelIcon={<ArrowDownWideNarrow size={20} class="icon-default" />}
+        />
       </div>
       {/* Table Body */}
       <Suspense fallback={<TableRowSkeleton limits={20} />}>
@@ -115,7 +132,7 @@ export default function TrendTable2() {
 function TableRow(props: { item: TrendingTableRow } & ComponentProps<"div">) {
   return (
     <A href="#">
-      <div class="relative flex flex items-center p-[6.5px_0px_6.5px_15px] pt-[8px] border-b-[1px] border-border-color hover:bg-background-hover">
+      <div class="relative flex flex items-center p-[6.5px_0px_6.5px_15px] pt-[8px] border-b-[1px] border-border-color hover:bg-background-hover lt-smm:hidden">
         <div class="flex-[3_1_0%] text-table overflow-hidden">
           <div class="flex flex-row items-center space-x-3 text-table ">
             <Image.Root fallbackDelay={300} class="h-[42px] w-[42px] ">
@@ -158,6 +175,36 @@ function TableRow(props: { item: TrendingTableRow } & ComponentProps<"div">) {
         </div>
         <div class="flex-[0.8_1_0%] text-table items-center">
           {props.item.average}
+        </div>
+      </div>
+      <div class="hidden lt-smm:flex flex-row text-sm font-normal border-b-1 border-border space-x-5 items-center py-5px">
+        <Image.Root fallbackDelay={300} class="h-75px w-75px ">
+          <Image.Img
+            class="object-fill rounded-lg hover:(border-1 border-primary)"
+            src={props.item.collection.avatar}
+            alt="nft collection avatar"
+          />
+          <Image.Fallback>
+            {props.item.collection.name.slice(0, 1)}
+          </Image.Fallback>
+        </Image.Root>
+        <div class="flex flex-col justify-between w-full ">
+          <div class="inline-flex text-sm hover:text-primary">
+            {props.item.collection.name}
+            <div class="i-codicon-verified-filled text-20px text-primary" />
+          </div>
+          <div class="flex flex-row justify-between">
+            <div class="flex flex-col items-start font-normal text-sm">
+              <span>Floor: {props.item.floor}</span>
+              <span>Market Cap: {props.item.market_cap}</span>
+              <span>Sales: {props.item.sales}</span>
+            </div>
+            <div class="flex flex-col items-start font-normal text-sm">
+              <span>Volume: {props.item.volume}</span>
+              <span>Vol USD: {props.item.volume_usd}</span>
+              <span>Average: {props.item.average}</span>
+            </div>
+          </div>
         </div>
       </div>
     </A>
