@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker";
-import { collapseVariantGroup } from "unocss";
+import { fstat } from "fs";
 import type {
   TrendingTableRow,
   Collection,
@@ -16,6 +16,23 @@ function createCollection() {
     verified: faker.datatype.boolean(0.6),
     twitter: faker.internet.url(),
     website: faker.internet.url(),
+    // a list of enum values
+    properties: faker.helpers.arrayElements(
+      [
+        "background",
+        "ear",
+        "eye color",
+        "top",
+        "eye",
+        "outfit",
+        "weapon",
+        "mouse",
+        "name",
+        "nose",
+        "hat",
+      ],
+      { min: 4, max: 8 }
+    ),
   } as Collection;
 }
 
@@ -75,3 +92,54 @@ export const fakeTrendingData = faker.helpers.multiple(createTrendingRow, {
 export const fakeMintingData = faker.helpers.multiple(createMintingRow, {
   count: 5000,
 });
+
+// create fake collection properties:
+export const collectionWithProperties = fakeTrendingData.map((row) => {
+  const collection = row.collection;
+  const genOneProperty = () =>
+    [faker.lorem.word(), faker.number.int({ max: 100 })] as const;
+  const collectionProperties = collection.properties.reduce(
+    (acc: Record<string, Record<string, number>>, prop: string) => {
+      // call genOneProperty() n times
+      const pps = Array(20)
+        .map(genOneProperty)
+        .reduce((pp: Record<string, number>, [key, value]) => {
+          pp[key] = value;
+          return pp;
+        }, {});
+      acc[prop] = pps;
+      return acc;
+    },
+    {}
+  );
+  return {
+    collectionName: collection.name,
+    allProperties: collectionProperties,
+  };
+});
+// console.log(collectionWithProperties);
+
+// export const collectionItems = collectionWithProperties.map((row) => {
+//   return faker.helpers.multiple(
+//     () => {
+//       return {
+//         collectionName: row.collectionName,
+//         name: faker.person.middleName(),
+//         image: faker.image.avatar(),
+//         lastBid: faker.number.float({ min: 0, max: 1000, precision: 2 }),
+//         lastSale: faker.number.float({ min: 0, max: 1000, precision: 2 }),
+//         tokenId: faker.string.uuid(),
+//         properties: Object.entries(row.allProperties).map(([key, value]) => {
+//           console.log(key);
+//           return {
+//             name: key,
+//             value: faker.helpers.arrayElement(Object.keys(value)),
+//           };
+//         }),
+//       };
+//     },
+//     { count: 30 }
+//   );
+// });
+
+//TODO: create drizzle schemas and store into sqlite db

@@ -36,7 +36,7 @@ export function CurrencyToggleGroup() {
             id={index().toString()}
             onClick={() => setCurrency(item.name)}
             class={cn(
-              "text-md flex font-normal p-1 rounded-md hover:(bg-background-hover)",
+              "text-md flex font-normal p-1 rounded-md hover:(bg-[#333333])",
               currency() === item.name &&
                 "text-primary bg-[#432a11] hover:(text-primary bg-[#432a11])"
             )}

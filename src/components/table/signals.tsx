@@ -11,3 +11,10 @@ export const [search, setSearch] = createSignal<string>("");
 
 export const tsVal = () => TimeSpanMap.get(ts())!;
 export const catVal = () => CatFilterMap.get(cat())!;
+
+// no sure if I would use
+export const [minPrice, setMinPrice] = createSignal<number>(0);
+export const [maxPrice, setMaxPrice] = createSignal<number>(10000);
+
+export const [snipperDrawerOpen, setsnipperDrawerOpen] =
+  createSignal<boolean>(false);

@@ -51,6 +51,7 @@ export default defineConfig({
 			black: "#000",
 		},
 		breakpoints: {
+			xss: "445px",
 			smm: "500px",
 			sm: "750px",
 			mdd: "950px",
