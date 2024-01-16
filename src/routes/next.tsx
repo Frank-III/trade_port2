@@ -8,7 +8,7 @@ import { Filter } from "~/components/collections/filter";
 import Nav from "~/components/nav";
 import { trpc } from "~/utils/trpc";
 
-const name = "Zoie";
+const name = "Jany";
 
 const Next = () => {
 	const collectionDetailQuery = trpc.nftRouter.collectionProperties.useQuery(

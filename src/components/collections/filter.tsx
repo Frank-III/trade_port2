@@ -21,8 +21,12 @@ import {
 	setMaxPrice,
 	status,
 	setStatus,
+	filterRarityMin,
+	filterRarityMax,
+	setFilterRarityMin,
+	setFilterRarityMax,
 } from "~/components/collections/signals";
-import { PocketKnife, Tags } from "lucide-solid";
+import { PocketKnife, Search, Tags } from "lucide-solid";
 
 const TwowaySlider = (props: {
 	title?: string;
@@ -33,7 +37,7 @@ const TwowaySlider = (props: {
 	maxRange: number;
 }) => {
 	const thumbStyle =
-		"block h-16px top--4px w-16px rounded-full bg-background hover:shadow focus:(shadow outline-none) items-center border-2 border-border focus:border-primary";
+		"block h-16px top--4px w-16px rounded-full bg-background hover:shadow focus:(shadow outline-none) items-center border-2 border-border focus:(border-primary h-18px w-18px) transition-transform";
 	const range1_per = () => (props.range1() / props.maxRange) * 100;
 	const range2_per = () => (props.range2() / props.maxRange) * 100;
 	return (
@@ -72,7 +76,7 @@ interface FilterItemProps extends ComponentProps<"div"> {
 	children: JSX.Element;
 }
 
-const triggerIcon = "i-octicon-chevron-down-16 hover:rotate-180";
+const triggerIcon = "i-octicon-chevron-down-16 [&[data-expanded]]:rotate-180";
 const buttonStyle =
 	"bg-background-body hover:bg-background-hover w-full px-3 py-1 text-base font-normal";
 
@@ -90,7 +94,7 @@ function FilterItem(props: FilterItemProps) {
 			>
 				<span
 					class={cn(
-						(minPrice() !== 0 || maxPrice() !== 10000) && "text-primary",
+						// (minPrice() !== 0 || maxPrice() !== 10000) && "text-primary",
 					)}
 				>
 					{props.title}
@@ -105,8 +109,10 @@ function FilterItem(props: FilterItemProps) {
 }
 
 export function Filter(props: FilterProps) {
+	//TODO: should make another query here, to fetch the percentage of each properties
+
 	return (
-		<div class=" border-border pb-40px border-base-font-receding-color relative flex h-[cal(100%-80px)] w-[281px] flex-col overflow-auto overflow-x-hidden rounded-lg border ">
+		<div class=" border-border pb-40px border-base-font-receding-color relative flex h-[cal(100%-80px)] w-[281px] flex-col overflow-auto overflow-x-hidden rounded-lg border border-border">
 			<div class="flex flex-col justify-between px-3 text-offwhite text-base">
 				Status
 				<div class="flex flex-row p-1">
@@ -188,6 +194,85 @@ export function Filter(props: FilterProps) {
 					</div>
 				</div>
 			</FilterItem>
+			<FilterItem title="Rarity" class="flex flex-col w-full">
+				<div class="flex flex-row px-5 space-x-3">
+					<button
+						type="button"
+						class="button-default text-primary text-base font-normal"
+					>
+						Top 2%
+					</button>
+					<button
+						type="button"
+						class="button-default text-rose-7 text-base font-normal"
+					>
+						Top 10%
+					</button>
+					<button
+						type="button"
+						class="button-default text-violet-7 text-sm font-normal"
+					>
+						Top 20%
+					</button>
+				</div>
+				<TwowaySlider
+					range1={filterRarityMin}
+					range2={filterRarityMax}
+					range1Setter={setFilterRarityMin}
+					range2Setter={setFilterRarityMax}
+					maxRange={5000}
+				/>
+				<div class="flex flex-row items-center justify-between px-2 pt-2 text-base">
+					<div class="inline-flex space-x-2 text-base font-normal">
+						<span>Min</span>
+						<input
+							class="button-default h-[30px] w-[70px]"
+							value={minPrice()}
+							onChange={(e) => setMinPrice(Number(e.target.value))}
+						/>
+					</div>
+					<div class="inline-flex space-x-2 text-base font-normal">
+						<span>Max</span>
+						<input
+							class="button-default h-[30px] w-[70px]"
+							value={maxPrice()}
+							onChange={(e) => setMaxPrice(Number(e.target.value))}
+						/>
+					</div>
+				</div>
+			</FilterItem>
+			<div class="border-t-2 border-border flex flex-col flex-w-full">
+				<span class="text-offwhite font-bold text-base text-start">
+					Attributes
+				</span>
+				<div class="flex flex-col h-full w-full">
+					<div class="flex flex-row w-full border-b-2 border-border items-center">
+						<div class="flex flex-[3_3_1]">Type</div>
+						<div class="flex flex-[1_1_0]">Rarity</div>
+					</div>
+					<div class="h-[calc(100%-32px)] pb-20 overflow-y-scroll overflow-x-hidden">
+						<For each={Object.entries(props.filterStore)}>
+							{(item, idx) => {
+								return (
+									<FilterItem
+										title={item[0]}
+										class="w-full h-258px overflow-y-scroll"
+									>
+										<div class="button-default w-200px ml-15px lt-smm:ml-0 gap-0 text-sm font-normal">
+											<Search class="rounded-full" />
+											<input
+												class="text-offwhite w-full min-w-0 bg-transparent text-base font-light focus:outline-none "
+												placeholder="Search"
+											/>
+										</div>
+										{/* TODO: get the queried thing and load as a div element with one toggleButton and name and percentage */}
+									</FilterItem>
+								);
+							}}
+						</For>
+					</div>
+				</div>
+			</div>
 		</div>
 	);
 }
