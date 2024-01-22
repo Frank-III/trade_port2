@@ -5,10 +5,11 @@ interface BadgeProps {
 
 export function Badge(props: BadgeProps) {
   return (
-    <div class="button-default">
-      <span class="data-type box near before:bg-gradient-to-r before:from-gray-400 before:to-white">
-        {props.text}
-      </span>
-    </div>
+    <span class="text-base font-normal shadow-[inset_0_0_2px_hsla(0,0%,100%,.3)] p-[5px_15px_5px_15px] rounded-lg">
+      <span
+        class={`${props.color} rounded-full w-[10px] h-[10px] inline-block mr-[5px]`}
+      />
+      {props.text}
+    </span>
   );
 }

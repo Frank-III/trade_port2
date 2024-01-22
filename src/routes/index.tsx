@@ -1,10 +1,11 @@
-import { type VoidComponent } from "solid-js";
+import { For, type VoidComponent } from "solid-js";
 // import { A, useParams } from "solid-start";
 import { trpc } from "~/utils/trpc";
 import Nav from "~/components/nav";
 import { TableView } from "~/components/table/table-view";
 import "./index.module.css";
 import { useNavigate } from "solid-start";
+import { Badge } from "~/components/badge";
 
 const Home: VoidComponent = () => {
   const navigate = useNavigate();
@@ -27,6 +28,11 @@ const Home: VoidComponent = () => {
                   & Aggregator
                 </span>
               </h1>
+              <div class="flex flex-wrap items-center mt-15px lt-lgg:(justify-center) gap-5px">
+                <For each={["solana", "sui", "eth"]}>
+                  {(item) => <Badge text={item} color="bg-red" />}
+                </For>
+              </div>
               <div class="flex flex-row lt-lgg:(justify-center) items-center text-sm font-normal mt-15px space-x-5">
                 <button
                   class="button-primary"

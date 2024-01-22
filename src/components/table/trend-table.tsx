@@ -65,13 +65,13 @@ export default function TrendTable2() {
   };
   createEffect(() => {
     window.addEventListener("scroll", handleScroll);
+
+    onCleanup(() => {
+      window.removeEventListener("scroll", handleScroll);
+    });
   });
 
   //TODO: onMount would set the default data (but maybe do it with suspense?)
-
-  onCleanup(() => {
-    window.removeEventListener("scroll", handleScroll);
-  });
 
   return (
     <div class="mx-auto h-full text-nowrap">

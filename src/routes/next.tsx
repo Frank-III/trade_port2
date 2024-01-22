@@ -1,52 +1,87 @@
+import { Suspense, createEffect, on } from "solid-js";
 import { createStore } from "solid-js/store";
 import { useParams } from "solid-start";
 import {
-	CollectionDetail,
-	CollectionStats,
+  CollectionDetail,
+  CollectionStats,
 } from "~/components/collections/collection_detail";
 import { Filter } from "~/components/collections/filter";
 import Nav from "~/components/nav";
 import { trpc } from "~/utils/trpc";
+import {
+  minPrice,
+  maxPrice,
+  status,
+  filterRarityMin,
+  filterRarityMax,
+  marketPlace,
+} from "~/components/collections/signals";
+import { ChevronLeft } from "lucide-solid";
 
-const name = "Jany";
+const name = "Hal";
 
 const Next = () => {
-	const collectionDetailQuery = trpc.nftRouter.collectionProperties.useQuery(
-		() => ({
-			kind: "solana",
-			name: name,
-		}),
-	);
+  const collectionDetailQuery = trpc.nftRouter.collectionProperties.useQuery(
+    () => ({
+      kind: "solana",
+      name: name,
+    })
+  );
 
-	const [filter, setFilter] = createStore(
-		Object.keys(collectionDetailQuery.data?.allProperties).reduce(
-			(acc: Record<string, Array<string>>, key) => {
-				acc[key] = [];
-				return acc;
-			},
-			{},
-		),
-	);
-	return (
-		<main>
-			<Nav />
-			<div class="page-container p-[58px_20px_15px] max-w-[1600px] m-auto ">
-				<div class="collection-layout flex flex-col gap-10px w-100% ">
-					<div class="collection-top flex flex-wrap gap-10px gap-y-10px items-center justify-between">
-						<CollectionDetail collectionName={name} />
-						<CollectionStats collectionName={name} />
-					</div>
-					<div class="collection-bottom lt-lg:h-auto flex h-[calc(100vh-164px)] w-full">
-						<div class="collection-filter">
-							<Filter filterStore={filter} storeSetter={setFilter} />
-						</div>
-						<div class="collection-items"></div>
-						<div class="activities"></div>
-					</div>
-				</div>
-			</div>
-		</main>
-	);
+  const [filter, setFilter] = createStore(
+    Object.keys(collectionDetailQuery.data?.allProperties).reduce(
+      (acc: Record<string, Array<string>>, key) => {
+        acc[key] = [];
+        return acc;
+      },
+      {}
+    )
+  );
+
+  // const collectionItemsQuery = trpc.nftRouter.collectionItems.useInfiniteQuery(
+  //   () => ({
+  //     collection: name,
+  //     filters: filter,
+  //     minPrice: minPrice(),
+  //     maxPrice: maxPrice(),
+  //     minRarity: filterRarityMin(),
+  //     maxRarity: filterRarityMax(),
+  //     listed: status(),
+  //     marketPlace: marketPlace(),
+  //   })
+  // );
+
+  return (
+    <main>
+      <Nav />
+      <div class="page-container m-auto max-w-[1600px] p-[58px_20px_15px] ">
+        <div class="collection-layout gap-10px w-100% flex flex-col ">
+          <div class="collection-top gap-10px gap-y-10px flex flex-wrap items-center justify-between">
+            <CollectionDetail collectionName={name} />
+            <CollectionStats collectionName={name} />
+          </div>
+          <div class="collection-bottom lt-lg:h-auto flex h-[calc(100vh-180px)] w-full overflow-auto">
+            <div class="collection-filter h-full">
+              <div class="flex flex-row">
+                <Filter
+                  filterStore={filter}
+                  storeSetter={setFilter}
+                  collection={collectionDetailQuery.data!}
+                />
+                <div class="flex border border-1 items-center justify-center">
+                  <ChevronLeft />
+                </div>
+              </div>
+            </div>
+            <div class="collection-items">
+              {/* <Suspense fallback={<div>loading</div>} /> */}
+            </div>
+            <div class="activities"></div>
+          </div>
+        </div>
+      </div>
+    </main>
+  );
 };
 
 export default Next;

@@ -84,7 +84,7 @@ export default function SearchTable() {
         </div>
       </div>
       {/* Table Body */}
-      <div class="overflow-y-scroll overflow-x-hidden h-[calc(100%-32px)] lt-lg:h-[calc(80vh-88px)]">
+      <div class="overflow-y-scroll overflow-x-hidden h-[calc(60vh-80px)] lt-lg:h-[calc(80vh-80px)]">
         <Suspense fallback={<TableRowSkeleton limits={10} />}>
           <Switch>
             <Match when={query.data}>

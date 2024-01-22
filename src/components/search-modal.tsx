@@ -19,9 +19,9 @@ export default function SearchModal() {
         <Dialog.Overlay class="z-60 bg-[hsla(0,5%,4%,.5)] fixed top-0 flex w-100% h-100% shadow left-0 pt-5px justify-center">
           <div
             id="searchScroll"
-            class="ml--20px bg-background border-primary border z-1000 flex justify-center max-w-[900px] max-h-[60vh] lt-mdd:(max-w-[97vw] max-h-[80vh]) relative overflow-x-hidden overflow-y-scroll rounded-10px w-100%"
+            class="ml--20px bg-background border-primary border z-1000 flex justify-center max-w-[900px] max-h-[60vh] lt-mdd:(max-w-[97vw] max-h-[80vh]) relative rounded-10px w-100% overflow-x-hidden overflow-y-scroll "
           >
-            <Dialog.Content class="w-100%" id="searchDialog">
+            <Dialog.Content class="w-100% " id="searchDialog">
               <div class="search-header flex items-center relative py-7px px-10px">
                 <div class="flex w-[calc(100%-170px)] button-default mr-7px">
                   <Search class="text-primary ml-0" />
@@ -37,7 +37,7 @@ export default function SearchModal() {
                   <X />
                 </Dialog.CloseButton>
               </div>
-              <div class="h-100%">
+              <div class="">
                 <SearchTable />
               </div>
             </Dialog.Content>

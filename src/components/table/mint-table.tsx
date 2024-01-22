@@ -60,13 +60,13 @@ export default function MintTable() {
   };
   createEffect(() => {
     window.addEventListener("scroll", handleScroll);
+
+    onCleanup(() => {
+      window.removeEventListener("scroll", handleScroll);
+    });
   });
 
   //TODO: onMount would set the default data (but maybe do it with suspense?)
-
-  onCleanup(() => {
-    window.removeEventListener("scroll", handleScroll);
-  });
 
   return (
     <Table class="mx-auto mb-0">

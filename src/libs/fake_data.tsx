@@ -96,12 +96,14 @@ export const fakeMintingData = faker.helpers.multiple(createMintingRow, {
 // create fake collection properties:
 export const collectionWithProperties = fakeTrendingData.map((row) => {
   const collection = row.collection;
+
   const genOneProperty = () =>
     [faker.lorem.word(), faker.number.int({ max: 100 })] as const;
   const collectionProperties = collection.properties.reduce(
     (acc: Record<string, Record<string, number>>, prop: string) => {
       // call genOneProperty() n times
       const pps = Array(20)
+        .fill(0)
         .map(genOneProperty)
         .reduce((pp: Record<string, number>, [key, value]) => {
           pp[key] = value;
@@ -117,29 +119,30 @@ export const collectionWithProperties = fakeTrendingData.map((row) => {
     allProperties: collectionProperties,
   };
 });
-// console.log(collectionWithProperties);
 
-// export const collectionItems = collectionWithProperties.map((row) => {
-//   return faker.helpers.multiple(
-//     () => {
-//       return {
-//         collectionName: row.collectionName,
-//         name: faker.person.middleName(),
-//         image: faker.image.avatar(),
-//         lastBid: faker.number.float({ min: 0, max: 1000, precision: 2 }),
-//         lastSale: faker.number.float({ min: 0, max: 1000, precision: 2 }),
-//         tokenId: faker.string.uuid(),
-//         properties: Object.entries(row.allProperties).map(([key, value]) => {
-//           console.log(key);
-//           return {
-//             name: key,
-//             value: faker.helpers.arrayElement(Object.keys(value)),
-//           };
-//         }),
-//       };
-//     },
-//     { count: 30 }
-//   );
-// });
+export type CollectionWithProperties = (typeof collectionWithProperties)[0];
 
+export const collectionItems = collectionWithProperties.flatMap((row) => {
+  return faker.helpers.multiple(
+    () => {
+      return {
+        collectionName: row.collectionName,
+        name: faker.person.middleName(),
+        image: faker.image.avatar(),
+        lastBid: faker.number.float({ min: 0, max: 1000, precision: 2 }),
+        lastSale: faker.number.float({ min: 0, max: 1000, precision: 2 }),
+        tokenId: faker.string.uuid(),
+        properties: Object.entries(row.allProperties).map(([key, value]) => {
+          return {
+            name: key,
+            value: faker.helpers.arrayElement(Object.keys(value)),
+          };
+        }),
+      };
+    },
+    { count: 30 }
+  );
+});
+
+console.log(collectionItems[0]);
 //TODO: create drizzle schemas and store into sqlite db
