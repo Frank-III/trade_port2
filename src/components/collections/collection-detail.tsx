@@ -1,7 +1,6 @@
 import { Image, Tooltip } from "@kobalte/core";
 import { Collection } from "../table/types";
-import { BadgeCheck, Image as ImageIcon } from "lucide-solid";
-import { Slider } from "@kobalte/core";
+import { Image as ImageIcon } from "lucide-solid";
 import { Accessor, Setter, Show, Suspense } from "solid-js";
 import { trpc } from "~/utils/trpc";
 import { A } from "solid-start";

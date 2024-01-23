@@ -4,7 +4,7 @@ import { useParams } from "solid-start";
 import {
   CollectionDetail,
   CollectionStats,
-} from "~/components/collections/collection_detail";
+} from "~/components/collections/collection-detail";
 import { Filter } from "~/components/collections/filter";
 import Nav from "~/components/nav";
 import { trpc } from "~/utils/trpc";
@@ -18,7 +18,7 @@ import {
 } from "~/components/collections/signals";
 import { ChevronLeft } from "lucide-solid";
 
-const name = "Kyle";
+const name = "Art";
 
 const Next = () => {
   const collectionDetailQuery = trpc.nftRouter.collectionProperties.useQuery(
@@ -37,6 +37,11 @@ const Next = () => {
       {}
     )
   );
+
+  createEffect(() => {
+    filter;
+    console.log(filter);
+  });
 
   // const collectionItemsQuery = trpc.nftRouter.collectionItems.useInfiniteQuery(
   //   () => ({
@@ -73,10 +78,11 @@ const Next = () => {
                 </div>
               </div>
             </div>
-            <div class="collection-items">
+            <div class="collection-items-and-chart flex flex-grow flex-col ">
+              <div class="collection-items border-t border-border"></div>
               {/* <Suspense fallback={<div>loading</div>} /> */}
             </div>
-            <div class="activities"></div>
+            <div class="activities h-[cal(40vh-87px)] border-y border-border overflow-hidden lt-lg:hidden"></div>
           </div>
         </div>
       </div>

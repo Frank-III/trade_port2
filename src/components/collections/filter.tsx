@@ -6,6 +6,7 @@ import {
   type Accessor,
   type Setter,
   Show,
+  createMemo,
 } from "solid-js";
 import { createStore, type SetStoreFunction } from "solid-js/store";
 import { cn } from "~/utils/cn";
@@ -23,6 +24,7 @@ import {
 } from "~/components/collections/signals";
 import { PocketKnife, Search, Tags } from "lucide-solid";
 import { type CollectionWithProperties } from "~/libs/fake_data";
+import "./filter.css";
 
 export function TwowaySlider(props: {
   title?: string;
@@ -39,10 +41,7 @@ export function TwowaySlider(props: {
   return (
     <Slider.Root
       class="select-none relative flex flex-col items-center touch-none px-5 w-full h-10px mt-3 mb-2"
-      value={[
-        (props.range1() / props.maxRange) * 100,
-        (props.range2() / props.maxRange) * 100,
-      ]}
+      value={[range1_per(), range2_per()]}
       onChange={(vs) => {
         props.range1Setter((vs[0] * props.maxRange) / 100);
         props.range2Setter((vs[1] * props.maxRange) / 100);
@@ -92,13 +91,13 @@ function FilterItem(props: FilterItemProps) {
       <Collapsible.Trigger
         class={cn(
           buttonStyle,
-          "inline-flex items-center justify-between h-full",
+          "collapse-trigger inline-flex items-center justify-between",
           props.triggerStyles
         )}
       >
-        <span class={props.titleStyles}>{props.title}</span>
+        <span class={`text-offwhite ${props.titleStyles}`}>{props.title}</span>
         {/* TODO: fix this using normal css*/}
-        <div class={triggerIcon} />
+        <div class={`collapse-icon ${triggerIcon}`} />
       </Collapsible.Trigger>
       <Collapsible.Content class={props.class}>
         {props.children}
@@ -112,11 +111,44 @@ export function Filter(props: FilterProps) {
     Object.keys(props.collection.allProperties).map((_) => "")
   );
 
+  const priceRangeChanged = createMemo(
+    () => minPrice() !== 0 || maxPrice() !== 10000
+  );
+  const rarityRangeChanged = createMemo(
+    () => filterRarityMin() > 1 || filterRarityMax() < 5000
+  );
+  const statusChanged = createMemo(() => status() !== "all");
+  const filterChanged = createMemo(() =>
+    Object.values(props.filterStore).reduce(
+      (acc, curr) => acc || curr.length > 0,
+      false
+    )
+  );
+
   return (
     <div class="pb-40px relative flex w-[281px] flex-col rounded-lg rounded-r-none border border-border h-[cal(100%-190px)] overflow-auto overflow-x-hidden overflow-y-auto">
-      <div class="flex flex-col justify-between  ">
+      <div class="flex flex-col justify-between w-full">
         <div class="inline-flex px-3 w-full justify-between text-offwhite text-base">
           Status
+          <Show
+            when={
+              statusChanged() || priceRangeChanged() || rarityRangeChanged()
+            }
+          >
+            <button
+              type="button"
+              class="text-primary bg-transparent font-normal"
+              onClick={() => {
+                setStatus("all");
+                setMinPrice(0);
+                setMaxPrice(10000);
+                setFilterRarityMin(1);
+                setFilterRarityMax(5000);
+              }}
+            >
+              Reset
+            </button>
+          </Show>
         </div>
         <div class="flex flex-row p-1">
           <button
@@ -173,9 +205,7 @@ export function Filter(props: FilterProps) {
       <FilterItem
         title="Price"
         class="flex flex-col w-full"
-        titleStyles={
-          minPrice() !== 0 || maxPrice() !== 10000 ? "text-primary" : ""
-        }
+        titleStyles={priceRangeChanged() ? "text-primary" : ""}
       >
         <TwowaySlider
           range1={minPrice}
@@ -206,11 +236,7 @@ export function Filter(props: FilterProps) {
       <FilterItem
         title="Rarity"
         class="flex flex-col w-full my-2"
-        titleStyles={
-          filterRarityMin() > 1 || filterRarityMax() < 5000
-            ? "text-primary"
-            : ""
-        }
+        titleStyles={rarityRangeChanged() ? "text-primary" : ""}
       >
         <div class="flex flex-row gap-3 justify-center">
           <button
@@ -259,9 +285,30 @@ export function Filter(props: FilterProps) {
         </div>
       </FilterItem>
       <div class="border-t-2 border-border flex flex-col w-full h-full">
-        <span class="text-offwhite font-bold text-base text-start px-3">
-          Attributes
-        </span>
+        <div class="inline-flex justify-between w-full px-3">
+          <span class="text-offwhite font-bold text-base text-start ">
+            Attributes
+          </span>
+          <Show when={filterChanged()}>
+            <button
+              type="button"
+              class="text-primary bg-transparent font-normal text-base"
+              onClick={() => {
+                props.storeSetter((l) =>
+                  Object.keys(l).reduce(
+                    (acc: Record<string, string[]>, curr) => {
+                      acc[curr] = [];
+                      return acc;
+                    },
+                    {}
+                  )
+                );
+              }}
+            >
+              Reset
+            </button>
+          </Show>
+        </div>
         <div class="flex flex-col h-full w-full">
           <div class="flex flex-row w-full border-b-2 border-border items-center justify-between px-3 py-1">
             <div class="flex flex-[3_3_1] text-base font-normal">Type</div>
@@ -269,20 +316,22 @@ export function Filter(props: FilterProps) {
               Rarity
             </div>
           </div>
-          <div class="h-[calc(100%-34px)] pb-20 overflow-y-scroll overflow-x-hidden">
+          <div class="h-[calc(100%-34px)] pb-20 overflow-x-hidden">
             <For each={Object.entries(props.collection.allProperties)}>
               {(item, idx) => {
                 return (
                   <FilterItem
                     title={item[0]}
                     class="w-full h-258px overflow-y-scroll overflow-x-hidden"
-                    triggerStyles={cn(
-                      idx() === 0 && "pt-0",
-                      props.filterStore[item[0]].length > 0 && "text-primary"
-                    )}
+                    triggerStyles={idx() === 0 ? "pt-0" : ""}
+                    titleStyles={
+                      props.filterStore[item[0]].length > 0
+                        ? "text-primary"
+                        : ""
+                    }
                   >
-                    <div class="button-default lt-smm:ml-0 gap-0 text-sm font-normal mx-3">
-                      <Search class="rounded-full" />
+                    <div class="button-default lt-smm:ml-0 gap-0 text-sm font-normal mx-3 h-1.8rem mt-1">
+                      <Search class="rounded-full text-primary" />
                       <input
                         class="text-offwhite w-full min-w-0 bg-transparent text-base font-light focus:outline-none "
                         placeholder="Search"
@@ -296,8 +345,9 @@ export function Filter(props: FilterProps) {
                     <div class="w-full flex flex-col px-3">
                       <For each={Object.entries(item[1])}>
                         {([key, val], idx_) => (
-                          <div class="flex flex-row justify-between items-center ">
-                            <div class="inline-flex text-base font-normal items-center">
+                          <div class="flex flex-row justify-between items-center px-3">
+                            <div class="inline-flex text-base font-normal items-center space-x-2">
+                              {/* TODO: figure out a way to make this input a comb of input and label */}
                               <input
                                 type="checkbox"
                                 checked={props.filterStore[item[0]].includes(
