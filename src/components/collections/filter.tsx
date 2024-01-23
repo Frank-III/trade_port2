@@ -9,12 +9,7 @@ import {
 } from "solid-js";
 import { createStore, type SetStoreFunction } from "solid-js/store";
 import { cn } from "~/utils/cn";
-import { trpc } from "~/utils/trpc";
 import {
-  filterSearch,
-  setFilterListed,
-  setFilterSearch,
-  filterListed,
   minPrice,
   setMinPrice,
   maxPrice,
@@ -27,16 +22,16 @@ import {
   setFilterRarityMax,
 } from "~/components/collections/signals";
 import { PocketKnife, Search, Tags } from "lucide-solid";
-import { CollectionWithProperties } from "~/libs/fake_data";
+import { type CollectionWithProperties } from "~/libs/fake_data";
 
-const TwowaySlider = (props: {
+export function TwowaySlider(props: {
   title?: string;
   range1: Accessor<number>;
   range2: Accessor<number>;
   range1Setter: Setter<number>;
   range2Setter: Setter<number>;
   maxRange: number;
-}) => {
+}) {
   const thumbStyle =
     "block h-16px top--4px w-16px rounded-full bg-background hover:shadow focus:(shadow outline-none) items-center border-2 border-border focus:(border-primary h-18px w-18px) transition-transform";
   const range1_per = () => (props.range1() / props.maxRange) * 100;
@@ -44,7 +39,10 @@ const TwowaySlider = (props: {
   return (
     <Slider.Root
       class="select-none relative flex flex-col items-center touch-none px-5 w-full h-10px mt-3 mb-2"
-      value={[range1_per(), range2_per()]}
+      value={[
+        (props.range1() / props.maxRange) * 100,
+        (props.range2() / props.maxRange) * 100,
+      ]}
       onChange={(vs) => {
         props.range1Setter((vs[0] * props.maxRange) / 100);
         props.range2Setter((vs[1] * props.maxRange) / 100);
@@ -64,7 +62,7 @@ const TwowaySlider = (props: {
       </Slider.Track>
     </Slider.Root>
   );
-};
+}
 
 // TODO: figure this out: Should I make it a Record<string, {search:"", selected:[]}> or keep it this way?
 type filterStore = Record<string, Array<string>>;
@@ -78,6 +76,7 @@ interface FilterItemProps extends ComponentProps<"div"> {
   title: string;
   children: JSX.Element;
   triggerStyles?: string;
+  titleStyles?: string;
 }
 
 const triggerIcon = "i-octicon-chevron-down-16 [&[data-expanded]]:rotate-180";
@@ -93,18 +92,12 @@ function FilterItem(props: FilterItemProps) {
       <Collapsible.Trigger
         class={cn(
           buttonStyle,
-          "inline-flex items-center justify-between",
+          "inline-flex items-center justify-between h-full",
           props.triggerStyles
         )}
       >
-        <span
-          class={
-            cn()
-            // (minPrice() !== 0 || maxPrice() !== 10000) && "text-primary",
-          }
-        >
-          {props.title}
-        </span>
+        <span class={props.titleStyles}>{props.title}</span>
+        {/* TODO: fix this using normal css*/}
         <div class={triggerIcon} />
       </Collapsible.Trigger>
       <Collapsible.Content class={props.class}>
@@ -120,9 +113,11 @@ export function Filter(props: FilterProps) {
   );
 
   return (
-    <div class=" border-border pb-40px border-base-font-receding-color relative flex w-[281px] flex-col rounded-lg rounded-r-none border border-border h-[cal(100%-190px)] overflow-auto overflow-x-hidden overflow-y-auto">
-      <div class="flex flex-col justify-between px-3 text-offwhite text-base">
-        Status
+    <div class="pb-40px relative flex w-[281px] flex-col rounded-lg rounded-r-none border border-border h-[cal(100%-190px)] overflow-auto overflow-x-hidden overflow-y-auto">
+      <div class="flex flex-col justify-between  ">
+        <div class="inline-flex px-3 w-full justify-between text-offwhite text-base">
+          Status
+        </div>
         <div class="flex flex-row p-1">
           <button
             type="button"
@@ -175,7 +170,13 @@ export function Filter(props: FilterProps) {
           </button>
         </div>
       </div>
-      <FilterItem title="Price" class="flex flex-col w-full">
+      <FilterItem
+        title="Price"
+        class="flex flex-col w-full"
+        titleStyles={
+          minPrice() !== 0 || maxPrice() !== 10000 ? "text-primary" : ""
+        }
+      >
         <TwowaySlider
           range1={minPrice}
           range2={maxPrice}
@@ -202,7 +203,15 @@ export function Filter(props: FilterProps) {
           </div>
         </div>
       </FilterItem>
-      <FilterItem title="Rarity" class="flex flex-col w-full">
+      <FilterItem
+        title="Rarity"
+        class="flex flex-col w-full my-2"
+        titleStyles={
+          filterRarityMin() > 1 || filterRarityMax() < 5000
+            ? "text-primary"
+            : ""
+        }
+      >
         <div class="flex flex-row gap-3 justify-center">
           <button
             type="button"
@@ -235,21 +244,21 @@ export function Filter(props: FilterProps) {
             <span>Min</span>
             <input
               class="button-default h-[30px] w-[70px]"
-              value={minPrice()}
-              onChange={(e) => setMinPrice(Number(e.target.value))}
+              value={filterRarityMin()}
+              onChange={(e) => setFilterRarityMin(Number(e.target.value))}
             />
           </div>
           <div class="inline-flex space-x-2 text-base font-normal">
             <span>Max</span>
             <input
               class="button-default h-[30px] w-[70px]"
-              value={maxPrice()}
-              onChange={(e) => setMaxPrice(Number(e.target.value))}
+              value={filterRarityMax()}
+              onChange={(e) => setFilterRarityMax(Number(e.target.value))}
             />
           </div>
         </div>
       </FilterItem>
-      <div class="border-t-2 border-border flex flex-col flex-w-full">
+      <div class="border-t-2 border-border flex flex-col w-full h-full">
         <span class="text-offwhite font-bold text-base text-start px-3">
           Attributes
         </span>
@@ -260,7 +269,7 @@ export function Filter(props: FilterProps) {
               Rarity
             </div>
           </div>
-          <div class="h-[calc(100%-32px)] pb-20 overflow-y-scroll overflow-x-hidden">
+          <div class="h-[calc(100%-34px)] pb-20 overflow-y-scroll overflow-x-hidden">
             <For each={Object.entries(props.collection.allProperties)}>
               {(item, idx) => {
                 return (
@@ -272,7 +281,7 @@ export function Filter(props: FilterProps) {
                       props.filterStore[item[0]].length > 0 && "text-primary"
                     )}
                   >
-                    <div class="button-default w-full ml-15px lt-smm:ml-0 gap-0 text-sm font-normal ">
+                    <div class="button-default lt-smm:ml-0 gap-0 text-sm font-normal mx-3">
                       <Search class="rounded-full" />
                       <input
                         class="text-offwhite w-full min-w-0 bg-transparent text-base font-light focus:outline-none "
@@ -286,9 +295,9 @@ export function Filter(props: FilterProps) {
                     {/* TODO: Filter Based on the Search Query */}
                     <div class="w-full flex flex-col px-3">
                       <For each={Object.entries(item[1])}>
-                        {([key, val]) => (
+                        {([key, val], idx_) => (
                           <div class="flex flex-row justify-between items-center ">
-                            <div class="inline-flex text-base font-normal">
+                            <div class="inline-flex text-base font-normal items-center">
                               <input
                                 type="checkbox"
                                 checked={props.filterStore[item[0]].includes(

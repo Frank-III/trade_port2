@@ -18,7 +18,7 @@ import {
 } from "~/components/collections/signals";
 import { ChevronLeft } from "lucide-solid";
 
-const name = "Hal";
+const name = "Kyle";
 
 const Next = () => {
   const collectionDetailQuery = trpc.nftRouter.collectionProperties.useQuery(
@@ -61,14 +61,14 @@ const Next = () => {
             <CollectionStats collectionName={name} />
           </div>
           <div class="collection-bottom lt-lg:h-auto flex h-[calc(100vh-180px)] w-full overflow-auto">
-            <div class="collection-filter h-full">
+            <div class="collection-filter">
               <div class="flex flex-row">
                 <Filter
                   filterStore={filter}
                   storeSetter={setFilter}
                   collection={collectionDetailQuery.data!}
                 />
-                <div class="flex border border-1 items-center justify-center">
+                <div class="flex border border-1 items-center justify-center border-border hover:bg-[#271C10]">
                   <ChevronLeft />
                 </div>
               </div>
