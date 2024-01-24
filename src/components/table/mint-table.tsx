@@ -8,6 +8,7 @@ import {
   Suspense,
   Match,
   Switch,
+  onMount,
 } from "solid-js";
 import { trpc } from "~/utils/trpc";
 import { Image } from "@kobalte/core";
@@ -58,14 +59,13 @@ export default function MintTable() {
     }
     setLastScrollY(window.scrollY);
   };
-  createEffect(() => {
+  onMount(() => {
     window.addEventListener("scroll", handleScroll);
-
-    onCleanup(() => {
-      window.removeEventListener("scroll", handleScroll);
-    });
   });
 
+  onCleanup(() => {
+    window.removeEventListener("scroll", handleScroll);
+  });
   //TODO: onMount would set the default data (but maybe do it with suspense?)
 
   return (

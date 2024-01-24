@@ -1,3 +1,4 @@
+
 .collapse-trigger[data-expanded] .collapse-icon {
   transform: rotateZ(180deg);
 }

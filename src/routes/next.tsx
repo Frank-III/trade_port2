@@ -18,7 +18,7 @@ import {
 } from "~/components/collections/signals";
 import { ChevronLeft } from "lucide-solid";
 
-const name = "Lacy";
+const name = "Rick";
 
 const Next = () => {
   const collectionDetailQuery = trpc.nftRouter.collectionProperties.useQuery(
@@ -44,18 +44,18 @@ const Next = () => {
   });
 
   // TODO: should I query this here or in the collectionItems component?
-  const collectionItemsQuery = trpc.nftRouter.collectionItems.useInfiniteQuery(
-    () => ({
-      collection: name,
-      filters: filter,
-      minPrice: minPrice(),
-      maxPrice: maxPrice(),
-      minRarity: filterRarityMin(),
-      maxRarity: filterRarityMax(),
-      listed: status(),
-      marketPlace: marketPlace(),
-    })
-  );
+  // const collectionItemsQuery = trpc.nftRouter.collectionItems.useInfiniteQuery(
+  //   () => ({
+  //     collection: name,
+  //     filters: filter,
+  //     minPrice: minPrice(),
+  //     maxPrice: maxPrice(),
+  //     minRarity: filterRarityMin(),
+  //     maxRarity: filterRarityMax(),
+  //     listed: status(),
+  //     marketPlace: marketPlace(),
+  //   })
+  // );
 
   return (
     <main>

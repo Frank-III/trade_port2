@@ -9,6 +9,7 @@ import {
   Match,
   Switch,
   type ComponentProps,
+  onMount,
 } from "solid-js";
 import { trpc } from "~/utils/trpc";
 import { Image, Skeleton } from "@kobalte/core";
@@ -63,14 +64,13 @@ export default function TrendTable2() {
     }
     setLastScrollY(window.scrollY);
   };
-  createEffect(() => {
+  onMount(() => {
     window.addEventListener("scroll", handleScroll);
-
-    onCleanup(() => {
-      window.removeEventListener("scroll", handleScroll);
-    });
   });
 
+  onCleanup(() => {
+    window.removeEventListener("scroll", handleScroll);
+  });
   //TODO: onMount would set the default data (but maybe do it with suspense?)
 
   return (
