@@ -110,17 +110,33 @@ export const nftRouter = router({
 			} = input;
 
 			const filteredItems = collectionItems.filter(
-				(item) =>
-					item.collectionName === collection &&
-					item.lastBid > minPrice &&
-					item.lastBid < maxPrice,
+				(item) => item.collectionName === collection,
+				//&& item.lastBid > minPrice &&
+				// item.lastBid < maxPrice,
 			);
 
 			//TODO: figure this out
-			// const filteredItemsWithFilters = Object.entries(filters).reduce((items, [filter, values]) =>
-			// 	items.filter((item) => values.includes(item.properties[filter]))
-			// , filteredItems);
+			const filteredItemsWithFilters = Object.entries(filters)
+				.reduce((items, [filter, values]) => {
+					if (values.length === 0) return items;
+					return items.filter((item) => {
+						const val = item.properties.find((p) => p.name === filter)?.value;
+						return val !== undefined && values.includes(val);
+					});
+				}, filteredItems)
+				.slice(cursor ?? 0, cursor ? cursor + limit : limit);
 
-			return 1;
+			const nextCursor = cursor
+				? cursor >= 100 - limit
+					? null
+					: cursor + limit
+				: limit;
+			const prevCursor = cursor ? cursor - limit : null;
+			await new Promise((resolve) => setTimeout(resolve, 1000));
+			return {
+				filteredItemsWithFilters,
+				nextCursor,
+				prevCursor,
+			};
 		}),
 });

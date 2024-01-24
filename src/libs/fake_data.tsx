@@ -119,7 +119,7 @@ export const collectionWithProperties = fakeTrendingData.map((row) => {
     allProperties: collectionProperties,
   };
 });
-
+console.log(collectionWithProperties[0]);
 export type CollectionWithProperties = (typeof collectionWithProperties)[0];
 
 export const collectionItems = collectionWithProperties.flatMap((row) => {
@@ -140,7 +140,7 @@ export const collectionItems = collectionWithProperties.flatMap((row) => {
         }),
       };
     },
-    { count: 30 }
+    { count: 100 }
   );
 });
 
