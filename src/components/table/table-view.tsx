@@ -1,7 +1,7 @@
 import { createSignal, For } from "solid-js";
 import { Tabs } from "@kobalte/core";
 import { useLocation, unstable_clientOnly } from "solid-start";
-import GenericSelect, { TimeSpanMap } from "./generic-select";
+import GenericSelect, { TimeSpanMap } from "../generic-select";
 import { ArrowDownWideNarrow, TimerReset } from "lucide-solid";
 import { CatFilterMap, CurrencyToggleGroup } from "./filter-valmaps";
 // import { cn } from "~/utils/cn";

@@ -18,7 +18,7 @@ import { A } from "solid-start";
 import { currency, catVal, tsVal, ts, setTS, setCat, cat } from "./signals";
 import { CatFilterMap, TimeSpanMap } from "./filter-valmaps";
 import { ArrowDownWideNarrow, TimerReset } from "lucide-solid";
-import GenericSelect from "./generic-select";
+import GenericSelect from "../generic-select";
 
 const CurrencyIcons = {
   // all: "https://cdn.lucide.dev/currency-dollar.svg",
