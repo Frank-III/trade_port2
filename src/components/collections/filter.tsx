@@ -7,6 +7,7 @@ import {
   type Setter,
   Show,
   createMemo,
+  useContext,
 } from "solid-js";
 import { createStore, type SetStoreFunction } from "solid-js/store";
 import { cn } from "~/utils/cn";
@@ -25,6 +26,7 @@ import {
 import { PocketKnife, Search, Tags } from "lucide-solid";
 import { type CollectionWithProperties } from "~/libs/fake_data";
 import "./filter.css";
+import { StoreContext } from "~/routes/next";
 
 export function TwowaySlider(props: {
   title?: string;
@@ -40,7 +42,7 @@ export function TwowaySlider(props: {
   const range2_per = () => (props.range2() / props.maxRange) * 100;
   return (
     <Slider.Root
-      class="select-none relative flex flex-col items-center touch-none px-5 w-full h-10px mt-3 mb-2"
+      class="h-10px relative mb-2 mt-3 flex w-full touch-none select-none flex-col items-center px-5"
       value={[range1_per(), range2_per()]}
       onChange={(vs) => {
         props.range1Setter((vs[0] * props.maxRange) / 100);
@@ -50,8 +52,8 @@ export function TwowaySlider(props: {
       <Show when={props.title}>
         <Slider.Label>{props.title}</Slider.Label>
       </Show>
-      <Slider.Track class="relative rounded-full w-full bg-[#2b2b2b] h-8px">
-        <Slider.Fill class="absolute rounded-full bg-[#414141] h-full" />
+      <Slider.Track class="h-8px relative w-full rounded-full bg-[#2b2b2b]">
+        <Slider.Fill class="absolute h-full rounded-full bg-[#414141]" />
         <Slider.Thumb class={thumbStyle}>
           <Slider.Input />
         </Slider.Thumb>
@@ -64,11 +66,7 @@ export function TwowaySlider(props: {
 }
 
 // TODO: figure this out: Should I make it a Record<string, {search:"", selected:[]}> or keep it this way?
-type filterStore = Record<string, Array<string>>;
-
 interface FilterProps {
-  filterStore: filterStore;
-  storeSetter: SetStoreFunction<filterStore>;
   collection: CollectionWithProperties;
 }
 interface FilterItemProps extends ComponentProps<"div"> {
@@ -92,7 +90,7 @@ function FilterItem(props: FilterItemProps) {
         class={cn(
           buttonStyle,
           "collapse-trigger inline-flex items-center justify-between",
-          props.triggerStyles
+          props.triggerStyles,
         )}
       >
         <span class={`text-offwhite ${props.titleStyles}`}>{props.title}</span>
@@ -107,28 +105,27 @@ function FilterItem(props: FilterItemProps) {
 }
 
 export function Filter(props: FilterProps) {
+  const { filter, filterSetter } = useContext(StoreContext);
+
   const [searchStore, setSearchStore] = createStore<string[]>(
-    Object.keys(props.collection.allProperties).map((_) => "")
+    Object.keys(props.collection.allProperties).map((_) => ""),
   );
 
   const priceRangeChanged = createMemo(
-    () => minPrice() !== 0 || maxPrice() !== 10000
+    () => minPrice() !== 0 || maxPrice() !== 10000,
   );
   const rarityRangeChanged = createMemo(
-    () => filterRarityMin() > 1 || filterRarityMax() < 5000
+    () => filterRarityMin() > 1 || filterRarityMax() < 5000,
   );
   const statusChanged = createMemo(() => status() !== "all");
   const filterChanged = createMemo(() =>
-    Object.values(props.filterStore).reduce(
-      (acc, curr) => acc || curr.length > 0,
-      false
-    )
+    Object.values(filter).reduce((acc, curr) => acc || curr.length > 0, false),
   );
 
   return (
-    <div class="pb-40px relative flex w-[281px] flex-col rounded-lg rounded-r-none border border-border h-[cal(100%-190px)] overflow-auto overflow-x-hidden overflow-y-auto">
-      <div class="flex flex-col justify-between w-full">
-        <div class="inline-flex px-3 w-full justify-between text-offwhite text-base">
+    <div class="pb-40px border-border relative flex h-[cal(100%-190px)] w-[281px] flex-col overflow-auto overflow-y-auto overflow-x-hidden rounded-lg rounded-r-none border">
+      <div class="flex w-full flex-col justify-between">
+        <div class="text-offwhite inline-flex w-full justify-between px-3 text-base">
           Status
           <Show
             when={
@@ -170,7 +167,7 @@ export function Filter(props: FilterProps) {
             <Tags
               class={cn(
                 "icon-default ",
-                (status() === "listed" || status() === "all") && "text-primary"
+                (status() === "listed" || status() === "all") && "text-primary",
               )}
             />
             <span class="text-offwhite">Listed</span>
@@ -195,7 +192,7 @@ export function Filter(props: FilterProps) {
               class={cn(
                 "icon-default ",
                 (status() === "unlisted" || status() === "all") &&
-                  "text-primary"
+                  "text-primary",
               )}
             />
             <span class="text-offwhite">Unlisted</span>
@@ -204,7 +201,7 @@ export function Filter(props: FilterProps) {
       </div>
       <FilterItem
         title="Price"
-        class="flex flex-col w-full"
+        class="flex w-full flex-col"
         titleStyles={priceRangeChanged() ? "text-primary" : ""}
       >
         <TwowaySlider
@@ -235,10 +232,10 @@ export function Filter(props: FilterProps) {
       </FilterItem>
       <FilterItem
         title="Rarity"
-        class="flex flex-col w-full my-2"
+        class="my-2 flex w-full flex-col"
         titleStyles={rarityRangeChanged() ? "text-primary" : ""}
       >
-        <div class="flex flex-row gap-3 justify-center">
+        <div class="flex flex-row justify-center gap-3">
           <button
             type="button"
             class="button-default text-primary text-base font-normal"
@@ -284,24 +281,24 @@ export function Filter(props: FilterProps) {
           </div>
         </div>
       </FilterItem>
-      <div class="border-t-2 border-border flex flex-col w-full h-full">
-        <div class="inline-flex justify-between w-full px-3">
-          <span class="text-offwhite font-bold text-base text-start ">
+      <div class="border-border flex h-full w-full flex-col border-t-2">
+        <div class="inline-flex w-full justify-between px-3">
+          <span class="text-offwhite text-start text-base font-bold ">
             Attributes
           </span>
           <Show when={filterChanged()}>
             <button
               type="button"
-              class="text-primary bg-transparent font-normal text-base"
+              class="text-primary bg-transparent text-base font-normal"
               onClick={() => {
-                props.storeSetter((l) =>
+                filterSetter((l) =>
                   Object.keys(l).reduce(
                     (acc: Record<string, string[]>, curr) => {
                       acc[curr] = [];
                       return acc;
                     },
-                    {}
-                  )
+                    {},
+                  ),
                 );
               }}
             >
@@ -309,29 +306,27 @@ export function Filter(props: FilterProps) {
             </button>
           </Show>
         </div>
-        <div class="flex flex-col h-full w-full">
-          <div class="flex flex-row w-full border-b-2 border-border items-center justify-between px-3 py-1">
+        <div class="flex h-full w-full flex-col">
+          <div class="border-border flex w-full flex-row items-center justify-between border-b-2 px-3 py-1">
             <div class="flex flex-[3_3_1] text-base font-normal">Type</div>
             <div class="flex flex-[1_1_0] justify-end text-base font-normal">
               Rarity
             </div>
           </div>
-          <div class="h-[calc(100%-34px)] pb-20 overflow-x-hidden">
+          <div class="h-[calc(100%-34px)] overflow-x-hidden pb-20">
             <For each={Object.entries(props.collection.allProperties)}>
               {(item, idx) => {
                 return (
                   <FilterItem
                     title={item[0]}
-                    class="w-full h-258px overflow-y-scroll overflow-x-hidden"
+                    class="h-258px w-full overflow-x-hidden overflow-y-scroll"
                     triggerStyles={idx() === 0 ? "pt-0" : ""}
                     titleStyles={
-                      props.filterStore[item[0]].length > 0
-                        ? "text-primary"
-                        : ""
+                      filter[item[0]].length > 0 ? "text-primary" : ""
                     }
                   >
-                    <div class="button-default lt-smm:ml-0 gap-0 text-sm font-normal mx-3 h-1.8rem mt-1">
-                      <Search class="rounded-full text-primary" />
+                    <div class="button-default lt-smm:ml-0 h-1.8rem mx-3 mt-1 gap-0 text-sm font-normal">
+                      <Search class="text-primary rounded-full" />
                       <input
                         class="text-offwhite w-full min-w-0 bg-transparent text-base font-light focus:outline-none "
                         placeholder="Search"
@@ -342,36 +337,31 @@ export function Filter(props: FilterProps) {
                       />
                     </div>
                     {/* TODO: Filter Based on the Search Query */}
-                    <div class="w-full flex flex-col px-3">
+                    <div class="flex w-full flex-col px-3">
                       <For each={Object.entries(item[1])}>
                         {([key, val], idx_) => (
-                          <div class="flex flex-row justify-between items-center px-3">
-                            <div class="inline-flex text-base font-normal items-center space-x-2">
+                          <div class="flex flex-row items-center justify-between px-3">
+                            <div class="inline-flex items-center space-x-2 text-base font-normal">
                               {/* TODO: figure out a way to make this input a comb of input and label */}
                               <input
                                 type="checkbox"
-                                checked={props.filterStore[item[0]].includes(
-                                  key
-                                )}
+                                checked={filter[item[0]].includes(key)}
                                 onClick={(e) => {
                                   // console.log(props.filterStore);
                                   if (e.currentTarget.checked) {
-                                    props.storeSetter(item[0], (l) => [
-                                      ...l,
-                                      key,
-                                    ]);
+                                    filterSetter(item[0], (l) => [...l, key]);
                                   } else {
-                                    props.storeSetter(item[0], (l) =>
-                                      l.filter((i) => i !== key)
+                                    filterSetter(item[0], (l) =>
+                                      l.filter((i) => i !== key),
                                     );
                                   }
                                 }}
                               />
-                              <span class="text-neutral-300 overflow-hidden text-ellipsis whitespace-nowrap text-base font-normal">
+                              <span class="overflow-hidden text-ellipsis whitespace-nowrap text-base font-normal text-neutral-300">
                                 {key}
                               </span>
                             </div>
-                            <span class="text-neutral-300 text-base font-normal">
+                            <span class="text-base font-normal text-neutral-300">
                               {val}
                             </span>
                           </div>

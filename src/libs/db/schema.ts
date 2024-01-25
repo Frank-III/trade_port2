@@ -44,7 +44,7 @@ export const attributeKinds = sqliteTable(
 			.references(() => collectionAttributes.id),
 		name: text("name").notNull(),
 		//statisic
-		// value: integer("value").notNull(),
+		value: integer("value").notNull(),
 
 		// Foreign key relation is handled at application level
 	},
