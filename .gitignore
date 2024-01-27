@@ -24,3 +24,12 @@ Thumbs.db
 
 .env
 pnpm-lock.yaml
+
+
+# database
+sqlite.db
+
+collectionItems.json
+collectionWithProperties.json
+minting.json
+trending.json
