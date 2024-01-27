@@ -109,14 +109,14 @@ export const nftRouter = router({
 				cursor,
 			} = input;
 
-			const filteredItems = collectionItems.filter(
+			let filteredItems = collectionItems.filter(
 				(item) => item.collectionName === collection,
 				//&& item.lastBid > minPrice &&
 				// item.lastBid < maxPrice,
 			);
 
 			//TODO: figure this out
-			const filteredItemsWithFilters = Object.entries(filters)
+			filteredItems = Object.entries(filters)
 				.reduce((items, [filter, values]) => {
 					if (values.length === 0) return items;
 					return items.filter((item) => {
@@ -134,7 +134,7 @@ export const nftRouter = router({
 			const prevCursor = cursor ? cursor - limit : null;
 			await new Promise((resolve) => setTimeout(resolve, 1000));
 			return {
-				filteredItemsWithFilters,
+				filteredItems,
 				nextCursor,
 				prevCursor,
 			};

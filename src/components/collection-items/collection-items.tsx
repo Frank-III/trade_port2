@@ -1,4 +1,4 @@
-import { For, Match, Suspense, Switch, useContext } from "solid-js";
+import { For, Match, Show, Suspense, Switch, useContext } from "solid-js";
 import { viewStyle } from "./signals";
 import { trpc } from "~/utils/trpc";
 import {
@@ -17,7 +17,6 @@ function CollectionItemView(props: { item: CollectionItem }) {
     <Switch>
       <Match when={viewStyle() === "list"}>list</Match>
       <Match when={viewStyle() === "grid_sm"}>grid_sm</Match>
-
       <Match when={viewStyle() === "grid_lg"}>grid_lg</Match>
     </Switch>
   );
@@ -48,15 +47,16 @@ export function CollectionItemsView() {
   return (
     <div class="flex flex-col">
       <Suspense fallback={<div>loading</div>}>
-        <For each={query!.data.page}>
-          {(page) => (
-            <div>
+        <div>
+          <Show when={viewStyle() === "list"}></Show>
+          <For each={query!.data.page}>
+            {(page) => (
               <For each={page.items}>
                 {(item: CollectionItem) => <CollectionItemView item={item} />}
               </For>
-            </div>
-          )}
-        </For>
+            )}
+          </For>
+        </div>
       </Suspense>
     </div>
   );
