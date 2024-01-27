@@ -1,5 +1,3 @@
-import { Suspense, createContext, createEffect } from "solid-js";
-import { SetStoreFunction, createStore } from "solid-js/store";
 import { useParams } from "solid-start";
 import {
   CollectionDetail,
@@ -10,6 +8,8 @@ import Nav from "~/components/nav";
 import { trpc } from "~/utils/trpc";
 import { ChevronLeft } from "lucide-solid";
 import { CollectionItemsTabView } from "~/components/collection-items/colllection-items-view";
+import { createStore, SetStoreFunction } from "solid-js/store";
+import { createContext, createEffect, Suspense } from "solid-js";
 
 const name = "April";
 
@@ -31,6 +31,7 @@ const Next = () => {
     }),
   );
 
+  // wait for the query to be ready to create the store: how
   const [filter, setFilter] = createStore(
     Object.keys(collectionDetailQuery.data?.allProperties).reduce(
       (acc: Record<string, Array<string>>, key) => {
@@ -41,24 +42,22 @@ const Next = () => {
     ),
   );
 
-  createEffect(() => {
-    filter;
-    console.log(filter);
-  });
-
-  // TODO: should I query this here or in the collectionItems component?
-  // const collectionItemsQuery = trpc.nftRouter.collectionItems.useInfiniteQuery(
-  //   () => ({
-  //     collection: name,
-  //     filters: filter,
-  //     minPrice: minPrice(),
-  //     maxPrice: maxPrice(),
-  //     minRarity: filterRarityMin(),
-  //     maxRarity: filterRarityMax(),
-  //     listed: status(),
-  //     marketPlace: marketPlace(),
-  //   })
-  // );
+  // let filter: Record<string, Array<string>>;
+  // let setFilter: SetStoreFunction<Record<string, Array<string>>>;
+  // createEffect(() => {
+  //   if (collectionDetailQuery.data) {
+  //     console.log(collectionDetailQuery.data[0]);
+  //     [(filter, setFilter)] = createStore(
+  //       Object.keys(collectionDetailQuery.data?.allProperties).reduce(
+  //         (acc: Record<string, Array<string>>, key) => {
+  //           acc[key] = [];
+  //           return acc;
+  //         },
+  //         {},
+  //       ),
+  //     );
+  //   }
+  // });
 
   return (
     <main>
@@ -69,23 +68,25 @@ const Next = () => {
             <CollectionDetail collectionName={name} />
             <CollectionStats collectionName={name} />
           </div>
-          <StoreContext.Provider value={{ filter, filterSetter: setFilter }}>
-            <div class="collection-bottom lt-lg:h-auto flex h-[calc(100vh-180px)] w-full overflow-auto">
-              <div class="collection-filter">
-                <div class="flex flex-row">
-                  <Filter collection={collectionDetailQuery.data!} />
-                  <div class="border-1 border-border flex items-center justify-center border hover:bg-[#271C10]">
-                    <ChevronLeft />
+          <Suspense fallback={<div>Loading...</div>}>
+            <StoreContext.Provider value={{ filter, filterSetter: setFilter }}>
+              <div class="collection-bottom lt-lg:h-auto flex h-[calc(100vh-180px)] w-full overflow-auto">
+                <div class="collection-filter">
+                  <div class="flex flex-row">
+                    <Filter collection={collectionDetailQuery.data!} />
+                    <div class="border-1 border-border flex items-center justify-center border hover:bg-[#271C10]">
+                      <ChevronLeft />
+                    </div>
                   </div>
                 </div>
+                <div class="collection-items-and-chart flex flex-grow flex-col ">
+                  <div class="collection-items border-border border-t"></div>
+                  <CollectionItemsTabView />
+                </div>
+                <div class="activities border-border lt-lg:hidden h-[cal(40vh-87px)] overflow-hidden border-y"></div>
               </div>
-              <div class="collection-items-and-chart flex flex-grow flex-col ">
-                <div class="collection-items border-border border-t"></div>
-                <CollectionItemsTabView />
-              </div>
-              <div class="activities border-border lt-lg:hidden h-[cal(40vh-87px)] overflow-hidden border-y"></div>
-            </div>
-          </StoreContext.Provider>
+            </StoreContext.Provider>
+          </Suspense>
         </div>
       </div>
     </main>

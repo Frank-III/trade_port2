@@ -54,7 +54,7 @@ function ViewSelector() {
   );
 }
 
-export function CollectionItemsTabView(props: {}) {
+export function CollectionItemsTabView() {
   // const { filter, filterSetter } = useContext(StoreContext);
   const [tab, setTab] = createSignal<string>();
 
@@ -112,7 +112,7 @@ export function CollectionItemsTabView(props: {}) {
         </div>
       </div>
       <Tabs.Content class="" value="items">
-        <CollectionItemsView />
+        {/* <CollectionItemsView /> */}
       </Tabs.Content>
       <Tabs.Content class="" value="bids">
         bids

@@ -167,3 +167,17 @@ export const itemRelationShip = relations(items, ({ one, many }) => ({
   }),
   itemAttributes: many(itemAttributes),
 }));
+
+export const itemAttributeRelationShip = relations(
+  itemAttributes,
+  ({ one }) => ({
+    item: one(items, {
+      fields: [itemAttributes.item_id],
+      references: [items.id],
+    }),
+    kind: one(attributeKinds, {
+      fields: [itemAttributes.kind_id],
+      references: [attributeKinds.id],
+    }),
+  }),
+);
