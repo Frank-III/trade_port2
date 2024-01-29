@@ -6,7 +6,6 @@
     "build": "solid-start build",
     "lint": "eslint --fix \"**/*.{ts,tsx,js,jsx}\"",
     "generate": "drizzle-kit generate:better-sqlite"
-
   },
   "type": "module",
   "devDependencies": {
@@ -44,6 +43,7 @@
     "chart.js": "^4.4.1",
     "clsx": "^2.0.0",
     "drizzle-orm": "^0.29.3",
+    "lodash": "^4.17.21",
     "lucide-solid": "^0.299.0",
     "solid-js": "^1.8.3",
     "solid-start": "0.3.9",
