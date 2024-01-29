@@ -1,10 +1,12 @@
 import { Image, Skeleton } from "@kobalte/core";
 import { For } from "solid-js";
 
-export function GenericRowSkeleton<T>(props: {
+export function GenericRowSkeleton<T extends Record<string, unknown>>(props: {
   exampleRow: T;
   limits: number;
 }) {
+  const rowLength = Object.entries(props.exampleRow).length;
+
   return (
     <For each={Array.from({ length: props.limits }, (_, i) => i)}>
       {(item, idx) => (

@@ -9,10 +9,11 @@ import {
   filterRarityMax,
   marketPlace,
 } from "~/components/collections/signals";
-import { type CollectionItem } from "~/libs/fake_data";
+import { type CollectionItemWithProperties } from "~/server/trpc/router/_app";
 import { StoreContext } from "~/routes/next";
+import { CollectionItemListHeader, ItemsListSkeleton } from "./list-view";
 
-function CollectionItemView(props: { item: CollectionItem }) {
+function CollectionItemView(props: { item: CollectionItemWithProperties }) {
   return (
     <Switch>
       <Match when={viewStyle() === "list"}>list</Match>
@@ -22,14 +23,22 @@ function CollectionItemView(props: { item: CollectionItem }) {
   );
 }
 
-const name = "April";
+const ItemsSkeleton = (props: { limits: number }) => (
+  <Switch>
+    <Match when={viewStyle() === "list"}>
+      <ItemsListSkeleton limits={props.limits} />
+    </Match>
+  </Switch>
+);
+
+const id = 1;
 
 export function CollectionItemsView() {
-  const { filter, filterSetter } = useContext(StoreContext);
+  const { filter } = useContext(StoreContext);
 
-  const query = trpc.nftRouter.collectionItems.useInfiniteQuery(
+  const query = trpc.nftRouter2.collectionItems.useInfiniteQuery(
     () => ({
-      collection: name,
+      collection: id,
       filters: filter,
       minPrice: minPrice(),
       maxPrice: maxPrice(),
@@ -44,20 +53,32 @@ export function CollectionItemsView() {
       getPreviousPageParam: (firstPage) => firstPage.prevCursor,
     }),
   );
+
   return (
     <div class="flex flex-col">
-      <Suspense fallback={<div>loading</div>}>
-        <div>
-          <Show when={viewStyle() === "list"}></Show>
-          <For each={query!.data.page}>
-            {(page) => (
-              <For each={page.items}>
-                {(item: CollectionItem) => <CollectionItemView item={item} />}
+      <div>
+        <Suspense fallback={<ItemsSkeleton limits={10} />}>
+          <Show when={viewStyle() === "list"}>
+            <CollectionItemListHeader />
+          </Show>
+          <Switch>
+            <Match when={query.data}>
+              <For each={query.data?.pages} fallback={<div>loading1</div>}>
+                {(page) => (
+                  <For each={page.items} fallback={<div>loading2</div>}>
+                    {(item: CollectionItemWithProperties) => (
+                      <CollectionItemView item={item} />
+                    )}
+                  </For>
+                )}
               </For>
-            )}
-          </For>
-        </div>
-      </Suspense>
+            </Match>
+            <Match when={query.isFetchingNextPage}>
+              <CollectionItemSkeleton limits={10} />
+            </Match>
+          </Switch>
+        </Suspense>
+      </div>
     </div>
   );
 }

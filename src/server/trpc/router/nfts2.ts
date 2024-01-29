@@ -1,14 +1,9 @@
 import { z } from "zod";
 import { procedure, router } from "../utils";
-import {
-  collectionItems,
-  collectionWithProperties,
-  fakeMintingData,
-  fakeTrendingData,
-} from "~/libs/fake_data";
 import { db } from "~/libs/db";
-import { and, count, eq, exists, inArray } from "drizzle-orm";
+import { and, count, eq, exists, inArray, sql } from "drizzle-orm";
 import {
+  collections as collectionsTable,
   trending as trendingTable,
   items as itemsTable,
   itemAttributes as itemAttributesTable,
@@ -31,7 +26,7 @@ const infiniteQueryInput = z.object({
 
 const infiniteItemsInput = z.object({
   collection: z.number(),
-  filters: z.record(z.array(z.string())).optional().default({}),
+  filters: z.record(z.array(z.number())).optional().default({}),
   minPrice: z.number().optional().default(0),
   maxPrice: z.number().optional().default(10000),
   minRarity: z.number().optional().default(1),
@@ -42,7 +37,7 @@ const infiniteItemsInput = z.object({
   cursor: z.number().nullish(),
 });
 
-export const nftRouter = router({
+export const nftRouter2 = router({
   trending: procedure.input(infiniteQueryInput).query(async ({ input }) => {
     const { kind, limit, cursor } = input;
 
@@ -58,7 +53,7 @@ export const nftRouter = router({
           ? (trending, { eq }) => eq(trending.kind, kind)
           : undefined,
       with: {
-        collections: true,
+        collection: true,
       },
       limit: limit,
       offset: cursor ?? 0,
@@ -88,7 +83,7 @@ export const nftRouter = router({
           ? (minting, { eq }) => eq(minting.kind, kind)
           : undefined,
       with: {
-        collections: true,
+        collection: true,
       },
       limit: limit,
       offset: cursor ?? 0,
@@ -110,16 +105,15 @@ export const nftRouter = router({
   collectionDetail: procedure
     .input(queryOneCollectionInput)
     .query(async ({ input }) => {
-      return fakeTrendingData.find(
-        (item) => item.collection.name === input.name,
-      );
+      return 1;
     }),
   // As it should be fetched when navigate to collection detail page, with param as the id
   collectionProperties: procedure
     .input(queryOneCollectionInput)
     .query(async ({ input }) => {
+      const { id } = input;
       const collectionWithProperties = await db.query.collections.findFirst({
-        where: (collection, { eq }) => eq(collection.id, input.id),
+        where: (collections, { eq }) => eq(collections.id, id),
         with: {
           attributes: {
             with: {
@@ -159,6 +153,8 @@ export const nftRouter = router({
       //     itemAttributes: {
       //       with: {
       //         kind: {
+      //           // is it possible
+      //           where: (kind, { eq }) =>
       //           with: {
       //             attribute: true,
       //           },
@@ -167,29 +163,16 @@ export const nftRouter = router({
       //     },
       //   },
       // });
+      //
+      //
+      // get collection attributs
 
       const noEmptyFilter = Object.entries(filters).filter(
         ([_, value]) => value.length > 0,
       );
-
-      // TODO: fix this line, then we should be good to go
-      const filteredItems = await db
-        .select()
-        .from(itemsTable)
-        .innerJoin(
-          itemAttributesTable,
-          eq(itemsTable.id, itemAttributesTable.item_id),
-        )
-        .innerJoin(
-          attributeKindsTable,
-          eq(itemAttributesTable.kind_id, attributeKindsTable.id),
-        )
-        .where(
-          and(
-            // some other filters
-            //
-            // should map here
-            ...noEmptyFilter.map(([key, value]) =>
+      const x =
+        noEmptyFilter.length > 0
+          ? noEmptyFilter.map(([key, value]) =>
               exists(
                 db
                   .select()
@@ -208,14 +191,55 @@ export const nftRouter = router({
                   .where(
                     and(
                       eq(itemAttributesTable.item_id, itemsTable.id),
-                      eq(collectionAttributesTable.name, key),
-                      inArray(attributeKindsTable.name, value),
+                      eq(collectionAttributesTable.id, Number(key)),
+                      inArray(attributeKindsTable.id, value),
                     ),
                   ),
               ),
-            ),
+            )
+          : [undefined];
+
+      // TODO: fix this line, then we should be good to go
+      const items = await db
+        .select({
+          id: itemsTable.id,
+          name: itemsTable.name,
+          image: itemsTable.image,
+          collectionId: itemsTable.collection_id,
+          price: itemsTable.price,
+          rarity: itemsTable.rarity,
+          topBid: itemsTable.topBid,
+          lastAction: itemsTable.lastAction,
+          tokenId: itemsTable.tokenId,
+          owner: itemsTable.owner,
+          attributes: sql<
+            string[]
+          >`group_concat(${collectionAttributesTable.name})`,
+          kinds: sql<string[]>`group_concat(${attributeKindsTable.name})`,
+        })
+        .from(itemsTable)
+        .innerJoin(
+          itemAttributesTable,
+          eq(itemsTable.id, itemAttributesTable.item_id),
+        )
+        .innerJoin(
+          attributeKindsTable,
+          eq(itemAttributesTable.kind_id, attributeKindsTable.id),
+        )
+        .innerJoin(
+          collectionAttributesTable,
+          eq(attributeKindsTable.attribute_id, collectionAttributesTable.id),
+        )
+        .where(
+          and(
+            // some other filters
+            eq(itemsTable.collection_id, collection),
+            ...x,
           ),
-        );
+        )
+        .groupBy(itemsTable.id)
+        .limit(limit)
+        .offset(cursor ?? 0);
 
       const nextCursor = cursor
         ? cursor >= 10 - limit
@@ -224,7 +248,7 @@ export const nftRouter = router({
         : limit;
       const prevCursor = cursor ? cursor - limit : null;
       return {
-        filteredItems,
+        items,
         nextCursor,
         prevCursor,
       };

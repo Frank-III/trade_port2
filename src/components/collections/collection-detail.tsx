@@ -1,5 +1,5 @@
 import { Image, Tooltip } from "@kobalte/core";
-import { Collection } from "../table/types";
+import { type CollectionWithProperties } from "~/server/trpc/router/_app";
 import { Image as ImageIcon } from "lucide-solid";
 import { Accessor, Setter, Show, Suspense } from "solid-js";
 import { trpc } from "~/utils/trpc";
@@ -8,7 +8,7 @@ import { cn } from "~/utils/cn";
 import "./collection-detail.css";
 
 interface CollectionDetailProps {
-  collectionName: string;
+  collection: CollectionWithProperties;
 }
 
 const VerifiedBadge = () => {
@@ -29,77 +29,66 @@ const VerifiedBadge = () => {
 };
 
 export function CollectionDetail(props: CollectionDetailProps) {
-  const query = trpc.nftRouter.collectionDetail.useQuery(() => ({
-    kind: "solana",
-    name: props.collectionName,
-  }));
-
   return (
-    <Suspense fallback={<div>loading</div>}>
-      <div class="button-default p-10px justify-unset rounded-16px hover:bg-background-body h-auto w-full flex-[415px]">
-        <div class="text-table flex flex-row items-center space-x-3 ">
-          <Image.Root
-            fallbackDelay={300}
-            class="h-60px w-60px lt-smm:(h-50px w-50px)"
-          >
-            <Image.Img
-              class="rounded-md object-fill"
-              src={query.data?.collection.avatar}
-              alt="nft collection avatar"
-            />
-            <Image.Fallback>
-              {query.data?.collection.name.slice(0, 1)}
-            </Image.Fallback>
-          </Image.Root>
-          <div class="ml-10px space-y-5px flex flex-col items-start">
-            <div class="space-x-5px flex flex-row flex-wrap justify-center">
-              <div class="text-offwhite text-lg ">
-                {query.data?.collection.name}
-              </div>
-              <Show when={query.data?.collection.verified}>
-                <VerifiedBadge />
-              </Show>
-              <Show when={query.data?.collection.twitter !== undefined}>
-                <A
-                  class="button-default p-2px h-auto rounded-lg"
-                  href={query.data?.collection.twitter!}
-                >
-                  <div class="i-codicon-twitter text-18px" />
-                  {/* <Twitter size={20} /> */}
-                </A>
-              </Show>
-              <Show when={query.data?.collection.website !== undefined}>
-                <A
-                  class="button-default p-2px h-auto rounded-lg"
-                  href={query.data?.collection.website!}
-                >
-                  <div class="i-codicon-globe text-18px" />
-                  {/* <Globe size={20} /> */}
-                </A>
-              </Show>
+    <div class="button-default p-10px justify-unset rounded-16px hover:bg-background-body h-auto w-full flex-[415px]">
+      <div class="text-table flex flex-row items-center space-x-3 ">
+        <Image.Root
+          fallbackDelay={300}
+          class="h-60px w-60px lt-smm:(h-50px w-50px)"
+        >
+          <Image.Img
+            class="rounded-md object-fill"
+            src={props.collection?.avatar || ""}
+            alt="nft collection avatar"
+          />
+          <Image.Fallback>{props.collection?.name.slice(0, 1)}</Image.Fallback>
+        </Image.Root>
+        <div class="ml-10px space-y-5px flex flex-col items-start">
+          <div class="space-x-5px flex flex-row flex-wrap justify-center">
+            <div class="text-offwhite text-lg ">{props.collection?.name}</div>
+            <Show when={props.collection?.verified}>
+              <VerifiedBadge />
+            </Show>
+            <Show when={props.collection?.twitter !== undefined}>
+              <A
+                class="button-default p-2px h-auto rounded-lg"
+                href={props.collection?.twitter!}
+              >
+                <div class="i-codicon-twitter text-18px" />
+                {/* <Twitter size={20} /> */}
+              </A>
+            </Show>
+            <Show when={props.collection?.website !== undefined}>
+              <A
+                class="button-default p-2px h-auto rounded-lg"
+                href={props.collection?.website!}
+              >
+                <div class="i-codicon-globe text-18px" />
+                {/* <Globe size={20} /> */}
+              </A>
+            </Show>
+          </div>
+          <div class="lt-smm:flex-wrap flex items-center justify-start ">
+            <div class="text-table text-base-font-receding-color">
+              Supply: {props.collection?.supply}
             </div>
-            <div class="lt-smm:flex-wrap flex items-center justify-start ">
-              <div class="text-table text-base-font-receding-color">
-                Supply: {query.data?.collection.supply}
-              </div>
-              <div class="button-default w-200px ml-15px lt-smm:(ml-0 w-full) gap-0 text-sm font-normal ">
-                <ImageIcon class="rounded-full" />
-                <input
-                  class="text-offwhite w-full bg-transparent text-base font-light focus:outline-none flex-grow w-full"
-                  placeholder="Search"
-                />
-                <button
-                  class="button-primary min-h-15px text-primary h-auto border-none p-[3px_8px]"
-                  type="button"
-                >
-                  View
-                </button>
-              </div>
+            <div class="button-default w-200px ml-15px lt-smm:(ml-0 w-full) gap-0 text-sm font-normal ">
+              <ImageIcon class="rounded-full" />
+              <input
+                class="text-offwhite w-full w-full flex-grow bg-transparent text-base font-light focus:outline-none"
+                placeholder="Search"
+              />
+              <button
+                class="button-primary min-h-15px text-primary h-auto border-none p-[3px_8px]"
+                type="button"
+              >
+                View
+              </button>
             </div>
           </div>
         </div>
       </div>
-    </Suspense>
+    </div>
   );
 }
 

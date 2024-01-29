@@ -18,7 +18,7 @@ import { currency, catVal, tsVal, search } from "./signals";
 import { Properties } from "solid-js/web";
 
 export default function SearchTable() {
-  const query = trpc.nftRouter.trending.useInfiniteQuery(
+  const query = trpc.nftRouter2.trending.useInfiniteQuery(
     () => ({
       kind: currency(),
       ts: tsVal(),
@@ -30,7 +30,7 @@ export default function SearchTable() {
       getNextPageParam: (lastPage) => lastPage.nextCursor,
       initialPageParam: () => 0,
       getPreviousPageParam: (firstPage) => firstPage.prevCursor,
-    })
+    }),
   );
   const [lastScrollY, setLastScrollY] = createSignal(window.scrollY);
   let tableHeaderRef: HTMLTableRowElement | undefined;
@@ -75,16 +75,16 @@ export default function SearchTable() {
   return (
     <div class="mx-auto h-full text-nowrap">
       {/* Table Header */}
-      <div class="bg-background h-[32px] flex items-center justify-between border-t-[1px] border-b-[1px] p-[0_0_0_15px] border-border">
-        <div class="flex-[3_1_0%] text-table flex items-center">COLLECTION</div>
-        <div class="flex-[1_1_0%] text-table flex items-center">FLOOR</div>
-        <div class="flex-[1_1_0%] text-table flex items-center">VOLUME</div>
-        <div class="flex-[1_1_0%] text-table flex items-center text-nowrap">
+      <div class="bg-background border-border flex h-[32px] items-center justify-between border-b-[1px] border-t-[1px] p-[0_0_0_15px]">
+        <div class="text-table flex flex-[3_1_0%] items-center">COLLECTION</div>
+        <div class="text-table flex flex-[1_1_0%] items-center">FLOOR</div>
+        <div class="text-table flex flex-[1_1_0%] items-center">VOLUME</div>
+        <div class="text-table flex flex-[1_1_0%] items-center text-nowrap">
           VOLUME USD
         </div>
       </div>
       {/* Table Body */}
-      <div class="overflow-y-scroll overflow-x-hidden h-[calc(60vh-80px)] lt-lg:h-[calc(80vh-80px)]">
+      <div class="lt-lg:h-[calc(80vh-80px)] h-[calc(60vh-80px)] overflow-x-hidden overflow-y-scroll">
         <Suspense fallback={<TableRowSkeleton limits={10} />}>
           <Switch>
             <Match when={query.data}>
@@ -111,12 +111,12 @@ export default function SearchTable() {
 function TableRow(props: { item: SearchTableRow } & ComponentProps<"div">) {
   return (
     <A href="#">
-      <div class="relative flex flex items-center p-[6.5px_0px_6.5px_15px] pt-[8px] border-b-[1px] border-border-color hover:bg-background-hover">
-        <div class="flex-[3_1_0%] text-table overflow-hidden">
-          <div class="flex flex-row items-center space-x-3 text-table ">
+      <div class="border-border-color hover:bg-background-hover relative flex flex items-center border-b-[1px] p-[6.5px_0px_6.5px_15px] pt-[8px]">
+        <div class="text-table flex-[3_1_0%] overflow-hidden">
+          <div class="text-table flex flex-row items-center space-x-3 ">
             <Image.Root fallbackDelay={300} class="h-[42px] w-[42px] ">
               <Image.Img
-                class="object-fill rounded-lg hover:(border-1 border-primary)"
+                class="hover:(border-1 border-primary) rounded-lg object-fill"
                 src={props.item.collection.avatar}
                 alt="nft collection avatar"
               />
@@ -125,7 +125,7 @@ function TableRow(props: { item: SearchTableRow } & ComponentProps<"div">) {
               </Image.Fallback>
             </Image.Root>
             <div class="flex flex-col">
-              <div class="text-table group hover:(text-primary)">
+              <div class="text-table hover:(text-primary) group">
                 {props.item.collection.name}
               </div>
               <div class="text-table text-base-font-receding-color">
@@ -134,9 +134,9 @@ function TableRow(props: { item: SearchTableRow } & ComponentProps<"div">) {
             </div>
           </div>
         </div>
-        <div class="flex-[1_1_0%] text-table">{props.item.floor}</div>
-        <div class="flex-[1_1_0%] text-table">{props.item.volume}</div>
-        <div class="flex-[1_1_0%] text-table">{props.item.volume_usd}</div>
+        <div class="text-table flex-[1_1_0%]">{props.item.floor}</div>
+        <div class="text-table flex-[1_1_0%]">{props.item.volume}</div>
+        <div class="text-table flex-[1_1_0%]">{props.item.volume_usd}</div>
       </div>
     </A>
   );
@@ -148,7 +148,7 @@ export function TableRowSkeleton(props: { limits: number }) {
       {(item, idx) => (
         <div
           id={idx.toString()}
-          class="relative flex flex items-center p-[6.5px_0px_6.5px_15px] pt-[8px] border-b-[solid_1px] border-border-color"
+          class="border-border-color relative flex flex items-center border-b-[solid_1px] p-[6.5px_0px_6.5px_15px] pt-[8px]"
         >
           <div class="flex-[3_1_0%] overflow-hidden ">
             <Skeleton.Root class="skeleton" radius={5}>

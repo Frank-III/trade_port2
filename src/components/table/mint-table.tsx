@@ -25,7 +25,7 @@ import { TableRowSkeleton } from "./table-skeleton";
 import { currency, catVal, tsVal } from "./signals";
 
 export default function MintTable() {
-  const query = trpc.nftRouter.minting.useInfiniteQuery(
+  const query = trpc.nftRouter2.minting.useInfiniteQuery(
     () => ({
       kind: currency(),
       ts: tsVal(),
@@ -37,7 +37,7 @@ export default function MintTable() {
       getNextPageParam: (lastPage) => lastPage.nextCursor,
       initialPageParam: () => 0,
       getPreviousPageParam: (firstPage) => firstPage.prevCursor,
-    })
+    }),
   );
   const [lastScrollY, setLastScrollY] = createSignal(window.scrollY);
   let tableHeaderRef: HTMLTableRowElement | undefined;
@@ -70,7 +70,7 @@ export default function MintTable() {
 
   return (
     <Table class="mx-auto mb-0">
-      <TableHeader class="sticky top-[57px] z-3 bg-background">
+      <TableHeader class="z-3 bg-background sticky top-[57px]">
         <TableRow ref={tableHeaderRef}>
           <TableHead class="w-[100px]">COLLECTION</TableHead>
           <TableHead>LAUNCHED</TableHead>
@@ -97,7 +97,7 @@ export default function MintTable() {
                               class="h-[40px] w-[40px] "
                             >
                               <Image.Img
-                                class="object-fill rounded-full"
+                                class="rounded-full object-fill"
                                 src={item.collection.avatar}
                                 alt="nft collection avatar"
                               />

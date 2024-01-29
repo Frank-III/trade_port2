@@ -63,9 +63,12 @@ export const items = sqliteTable("Items", {
     .references(() => collections.id),
   name: text("name").notNull(),
   image: text("image"),
-  lastBid: real("lastBid").notNull(),
-  lastSale: real("lastSale").notNull(),
+  rarity: integer("rarity").notNull(),
+  price: real("price").notNull(),
+  topBid: real("topBid").notNull(),
+  lastAction: text("lastAction").notNull(),
   tokenId: text("tokenId").notNull(),
+  owner: text("owner").notNull(),
   // Foreign key relation is handled at application level
 });
 
@@ -89,6 +92,29 @@ export const itemAttributes = sqliteTable(
     };
   },
 );
+
+// itemActivities table
+export const itemActivities = sqliteTable("ItemActivities", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  item_id: integer("item_id")
+    .notNull()
+    .references(() => items.id),
+  type: text("type", {
+    enum: [
+      "sales",
+      "listing",
+      "accept_bids",
+      "bids",
+      "transfer",
+      "mints",
+      "stakes",
+    ],
+  }).notNull(),
+  price: real("price"),
+  from: text("from"),
+  to: text("to"),
+  time: text("time").notNull(),
+});
 
 // Define TrendingRows table
 export const trending = sqliteTable("Trending", {
@@ -128,14 +154,14 @@ export const collectionRelationShip = relations(collections, ({ many }) => ({
 }));
 
 export const trendingRelationShip = relations(trending, ({ one }) => ({
-  collections: one(collections, {
+  collection: one(collections, {
     fields: [trending.collection_id],
     references: [collections.id],
   }),
 }));
 
 export const mintingRelationship = relations(minting, ({ one }) => ({
-  collections: one(collections, {
+  collection: one(collections, {
     fields: [minting.collection_id],
     references: [collections.id],
   }),
@@ -166,6 +192,7 @@ export const itemRelationShip = relations(items, ({ one, many }) => ({
     references: [collections.id],
   }),
   itemAttributes: many(itemAttributes),
+  activities: many(itemActivities),
 }));
 
 export const itemAttributeRelationShip = relations(
@@ -178,6 +205,16 @@ export const itemAttributeRelationShip = relations(
     kind: one(attributeKinds, {
       fields: [itemAttributes.kind_id],
       references: [attributeKinds.id],
+    }),
+  }),
+);
+
+export const itemActivityRelationShip = relations(
+  itemActivities,
+  ({ one }) => ({
+    item: one(items, {
+      fields: [itemActivities.item_id],
+      references: [items.id],
     }),
   }),
 );

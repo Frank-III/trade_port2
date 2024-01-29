@@ -1,10 +1,4 @@
 // import { faker } from "@faker-js/faker";
-// import { fstat } from "fs";
-// import type {
-//   TrendingTableRow,
-//   Collection,
-//   MintingTableRow,
-// } from "~/components/table/types";
 // import { db } from "./db/index";
 // import {
 //   collections as collectionTable,
@@ -14,7 +8,10 @@
 //   itemAttributes as itemAttributesTable,
 //   trending as trendingTable,
 //   minting as mintingTable,
+//   itemActivities as itemActivitiesTable,
 // } from "./db/schema";
+
+// const collectionTotal = 800;
 
 // async function createCollectionAndItems() {
 //   const collection = {
@@ -103,14 +100,60 @@
 //           collection_id: addedCollection[0].collectionId,
 //           name: faker.person.firstName(),
 //           image: faker.image.avatar(),
-//           lastBid: faker.number.float({ min: 0, max: 1000, precision: 2 }),
-//           lastSale: faker.number.float({ min: 0, max: 1000, precision: 2 }),
 //           tokenId: faker.string.uuid(),
+//           rarity: faker.number.int({ min: 1, max: 5000 }),
+//           price: Number(
+//             faker.finance.amount({ min: 0.1, max: 100, dec: 3, symbol: "" }),
+//           ),
+//           topBid: Number(
+//             faker.finance.amount({ min: 50, max: 100, dec: 3, symbol: "" }),
+//           ),
+//           lastAction: `${faker.number.int({
+//             min: 0,
+//             max: 10,
+//           })} ${faker.helpers.arrayElement(["hours", "minutes", "days"])}`,
+//           owner: faker.string.uuid(),
 //         };
 //         const item_id = await db
 //           .insert(itemsTable)
 //           .values(item)
 //           .returning({ itemId: itemsTable.id });
+//         //insert item activities
+//         await Promise.all(
+//           Array(30)
+//             .fill(0)
+//             .map(async (_) => {
+//               const item_activity = {
+//                 item_id: item_id[0].itemId,
+//                 price: Number(
+//                   faker.finance.amount({
+//                     min: 0.1,
+//                     max: 100,
+//                     dec: 3,
+//                     symbol: "",
+//                   }),
+//                 ),
+//                 type: faker.helpers.arrayElement([
+//                   "bids",
+//                   "sales",
+//                   "listing",
+//                   "accept_bids",
+//                   "transfer",
+//                   "mints",
+//                   "stakes",
+//                 ] as const),
+//                 from: faker.string.uuid(),
+//                 to: faker.string.uuid(),
+//                 time: `${faker.number.int({
+//                   min: 0,
+//                   max: 30,
+//                 })} ${faker.helpers.arrayElement(["hours", "minutes", "days"])}`,
+//               };
+
+//               await db.insert(itemActivitiesTable).values(item_activity);
+//             }),
+//         );
+
 //         // insert item attribute kinds
 //         await Promise.all(
 //           properties.map(async (prop, idx) => {
@@ -129,10 +172,10 @@
 //   return addedCollection[0].collectionId;
 // }
 
-// const collectionIdx = await Promise.all(
-//   Array(3500).fill(0).map(createCollectionAndItems),
-// );
-
+// // const collectionIdx = await Promise.all(
+// //   Array(collectionTotal).fill(0).map(createCollectionAndItems),
+// // );
+// const collectionIdx = Array.from({ length: collectionTotal }, (x, i) => i + 1);
 // const trendings = collectionIdx.map((id) => {
 //   return {
 //     collection_id: id,

@@ -1,5 +1,5 @@
 import { Tabs } from "@kobalte/core";
-import { For, createSignal, useContext } from "solid-js";
+import { For, createSignal, useContext, Suspense } from "solid-js";
 
 import { trpc } from "~/utils/trpc";
 import {
@@ -56,7 +56,7 @@ function ViewSelector() {
 
 export function CollectionItemsTabView() {
   // const { filter, filterSetter } = useContext(StoreContext);
-  const [tab, setTab] = createSignal<string>();
+  const [tab, setTab] = createSignal<string>("items");
 
   // const collectionItemsQuery = trpc.nftRouter.collectionItems.useInfiniteQuery(
   // 	() => ({
@@ -111,15 +111,17 @@ export function CollectionItemsTabView() {
           />
         </div>
       </div>
-      <Tabs.Content class="" value="items">
-        {/* <CollectionItemsView /> */}
-      </Tabs.Content>
-      <Tabs.Content class="" value="bids">
-        bids
-      </Tabs.Content>
-      <Tabs.Content class="" value="holders">
-        holders
-      </Tabs.Content>
+      <Suspense fallback={<div>Loading...</div>}>
+        <Tabs.Content class="" value="items">
+          <CollectionItemsView />
+        </Tabs.Content>
+        <Tabs.Content class="" value="bids">
+          bids
+        </Tabs.Content>
+        <Tabs.Content class="" value="holders">
+          holders
+        </Tabs.Content>
+      </Suspense>
     </Tabs.Root>
   );
 }
