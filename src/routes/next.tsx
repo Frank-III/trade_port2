@@ -1,6 +1,6 @@
 import {
-	CollectionDetail,
-	CollectionStats,
+  CollectionDetail,
+  CollectionStats,
 } from "~/components/collections/collection-detail";
 const Filter = lazy(() => import("~/components/collections/filter"));
 // import Filter from "~/components/collections/filter";
@@ -12,79 +12,79 @@ import { createStore, SetStoreFunction } from "solid-js/store";
 import { createContext, createEffect, lazy, Show, Suspense } from "solid-js";
 
 type StoreContext = {
-	filter: Record<number, Array<number>>;
-	filterSetter: SetStoreFunction<Record<number, Array<number>>>;
+  filter: Record<number, Array<number>>;
+  filterSetter: SetStoreFunction<Record<number, Array<number>>>;
 };
 
 export const StoreContext = createContext<StoreContext>({
-	filter: {},
-	filterSetter: () => {},
+  filter: {},
+  filterSetter: () => {},
 });
 
 const Next = () => {
-	const collectionDetailQuery = trpc.nftRouter2.collectionProperties.useQuery(
-		() => ({
-			kind: "all",
-			id: 4,
-		}),
-	);
+  const collectionDetailQuery = trpc.nftRouter2.collectionProperties.useQuery(
+    () => ({
+      kind: "all",
+      id: 5,
+    }),
+  );
 
-	// wait for the query to be ready to create the store: how
-	const [filter, setFilter] = createStore({});
+  // wait for the query to be ready to create the store: how
+  const [filter, setFilter] = createStore({});
 
-	createEffect(() => {
-		if (collectionDetailQuery.isSuccess) {
-			const newFilter = collectionDetailQuery.data.attributes.reduce(
-				(acc: Record<string, Array<number>>, val) => {
-					acc[val.id] = [];
-					return acc;
-				},
-				{},
-			);
-			setFilter(newFilter);
-		}
-	});
+  createEffect(() => {
+    if (collectionDetailQuery.isSuccess) {
+      const newFilter = collectionDetailQuery.data.attributes.reduce(
+        (acc: Record<string, Array<number>>, val) => {
+          acc[val.id] = [];
+          return acc;
+        },
+        {},
+      );
+      setFilter(newFilter);
+    }
+  });
 
-	return (
-		<main>
-			<Nav />
-			<Show when={collectionDetailQuery.data && Object.keys(filter).length > 0}>
-				<div class="page-container m-auto max-w-[1600px] p-[58px_20px_15px] ">
-					<div class="collection-layout gap-10px w-100% flex flex-col ">
-						<div class="collection-top gap-10px gap-y-10px flex flex-wrap items-center justify-between">
-							<CollectionDetail collection={collectionDetailQuery.data} />
-							<CollectionStats collection={collectionDetailQuery.data} />
-						</div>
-						<StoreContext.Provider value={{ filter, filterSetter: setFilter }}>
-							<div class="collection-bottom lt-lg:h-auto flex h-[calc(100vh-180px)] w-full overflow-auto">
-								<div class="collection-filter">
-									<div class="flex flex-row">
-										<Filter collection={collectionDetailQuery.data} />
-										<div class="border-1 border-border flex items-center justify-center border hover:bg-[#271C10]">
-											<ChevronLeft />
-										</div>
-									</div>
-								</div>
-								<div class="collection-items-and-chart flex flex-grow flex-col ">
-									<div class="collection-items border-border border-t">
-										{/* <CollectionItemsTabView /> */}
-									</div>
-								</div>
-								<div class="activities w-330px border-border lt-lg:hidden overflow-hidden border-y">
-									<div class="collapse-right border-border w-20px flex h-full items-center justify-center border-r">
-										<ChevronRight />
-									</div>
-									<div class="activities flex w-full flex-col ">
-										<div class="activities-header"></div>
-									</div>
-								</div>
-							</div>
-						</StoreContext.Provider>
-					</div>
-				</div>
-			</Show>
-		</main>
-	);
+  return (
+    <main>
+      <Nav />
+      <Show when={collectionDetailQuery.data && Object.keys(filter).length > 0}>
+        <div class="page-container m-auto max-w-[1600px] p-[58px_20px_15px] ">
+          <div class="collection-layout gap-10px w-100% flex flex-col ">
+            <div class="collection-top gap-10px gap-y-10px flex flex-wrap items-center justify-between">
+              <CollectionDetail collection={collectionDetailQuery.data} />
+              <CollectionStats collection={collectionDetailQuery.data} />
+            </div>
+            <StoreContext.Provider value={{ filter, filterSetter: setFilter }}>
+              <div class="collection-bottom lt-lg:h-auto flex h-[calc(100vh-180px)] w-full overflow-auto">
+                <div class="collection-filter">
+                  <div class="flex flex-row">
+                    <Filter collection={collectionDetailQuery.data} />
+                    <div class="border-1 border-border flex items-center justify-center border hover:bg-[#271C10]">
+                      <ChevronLeft />
+                    </div>
+                  </div>
+                </div>
+                <div class="collection-items-and-chart flex flex-grow flex-col ">
+                  <div class="collection-items border-border border-t">
+                    <CollectionItemsTabView />
+                  </div>
+                </div>
+                <div class="activities w-330px border-border lt-lg:hidden overflow-hidden border-y">
+                  <div class="collapse-right border-border w-20px flex h-full items-center justify-center border-r">
+                    <ChevronRight />
+                  </div>
+                  <div class="activities flex w-full flex-col ">
+                    <div class="activities-header"></div>
+                  </div>
+                </div>
+              </div>
+            </StoreContext.Provider>
+          </div>
+        </div>
+      </Show>
+    </main>
+  );
 };
 
 export default Next;

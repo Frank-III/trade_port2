@@ -21,8 +21,6 @@ import { CollectionItemsView } from "./collection-items";
 const tabStyle =
   "bg-transparent  hover:(text-base-font-receding-color) [&[data-selected]]:(text-offwhite ) px-[12px] ";
 
-const name = "April";
-
 function ViewSelector() {
   return (
     <div class="inline-flex ">

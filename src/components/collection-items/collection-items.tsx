@@ -74,7 +74,7 @@ export function CollectionItemsView() {
               </For>
             </Match>
             <Match when={query.isFetchingNextPage}>
-              <CollectionItemSkeleton limits={10} />
+              <ItemsSkeleton limits={10} />
             </Match>
           </Switch>
         </Suspense>
