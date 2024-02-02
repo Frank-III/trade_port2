@@ -1,13 +1,13 @@
 import { inferRouterOutputs } from "@trpc/server";
 import { router } from "../utils";
 import example from "./example";
-import { nftRouter } from "./nfts";
-import { nftRouter2 } from "./nfts2";
+import { nftCollectionsRouter } from "./nftCollections";
+import { nftItemsRouter } from "./nftItems";
 
 export const appRouter = router({
-  example,
-  // nftRouter,
-  nftRouter2,
+	example,
+	nftCollectionsRouter,
+	nftItemsRouter,
 });
 
 export type IAppRouter = typeof appRouter;
@@ -15,7 +15,7 @@ export type IAppRouter = typeof appRouter;
 export type AppRouterOutput = inferRouterOutputs<typeof appRouter>;
 
 export type CollectionWithProperties =
-  AppRouterOutput["nftRouter2"]["collectionProperties"];
+	AppRouterOutput["nftCollectionsRouter"]["collectionProperties"];
 
 export type CollectionItemWithProperties =
-  AppRouterOutput["nftRouter2"]["collectionItems"]["items"][number];
+	AppRouterOutput["nftCollectionsRouter"]["collectionItems"]["items"][number];

@@ -29,7 +29,7 @@ const CurrencyIcons = {
 };
 
 export default function TrendTable2() {
-	const query = trpc.nftRouter2.trending.useInfiniteQuery(
+	const query = trpc.nftCollectionsRouter.trending.useInfiniteQuery(
 		() => ({
 			kind: currency(),
 			ts: tsVal(),
@@ -212,6 +212,7 @@ function TableRow(props: { item: TrendingTableRow } & ComponentProps<"div">) {
 }
 
 export function TableRowSkeleton(props: { limits: number }) {
+	const extraStyles = { width: "60%" };
 	return (
 		<For each={Array.from({ length: props.limits }, (_, i) => i)}>
 			{(item, idx) => (
@@ -220,7 +221,7 @@ export function TableRowSkeleton(props: { limits: number }) {
 					class="border-border-color relative flex flex items-center border-b-[solid_1px] p-[6.5px_0px_6.5px_15px] pt-[8px]"
 				>
 					<div class="flex-[3_1_0%] overflow-hidden">
-						<Skeleton.Root class="skeleton" radius={5}>
+						<Skeleton.Root class="skeleton" radius={5} style={extraStyles}>
 							<div class="flex flex-row items-center space-x-3">
 								<img
 									class="h-[42px] w-[42px] rounded-full"
@@ -234,32 +235,32 @@ export function TableRowSkeleton(props: { limits: number }) {
 						</Skeleton.Root>
 					</div>
 					<div class="flex-[1_1_0%]">
-						<Skeleton.Root class="skeleton" radius={5}>
+						<Skeleton.Root class="skeleton" radius={5} style={extraStyles}>
 							<div class="text-table">100 SOL</div>
 						</Skeleton.Root>
 					</div>
 					<div class="flex-[1_1_0%]">
-						<Skeleton.Root class="skeleton" radius={5}>
+						<Skeleton.Root class="skeleton" radius={5} style={extraStyles}>
 							<div class="text-table">100 SOL</div>
 						</Skeleton.Root>
 					</div>
 					<div class="flex-[1_1_0%]">
-						<Skeleton.Root class="skeleton" radius={5}>
+						<Skeleton.Root class="skeleton" radius={5} style={extraStyles}>
 							<div class="text-table">100 NFTs</div>
 						</Skeleton.Root>
 					</div>
 					<div class="flex-[1_1_0%]">
-						<Skeleton.Root class="skeleton" radius={5}>
+						<Skeleton.Root class="skeleton" radius={5} style={extraStyles}>
 							<div class="text-table">100 NFTs</div>
 						</Skeleton.Root>
 					</div>
 					<div class="flex-[1_1_0%]">
-						<Skeleton.Root class="skeleton" radius={5}>
+						<Skeleton.Root class="skeleton" radius={5} style={extraStyles}>
 							<div class="text-table">100 NFTs</div>
 						</Skeleton.Root>
 					</div>
 					<div class="flex-[0.8_1_0%]">
-						<Skeleton.Root class="skeleton" radius={5}>
+						<Skeleton.Root class="skeleton" radius={5} style={extraStyles}>
 							<div class="text-table">10 NFTs</div>
 						</Skeleton.Root>
 					</div>

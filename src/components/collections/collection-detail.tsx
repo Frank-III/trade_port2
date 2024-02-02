@@ -49,22 +49,20 @@ export function CollectionDetail(props: CollectionDetailProps) {
             <Show when={props.collection?.verified}>
               <VerifiedBadge />
             </Show>
-            <Show when={props.collection?.twitter !== undefined}>
+            <Show when={props.collection?.twitter}>
               <A
                 class="button-default p-2px h-auto rounded-lg"
                 href={props.collection?.twitter!}
               >
                 <div class="i-codicon-twitter text-18px" />
-                {/* <Twitter size={20} /> */}
               </A>
             </Show>
-            <Show when={props.collection?.website !== undefined}>
+            <Show when={props.collection?.website}>
               <A
                 class="button-default p-2px h-auto rounded-lg"
-                href={props.collection?.website!}
+                href={props.collection?.website}
               >
                 <div class="i-codicon-globe text-18px" />
-                {/* <Globe size={20} /> */}
               </A>
             </Show>
           </div>
