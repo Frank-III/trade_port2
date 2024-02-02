@@ -1,4 +1,3 @@
-import type { TrendingTableRow } from "./types";
 import {
 	createSignal,
 	For,
@@ -113,7 +112,7 @@ export default function TrendTable2() {
 						<For each={query.data?.pages}>
 							{(page) => (
 								<For each={page.items}>
-									{(item: TrendingTableRow, idx) => (
+									{(item, idx) => (
 										<TableRow item={item} id={idx().toString()} />
 									)}
 								</For>
@@ -129,7 +128,8 @@ export default function TrendTable2() {
 	);
 }
 
-function TableRow(props: { item: TrendingTableRow } & ComponentProps<"div">) {
+//TODO: fix the item type here
+function TableRow(props: { item: any } & ComponentProps<"div">) {
 	return (
 		<A href={`/${props.item.kind}/${props.item.collection.id}`}>
 			<div class="border-border-color hover:bg-background-hover lt-smm:hidden relative flex flex items-center border-b-[1px] p-[6.5px_0px_6.5px_15px] pt-[8px]">
