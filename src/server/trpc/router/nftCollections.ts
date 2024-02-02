@@ -37,8 +37,7 @@ const infiniteItemsInput = z.object({
 	cursor: z.number().nullish(),
 });
 
-//TODO: rename to nftCollectionsRouter, Items Router would be nftItemsRouter
-export const nftRouter2 = router({
+export const nftCollectionsRouter = router({
 	trending: procedure.input(infiniteQueryInput).query(async ({ input }) => {
 		const { kind, limit, cursor } = input;
 
@@ -142,32 +141,6 @@ export const nftRouter2 = router({
 				cursor,
 			} = input;
 
-			// // not quite right, maybe go back to the old way: SQL query
-			// const filteredItems = await db.query.items.findMany({
-			//   where: (item, { eq, gte, lte }) =>
-			//     and(
-			//       eq(item.collection_id, collection),
-			//       gte(item.lastSale, minPrice),
-			//       lte(item.lastSale, maxPrice),
-			//     ),
-			//   with: {
-			//     itemAttributes: {
-			//       with: {
-			//         kind: {
-			//           // is it possible
-			//           where: (kind, { eq }) =>
-			//           with: {
-			//             attribute: true,
-			//           },
-			//         },
-			//       },
-			//     },
-			//   },
-			// });
-			//
-			//
-			// get collection attributs
-
 			const noEmptyFilter = Object.entries(filters).filter(
 				([_, value]) => value.length > 0,
 			);
@@ -200,7 +173,6 @@ export const nftRouter2 = router({
 					  )
 					: [undefined];
 
-			// TODO: fix this line, then we should be good to go
 			const items = (
 				await db
 					.select({

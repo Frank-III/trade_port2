@@ -1,12 +1,12 @@
 import { count, eq, sql, and, exists, inArray } from "drizzle-orm";
 import { db } from "./db";
 import {
-  attributeKinds,
-  collectionAttributes,
-  collections,
-  itemAttributes,
-  items,
-  trending,
+	attributeKinds,
+	collectionAttributes,
+	collections,
+	itemAttributes,
+	items,
+	trending,
 } from "./db/schema";
 
 // await migrate(db, { migrationsFolder: "drizzle" });
@@ -85,75 +85,73 @@ import {
 // console.log(collectionAttributesCount);
 
 async function getFilterItems(props: {
-  col_id: number;
-  filter: Record<number, Array<number>>;
+	col_id: number;
+	filter: Record<number, Array<number>>;
 }) {
-  const x =
-    Object.entries(props.filter).length > 0
-      ? Object.entries(props.filter).map(([key, value]) =>
-          exists(
-            db
-              .select()
-              .from(itemAttributes)
-              .innerJoin(
-                attributeKinds,
-                eq(itemAttributes.kind_id, attributeKinds.id),
-              )
-              .innerJoin(
-                collectionAttributes,
-                eq(attributeKinds.attribute_id, collectionAttributes.id),
-              )
-              .where(
-                and(
-                  eq(itemAttributes.item_id, items.id),
-                  eq(collectionAttributes.id, Number(key)),
-                  inArray(attributeKinds.id, value),
-                ),
-              ),
-          ),
-        )
-      : [undefined];
-  return await db
-    .select({
-      id: items.id,
-      name: items.name,
-      image: items.image,
-      collectionId: items.collection_id,
-      price: items.price,
-      rarity: items.rarity,
-      topBid: items.topBid,
-      lastAction: items.lastAction,
-      tokenId: items.tokenId,
-      attributes: sql<string[]>`group_concat(${collectionAttributes.name})`,
-      kinds: sql<string[]>`group_concat(${attributeKinds.name})`,
-    })
-    .from(items)
-    .innerJoin(itemAttributes, eq(items.id, itemAttributes.item_id))
-    .innerJoin(attributeKinds, eq(itemAttributes.kind_id, attributeKinds.id))
-    .innerJoin(
-      collectionAttributes,
-      eq(attributeKinds.attribute_id, collectionAttributes.id),
-    )
-    .where(
-      and(
-        // some other filters
-        eq(items.collection_id, props.col_id),
-        // should map here
-        ...x,
-      ),
-    )
-    .groupBy(items.id);
+	const x =
+		Object.entries(props.filter).length > 0
+			? Object.entries(props.filter).map(([key, value]) =>
+					exists(
+						db
+							.select()
+							.from(itemAttributes)
+							.innerJoin(
+								attributeKinds,
+								eq(itemAttributes.kind_id, attributeKinds.id),
+							)
+							.innerJoin(
+								collectionAttributes,
+								eq(attributeKinds.attribute_id, collectionAttributes.id),
+							)
+							.where(
+								and(
+									eq(itemAttributes.item_id, items.id),
+									eq(collectionAttributes.id, Number(key)),
+									inArray(attributeKinds.id, value),
+								),
+							),
+					),
+			  )
+			: [undefined];
+	return await db
+		.select({
+			id: items.id,
+			name: items.name,
+			image: items.image,
+			collectionId: items.collection_id,
+			price: items.price,
+			rarity: items.rarity,
+			topBid: items.topBid,
+			lastAction: items.lastAction,
+			tokenId: items.tokenId,
+			attributes: sql<string[]>`group_concat(${collectionAttributes.name})`,
+			kinds: sql<string[]>`group_concat(${attributeKinds.name})`,
+		})
+		.from(items)
+		.innerJoin(itemAttributes, eq(items.id, itemAttributes.item_id))
+		.innerJoin(attributeKinds, eq(itemAttributes.kind_id, attributeKinds.id))
+		.innerJoin(
+			collectionAttributes,
+			eq(attributeKinds.attribute_id, collectionAttributes.id),
+		)
+		.where(
+			and(
+				// some other filters
+				eq(items.collection_id, props.col_id),
+				// should map here
+				...x,
+			),
+		)
+		.groupBy(items.id);
 }
 
-// console.log(
-//   (
-//     await getFilterItems({
-//       col_id: 1,
-//       filter: {},
-//       // filter: {
-//       //   1: [1, 2, 3],
-//       //   2: [10, 20, 30],
-//       // },
-//     })
-//   ).length,
-// );
+console.log(
+	await getFilterItems({
+		col_id: 1,
+		filter: {},
+		// filter: {
+		//   1: [1, 2, 3],
+		//   2: [10, 20, 30],
+		// },
+	}),
+);
