@@ -160,21 +160,14 @@ export function CollectionItemsView() {
 	);
 
 	const totalItems = () =>
-		query.data?.pages.reduce(
-			(acc: number, page) =>
-				acc +
-				page.items.reduce((accInner: number, item) => accInner + item.price, 0),
-		);
+		query.data?.pages.reduce((acc, page) => acc + page.items.length, 0);
 
 	const totalPrice = () =>
-		query.data?.pages.reduce((acc: number, page) => {
-			return (
-				acc +
-				page.items.reduce((accInner: number, item) => {
-					if (selectedItems().includes(item.id)) return accInner + item.price;
-				}, 0)
-			);
-		});
+		query.data?.pages.reduce(
+			(acc, page) =>
+				acc + page.items.reduce((accInner, item) => accInner + item.price, 0),
+			0,
+		);
 
 	const itemsContainerStyle = () =>
 		viewStyle() === "list"
