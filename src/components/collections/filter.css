@@ -1,4 +1,27 @@
-
 .collapse-trigger[data-expanded] .collapse-icon {
   transform: rotateZ(180deg);
+}
+
+.collapsible__content {
+  animation: slideUp 150ms ease-out;
+}
+.collapsible__content[data-expanded] {
+  animation: slideDown 200ms ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    height: 0;
+  }
+  to {
+    height: var(--kb-collapsible-content-height);
+  }
+}
+@keyframes slideUp {
+  from {
+    height: var(--kb-collapsible-content-height);
+  }
+  to {
+    height: 0;
+  }
 }

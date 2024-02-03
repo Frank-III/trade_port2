@@ -43,14 +43,13 @@ export default function TrendTable2() {
       getPreviousPageParam: (firstPage) => firstPage.prevCursor,
     }),
   );
+
+  // logic here: if scroll down to the bottom, fetch next page, if scroll up to the table header(as we would make header stick at top), fetch prev page
   const [lastScrollY, setLastScrollY] = createSignal(window.scrollY);
   let tableHeaderRef: HTMLTableRowElement | undefined;
   const handleScroll = () => {
-    // logic here: if scroll down to the bottom, fetch next page, if scroll up to the table header(as we would make header stick at top), fetch prev page
     const currentScrollY = window.scrollY;
-    //TODO: fix this issue(must be padding or margin)
     if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 1) {
-      // fetchNext();
       console.log("fetch next");
       query.fetchNextPage();
     } else {
@@ -99,12 +98,10 @@ export default function TrendTable2() {
           setVal={setTS}
           defaultIcon={<TimerReset size={20} class="icon-default" />}
         />
-
         <GenericSelect2<string>
           options={catOptions}
           val={cat}
           setVal={setCat}
-          class="lt-sm:hidden!"
           defaultIcon={<ArrowDownWideNarrow size={20} class="icon-default" />}
         />
       </div>

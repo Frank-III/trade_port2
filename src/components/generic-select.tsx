@@ -32,6 +32,7 @@ export function GenericSelect2<T>(props: GenericSelectProps2<T>) {
       optionTextValue="label"
       // optionDisabled="disabled"
       disallowEmptySelection
+      class={props.class}
       onChange={(s) => {
         props.setVal(s.value);
       }}

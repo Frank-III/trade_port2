@@ -6,7 +6,11 @@ export const [viewStyle, setViewStyle] = createSignal<
 
 export const [selectedItems, setSelectedItems] = createSignal<number[]>([]);
 
+export const [timeSpan, setTimeSpan] = createSignal<number>(7);
+
 export const [viewSort, setViewSort] = createSignal<string>("price_asc");
+
+export const [outlier, setOutlier] = createSignal<boolean>(false);
 
 export type ActivityKind =
   | "sales"

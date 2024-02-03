@@ -7,12 +7,12 @@ import {
   ShoppingCart,
   Tag,
   Gavel,
-  BankNote,
+  Banknote,
   Coins,
+  SmartphoneNfc,
 } from "lucide-solid";
 import { SelectItem } from "../generic-select";
 import { ActivityKind } from "./signals";
-
 const iconStyle = "w-[20px] h-[20px] icon-default";
 
 export const viewSortOptions = [
@@ -65,7 +65,7 @@ export const activityOptions: SelectItem<ActivityKind>[] = [
     icon: () => <ShoppingCart class={iconStyle} />,
   },
   {
-    value: "listings",
+    value: "listing",
     label: "Listings",
     icon: () => <Tag class={iconStyle} />,
   },
@@ -75,9 +75,9 @@ export const activityOptions: SelectItem<ActivityKind>[] = [
     icon: () => <Gavel class={iconStyle} />,
   },
   {
-    value: "transfers",
+    value: "transfer",
     label: "Transfers",
-    icon: () => <div class={`i-ci-transfer ${iconStyle}`} />,
+    icon: () => <SmartphoneNfc class={iconStyle} />,
   },
   {
     value: "mints",
@@ -85,8 +85,29 @@ export const activityOptions: SelectItem<ActivityKind>[] = [
     icon: () => <Coins class={iconStyle} />,
   },
   {
-    value: "stakess",
+    value: "stakes",
     label: "Stakes",
-    icon: () => <BankNote class={iconStyle} />,
+    icon: () => <Banknote class={iconStyle} />,
   },
+];
+
+export const activityIconMap = {
+  sales: ShoppingCart,
+  listing: Tag,
+  bids: Gavel,
+  transfer: SmartphoneNfc,
+  mints: Coins,
+  stakes: Banknote,
+};
+
+export const timeSpanOptions = [
+  { label: "7 Days", value: 7 },
+  { label: "1 Hrs", value: 1 / 24 },
+  { label: "4 Hrs", value: 4 / 24 },
+  { label: "1 Day", value: 1 },
+  { label: "14 Days", value: 14 },
+  { label: "30 Days", value: 30 },
+  { label: "60 Days", value: 60 },
+  { label: "90 Days", value: 90 },
+  { label: "All Time", value: -1 },
 ];

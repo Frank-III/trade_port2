@@ -11,61 +11,62 @@ const TrendTable = unstable_clientOnly(() => import("./trend-table"));
 const MintTable = unstable_clientOnly(() => import("./mint-table"));
 // outline-offset-6 border-b-1 border-primary
 const tabStyle =
-	"bg-transparent  hover:(text-base-font-receding-color) [&[data-selected]]:(text-offwhite ) px-[12px] ";
+  "bg-transparent  hover:(text-base-font-receding-color) [&[data-selected]]:(text-offwhite ) px-[12px] ";
 
 export function TableView() {
-	const location = useLocation();
-	const [tab, setTab] = createSignal<string>(location.query["#"] ?? "trending");
-	//TODO: use something other than map
-	return (
-		<Tabs.Root
-			aria-label="Table Nav"
-			class="h-[100%] px-5 mx-auto mt-[50px] mb-0 max-w-[1200px] w-100%"
-			value={tab()}
-			onChange={setTab}
-		>
-			<div class="flex flex-row space-y-1 pb-1 border-b-base-font-more-receding-color border-b-1 justify-between border-border">
-				<Tabs.List class="flex flex-row relative justify-between">
-					<div class="text-base-font-more-receding-color inline-flex font-normal text-[20px]">
-						<Tabs.Trigger class={tabStyle} value="trending">
-							Trending
-						</Tabs.Trigger>
-						<Tabs.Trigger class={tabStyle} value="minting">
-							Miniting
-						</Tabs.Trigger>
-						<Tabs.Trigger class={tabStyle} value="sniper">
-							Sniper
-						</Tabs.Trigger>
-						<Tabs.Indicator class="tabs-indicator absolute transition transition-all transition-250 bg-primary bottom--1 h-0.5 " />
-					</div>
-				</Tabs.List>
-				<div class="inline-flex space-x-3">
-					<CurrencyToggleGroup />
-					<GenericSelect2<number>
-						options={tsOptions}
-						val={ts}
-						setVal={setTS}
-						defaultIcon={<TimerReset size={20} class="icon-default" />}
-					/>
+  const location = useLocation();
+  const [tab, setTab] = createSignal<string>(location.query["#"] ?? "trending");
+  //TODO: use something other than map
+  return (
+    <Tabs.Root
+      aria-label="Table Nav"
+      class="w-100% mx-auto mb-0 mt-[50px] h-[100%] max-w-[1200px] px-5"
+      value={tab()}
+      onChange={setTab}
+    >
+      <div class="border-b-base-font-more-receding-color border-b-1 border-border flex flex-row justify-between space-y-1 pb-1">
+        <Tabs.List class="relative flex flex-row justify-between">
+          <div class="text-base-font-more-receding-color inline-flex text-[20px] font-normal">
+            <Tabs.Trigger class={tabStyle} value="trending">
+              Trending
+            </Tabs.Trigger>
+            <Tabs.Trigger class={tabStyle} value="minting">
+              Miniting
+            </Tabs.Trigger>
+            <Tabs.Trigger class={tabStyle} value="sniper">
+              Sniper
+            </Tabs.Trigger>
+            <Tabs.Indicator class="tabs-indicator transition-250 bg-primary absolute bottom--1 h-0.5 transition transition-all " />
+          </div>
+        </Tabs.List>
+        <div class="inline-flex space-x-3">
+          <CurrencyToggleGroup />
+          <GenericSelect2<number>
+            options={tsOptions}
+            val={ts}
+            setVal={setTS}
+            defaultIcon={<TimerReset size={20} class="icon-default" />}
+            class="lt-sm:hidden!"
+          />
 
-					<GenericSelect2<string>
-						options={catOptions}
-						val={cat}
-						setVal={setCat}
-						class="lt-sm:hidden!"
-						defaultIcon={<ArrowDownWideNarrow size={20} class="icon-default" />}
-					/>
-				</div>
-			</div>
-			<Tabs.Content class="" value="trending">
-				<TrendTable fallback={<div>is loading</div>} />
-			</Tabs.Content>
-			<Tabs.Content class="" value="minting">
-				<MintTable fallback={<div>is loading</div>} />
-			</Tabs.Content>
-			<Tabs.Content class="" value="sniper">
-				<SniperTable />
-			</Tabs.Content>
-		</Tabs.Root>
-	);
+          <GenericSelect2<string>
+            options={catOptions}
+            val={cat}
+            setVal={setCat}
+            class="lt-sm:hidden!"
+            defaultIcon={<ArrowDownWideNarrow size={20} class="icon-default" />}
+          />
+        </div>
+      </div>
+      <Tabs.Content class="" value="trending">
+        <TrendTable fallback={<div>is loading</div>} />
+      </Tabs.Content>
+      <Tabs.Content class="" value="minting">
+        <MintTable fallback={<div>is loading</div>} />
+      </Tabs.Content>
+      <Tabs.Content class="" value="sniper">
+        <SniperTable />
+      </Tabs.Content>
+    </Tabs.Root>
+  );
 }

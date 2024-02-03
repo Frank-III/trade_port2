@@ -13,8 +13,8 @@ import { setViewSort, viewSort, viewStyle, setViewStyle } from "./signals";
 import { viewSortOptions } from "./val-maps";
 import { Grid2X2, Grid3X3, List } from "lucide-solid";
 import { cn } from "~/utils/cn";
-import { CollectionItemsView } from "./collection-items";
-// const CollectionItemsView = lazy(() => import("./collection-items"));
+// import  CollectionItemsView  from "./collection-items";
+const CollectionItemsView = lazy(() => import("./collection-items"));
 
 const tabStyle =
   "bg-transparent  hover:(text-base-font-receding-color) [&[data-selected]]:(text-offwhite ) px-[12px] ";
@@ -74,8 +74,8 @@ export default function CollectionItemsTabView() {
 
   return (
     <Tabs.Root
-      aria-label="Table Nav"
-      class="lt-lg:h-[100vh-80px] h-[60vh-78px] "
+      aria-label="Table Item View"
+      class="lt-lg:h-[100vh-80px] h-[calc(60vh-78px)]"
       value={tab()}
       onChange={setTab}
     >
@@ -105,15 +105,17 @@ export default function CollectionItemsTabView() {
           </div>
         </Show>
       </div>
-      <Tabs.Content class="" value="items">
-        <CollectionItemsView />
-      </Tabs.Content>
-      <Tabs.Content class="" value="bids">
-        bids
-      </Tabs.Content>
-      <Tabs.Content class="" value="holders">
-        holders
-      </Tabs.Content>
+      <Suspense fallback={<div>loading</div>}>
+        <Tabs.Content class="h-[calc(100%-50px)]" value="items">
+          <CollectionItemsView />
+        </Tabs.Content>
+        <Tabs.Content class="" value="bids">
+          bids
+        </Tabs.Content>
+        <Tabs.Content class="" value="holders">
+          holders
+        </Tabs.Content>
+      </Suspense>
     </Tabs.Root>
   );
 }
