@@ -14,15 +14,15 @@ import {
 import { trpc } from "~/utils/trpc";
 import { Image, Skeleton } from "@kobalte/core";
 import { A } from "solid-start";
-import { currency, catVal, tsVal, search } from "./signals";
+import { cat, currency, search, ts } from "./signals";
 import { Properties } from "solid-js/web";
 
 export default function SearchTable() {
 	const query = trpc.nftCollectionsRouter.trending.useInfiniteQuery(
 		() => ({
 			kind: currency(),
-			ts: tsVal(),
-			cat: catVal(),
+			ts: ts(),
+			cat: cat(),
 			limit: 10,
 			cursor: null,
 		}),

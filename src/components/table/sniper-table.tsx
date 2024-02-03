@@ -1,11 +1,11 @@
 import { ChevronDown, ChevronUp, Search } from "lucide-solid";
-import { SniperState, TableProps, TrendingTableRow } from "./types";
+import { SniperState, TrendingTableRow } from "./types";
 import { createSignal, For } from "solid-js";
 import { cn } from "~/utils/cn";
 import { Collapsible } from "@kobalte/core";
 import { createStore } from "solid-js/store";
 
-function TableRow(props: { item: ListTableRow }) {}
+function TableRow(props: { item: any }) {}
 
 export default function SniperTable() {
   // should probably use a solid store
@@ -22,14 +22,14 @@ export default function SniperTable() {
   const buttonStyle =
     "bg-background-body hover:bg-background-hover w-full px-3 py-1 text-base font-normal";
   return (
-    <div class="h-[calc(100vh-90px)] mt-10px flex flex-col flex-wrap w-full">
+    <div class="mt-10px flex h-[calc(100vh-90px)] w-full flex-col flex-wrap">
       <div class="border-border pb-40px border-base-font-receding-color relative flex h-[cal(100%-80px)] w-[281px] flex-col overflow-auto overflow-x-hidden rounded-lg border ">
-        <div class="inline-flex justify-between px-3 text-offwhite text-base">
+        <div class="text-offwhite inline-flex justify-between px-3 text-base">
           Collections
           <button
             class={cn(
               "text-primary bg-transparent text-base font-normal",
-              sniperState.collection === "all" && "hidden"
+              sniperState.collection === "all" && "hidden",
             )}
             type="button"
           >
@@ -39,19 +39,19 @@ export default function SniperTable() {
         <div class="button-default m-2">
           <Search class="text-primary ml-0" />
           <input
-            class="text-offwhite w-80% bg-transparent text-base font-light focus:outline-none hover:bg-background-hover"
+            class="text-offwhite w-80% hover:bg-background-hover bg-transparent text-base font-light focus:outline-none"
             placeholder="Search"
             value={sniperState.search}
             onChange={(e) => setSniperState("search", e.target.value)}
           />
         </div>
-        <div class="border-y-1 text-md inline-flex w-full justify-between px-3 text-lg font-normal border-border-color">
+        <div class="border-y-1 text-md border-border-color inline-flex w-full justify-between px-3 text-lg font-normal">
           <span class="text-base-font-more-receding-color">Collection</span>
           <span class="text-base-font-more-receding-color">Floor</span>
         </div>
         <div class="flex flex-col">
           <button
-            class={cn(buttonStyle, "flex justify-start bg-background-hover")}
+            class={cn(buttonStyle, "bg-background-hover flex justify-start")}
             type="button"
           >
             All Collections
@@ -66,7 +66,7 @@ export default function SniperTable() {
           <Collapsible.Trigger
             class={cn(
               buttonStyle,
-              "inline-flex items-center justify-between py-1 "
+              "inline-flex items-center justify-between py-1 ",
             )}
           >
             <span>Rarity</span>
@@ -96,7 +96,7 @@ export default function SniperTable() {
           </Collapsible.Content>
         </Collapsible.Root>
       </div>
-      <div class="flex flex-col gap-40px"></div>
+      <div class="gap-40px flex flex-col"></div>
     </div>
   );
 }

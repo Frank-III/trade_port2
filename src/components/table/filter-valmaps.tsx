@@ -2,23 +2,23 @@ import { For } from "solid-js";
 import { cn } from "~/utils/cn";
 import { currency, setCurrency } from "./signals";
 
-export const CatFilterMap = new Map([
-	["Volume", "vol"],
-	["Vol USD", "vol_usd"],
-	["Market cap", "mcap"],
-	["Sales", "sales"],
-	["Average", "avg"],
-]);
+export const tsOptions = [
+	{ label: "24 Hrs", value: 1 },
+	{ label: "7 Days", value: 7 },
+	{ label: "14 Days", value: 14 },
+	{ label: "30 Days", value: 30 },
+	{ label: "60 Days", value: 60 },
+	{ label: "90 Days", value: 90 },
+	{ label: "All Time", value: -1 },
+];
 
-export const TimeSpanMap = new Map([
-	["24 Hrs", 1],
-	["7 Days", 7],
-	["14 Days", 14],
-	["30 Days", 30],
-	["60 Days", 60],
-	["90 Days", 90],
-	["All Time", -1],
-]);
+export const catOptions = [
+	{ label: "Volume", value: "vol" },
+	{ label: "Vol USD", value: "vol_usd" },
+	{ label: "Market cap", value: "mcap" },
+	{ label: "Sales", value: "sales" },
+	{ label: "Average", value: "avg" },
+];
 
 export const Currency = {
 	all: "all",

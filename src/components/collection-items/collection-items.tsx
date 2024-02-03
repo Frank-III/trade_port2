@@ -211,8 +211,8 @@ export function CollectionItemsView() {
 					</Match>
 				</Switch>
 				<div class="tabebed-container-action flex h-52px items-center border-t px-10px bg-background-body justify-between border-border">
-					<BuyItem totalPrice={totalPrice()} currency="solana" />
-					<Sweeper maxSelected={totalItems()} />
+					<BuyItem totalPrice={totalPrice() || 0} currency="solana" />
+					<Sweeper maxSelected={totalItems() || 0} />
 				</div>
 			</div>
 		</div>

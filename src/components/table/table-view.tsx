@@ -1,9 +1,9 @@
 import { createSignal } from "solid-js";
 import { Tabs } from "@kobalte/core";
 import { useLocation, unstable_clientOnly } from "solid-start";
-import GenericSelect, { TimeSpanMap } from "../generic-select";
+import { GenericSelect2 } from "../generic-select";
 import { ArrowDownWideNarrow, TimerReset } from "lucide-solid";
-import { CatFilterMap, CurrencyToggleGroup } from "./filter-valmaps";
+import { CurrencyToggleGroup, catOptions, tsOptions } from "./filter-valmaps";
 import SniperTable from "./sniper-table";
 import { cat, setCat, setTS, ts } from "./signals";
 // import TrendTable from "./trend-table";
@@ -41,19 +41,19 @@ export function TableView() {
 				</Tabs.List>
 				<div class="inline-flex space-x-3">
 					<CurrencyToggleGroup />
-					<GenericSelect<number>
-						valMap={TimeSpanMap}
+					<GenericSelect2<number>
+						options={tsOptions}
 						val={ts}
 						setVal={setTS}
-						class="lt-sm:(hidden!) "
-						labelIcon={<TimerReset size={20} class="icon-default" />}
+						defaultIcon={<TimerReset size={20} class="icon-default" />}
 					/>
-					<GenericSelect<string>
-						valMap={CatFilterMap}
+
+					<GenericSelect2<string>
+						options={catOptions}
 						val={cat}
 						setVal={setCat}
 						class="lt-sm:hidden!"
-						labelIcon={<ArrowDownWideNarrow size={20} class="icon-default" />}
+						defaultIcon={<ArrowDownWideNarrow size={20} class="icon-default" />}
 					/>
 				</div>
 			</div>

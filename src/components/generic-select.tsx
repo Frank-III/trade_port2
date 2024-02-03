@@ -5,64 +5,76 @@ import {
   type Setter,
   ComponentProps,
   type JSX,
-  Match,
   Show,
 } from "solid-js";
 import "./select.css";
 
-export const TimeSpanMap = new Map([
-  ["24 Hrs", 1],
-  ["7 Days", 7],
-  ["14 Days", 14],
-  ["30 Days", 30],
-  ["60 Days", 60],
-  ["90 Days", 90],
-  ["All Time", -1],
-]);
-// FIXME: Really Ugly now
-interface GenericSelectProps<T> extends ComponentProps<"div"> {
-  valMap: Map<string, T>;
-  labelIcon: JSX.Element;
-  val: Accessor<string>;
-  setVal: Setter<string>;
-  labelIcons?: Record<string, JSX.Element>;
+export interface SelectItem<T> {
+  label: string;
+  value: T;
+  icon?: () => JSX.Element;
 }
 
-export default function GenericSelect<T>(props: GenericSelectProps<T>) {
-  const options = Array.from(props.valMap.keys());
+interface GenericSelectProps2<T> extends ComponentProps<"div"> {
+  options: SelectItem<T>[];
+  val: Accessor<T>;
+  setVal: Setter<T>;
+  defaultIcon?: JSX.Element;
+}
+export function GenericSelect2<T>(props: GenericSelectProps2<T>) {
+  // How can I get the value of the selected option? --> seems to work for now
   return (
     <Select.Root
-      value={props.val()}
-      onChange={props.setVal}
-      options={options}
-      defaultValue={options[0]}
+      options={props.options}
+      // value={props.val()}
+      defaultValue={props.options[0]}
+      optionValue="value"
+      optionTextValue="label"
+      // optionDisabled="disabled"
       disallowEmptySelection
-      itemComponent={(item_props) => (
+      onChange={(s) => {
+        props.setVal(s.value);
+      }}
+      placeholder="Select a fruit…"
+      itemComponent={(propsInner) => (
         <Select.Item
-          item={item_props.item}
+          item={propsInner.item}
           class="text-offwhite bg-background hover:bg-background-hover [&[data-selected]]:text-primary flex cursor-pointer list-none items-center justify-start gap-1.5 rounded-sm py-1 pl-1 pr-2 focus:outline-none"
         >
           <Show
-            when={props.labelIcons !== undefined}
+            when={propsInner.item.rawValue.icon}
             fallback={
-              <Select.Icon class="rounded-full">{props.labelIcon}</Select.Icon>
+              <Select.Icon class="rounded-full">
+                {props.defaultIcon}
+              </Select.Icon>
             }
           >
             <Select.Icon class="rounded-full">
-              {props.labelIcons![item_props.item.textValue]}
+              {propsInner.item.rawValue.icon()}
             </Select.Icon>
           </Show>
           <Select.ItemLabel class="text-offwhite text-sm font-normal">
-            {item_props.item.rawValue}
+            {propsInner.item.rawValue.label}
           </Select.ItemLabel>
         </Select.Item>
       )}
-      class={props.class}
     >
-      <Select.Trigger class="button-default" aria-label="Some Select">
-        <Select.Icon class="">{props.labelIcon}</Select.Icon>
-        <Select.Value<string> class="text-offwhite text-sm font-normal">
-          {(state) => state.selectedOption()}
+      <Select.Trigger aria-label="some-text" class="button-default">
+        <Select.Value<SelectItem<T>>>
+          {(state) => (
+            <div class="flex flex-row items-center  justify-center gap-0.5">
+              <Show
+                when={state.selectedOption().icon}
+                fallback={props.defaultIcon}
+              >
+                {state.selectedOption().icon()}
+              </Show>
+              {/* <Gem /> */}
+              <span class="text-offwhite text-sm font-normal">
+                {state.selectedOption().label}
+              </span>
+            </div>
+          )}
         </Select.Value>
         <Select.Icon class="i-octicon-chevron-down-16 [&[data-expanded]]:rotate-180" />
       </Select.Trigger>
