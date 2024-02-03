@@ -6,6 +6,7 @@ import { TableView } from "~/components/table/table-view";
 import "./index.module.css";
 import { useNavigate } from "solid-start";
 import { Badge } from "~/components/badge";
+import ItemsActivitiesView from "~/components/collection-items/collection-activities";
 
 const Home: VoidComponent = () => {
 	const navigate = useNavigate();
@@ -44,6 +45,8 @@ const Home: VoidComponent = () => {
 								<button class="button-secondary" type="button">
 									Buy NFTs
 								</button>
+
+								<ItemsActivitiesView />
 							</div>
 						</div>
 						<div class="mt-[60px]" />

@@ -5,17 +5,20 @@ import { nftCollectionsRouter } from "./nftCollections";
 import { nftItemsRouter } from "./nftItems";
 
 export const appRouter = router({
-	example,
-	nftCollectionsRouter,
-	nftItemsRouter,
+  example,
+  nftCollectionsRouter,
+  nftItemsRouter,
 });
 
 export type IAppRouter = typeof appRouter;
 
 export type AppRouterOutput = inferRouterOutputs<typeof appRouter>;
 
+export type TrendingRow =
+  AppRouterOutput["nftCollectionsRouter"]["trending"]["items"][number];
+
 export type CollectionWithProperties =
-	AppRouterOutput["nftCollectionsRouter"]["collectionProperties"];
+  AppRouterOutput["nftCollectionsRouter"]["collectionProperties"];
 
 export type CollectionItemWithProperties =
-	AppRouterOutput["nftCollectionsRouter"]["collectionItems"]["items"][number];
+  AppRouterOutput["nftCollectionsRouter"]["collectionItems"]["items"][number];

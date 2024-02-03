@@ -13,6 +13,7 @@ const CollectionItemsTabView = lazy(
 );
 import { createStore, type SetStoreFunction } from "solid-js/store";
 import { createContext, createEffect, lazy, Show, Suspense } from "solid-js";
+import ItemsActivitiesView from "~/components/collection-items/collection-activities";
 
 type StoreContext = {
 	filter: Record<number, Array<number>>;
@@ -89,7 +90,8 @@ const Next = () => {
 										</div>
 										{/* TODO: ultimately, I would have a items-with-activities view that would cover the whole element*/}
 										<div class="activities flex w-full flex-col ">
-											<div class="activities-header"></div>
+											<div class="activities-header w-full">
+											</div>
 										</div>
 									</div>
 								</div>
