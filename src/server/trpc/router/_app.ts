@@ -22,3 +22,6 @@ export type CollectionWithProperties =
 
 export type CollectionItemWithProperties =
   AppRouterOutput["nftCollectionsRouter"]["collectionItems"]["items"][number];
+
+export type ItemActivity =
+  AppRouterOutput["nftItemsRouter"]["itemActivities"]["items"][number];
