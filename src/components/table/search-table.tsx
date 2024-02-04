@@ -38,12 +38,11 @@ export default function SearchTable() {
   // logic here: if scroll down to the bottom, fetch next page, if scroll up to the table header(as we would make header stick at top), fetch prev page
   const handleScroll = (event) => {
     const { scrollTop, clientHeight, scrollHeight } = event.currentTarget;
-    console.log(scrollTop, clientHeight, scrollHeight);
     const isAtBottom = scrollTop + clientHeight >= scrollHeight - 1;
     if (isAtBottom) {
       // You've reached the bottom of the dialog
-      console.log("fetch next");
-      query.fetchNextPage();
+      // console.log("fetch next, can I", query.hasNextPage);
+      if (query.hasNextPage) query.fetchNextPage();
     } else {
     }
   };

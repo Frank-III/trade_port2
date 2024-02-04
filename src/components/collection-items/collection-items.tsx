@@ -55,7 +55,7 @@ const BuyItem = (props: {
           <div class="button-default h-auto">
             <div class={cn(Currency[props.currency], "text-18px")} />
             <span class="text-offwhite text-base font-normal">
-              {props.totalPrice}
+              {props.totalPrice.toFixed(2)}
             </span>
           </div>
         </Show>
@@ -81,7 +81,7 @@ const Sweeper = (props: { maxSelected: number }) => {
         class="button-default h-[30px] w-[50px] text-base font-normal"
         value={sweep()}
         onChange={(e) => {
-          setSweepValue(Number(e.currentTarget.value));
+          setSweepValue(e.currentTarget.value);
         }}
       />
       <Slider.Root
@@ -225,7 +225,10 @@ export default function CollectionItemsView() {
               <CollectionItemListHeader />
             </Show>
             <InstantSellView />
-            <For each={query.data?.pages}>
+            <For
+              each={query.data?.pages}
+              fallback={<ItemsSkeleton limits={15} />}
+            >
               {(page) => (
                 <For each={page.items}>
                   {(item: CollectionItemWithProperties) => (
@@ -236,11 +239,11 @@ export default function CollectionItemsView() {
             </For>
           </div>
           <Show when={query.isFetchingNextPage}>
-            <ItemsSkeleton limits={10} />
+            <ItemsSkeleton limits={15} />
           </Show>
         </Match>
         <Match when={query.isLoading}>
-          <ItemsSkeleton limits={20} />
+          <ItemsSkeleton limits={15} />
         </Match>
         <Match when={query.isError}>
           <div>Error</div>

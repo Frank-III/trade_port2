@@ -49,7 +49,7 @@ export default function ActivityChartView() {
             </Switch.Label>
             <Switch.Input class="switch__input" />
             <Switch.Control class="[&[data-checked]]:(bg-primary) h-24px w-44px border-border transition-bg bg-background duration-240 p[0_2px] inline-flex items-center rounded-xl border">
-              <Switch.Thumb class="h-20px w-20px rounded-10px bg-dark-gray duration-240 [&[data-checked]]:(translate-x-[cal(100%-1px)]) transition-transform" />
+              <Switch.Thumb class="h-20px w-20px rounded-10px bg-dark-gray duration-240 transition-transform [&[data-checked]]:translate-x-[calc(100%-1px)]" />
             </Switch.Control>
           </Switch.Root>
           <GenericSelect2<number>

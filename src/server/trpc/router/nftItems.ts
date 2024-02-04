@@ -53,7 +53,7 @@ export const nftItemsRouter = router({
         offset: cursor ?? 0,
       });
       const nextCursor = cursor
-        ? cursor >= 10 - limit
+        ? cursor >= 200 - limit
           ? null
           : cursor + limit
         : limit;

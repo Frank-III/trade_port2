@@ -13,7 +13,10 @@ const CollectionItemsTabView = lazy(
 );
 import { createStore, type SetStoreFunction } from "solid-js/store";
 import { createContext, createEffect, lazy, Show, Suspense } from "solid-js";
-import ItemsActivitiesView from "~/components/collection-items/collection-activities";
+// import ItemsActivitiesView from "~/components/collection-items/collection-activities";
+const ItemsActivitiesView = lazy(
+  () => import("~/components/collection-items/collection-activities"),
+);
 import { unstable_clientOnly } from "solid-start";
 const ActivityChartView = unstable_clientOnly(
   () => import("~/components/collection-items/chart-view"),
@@ -98,10 +101,8 @@ const Next = () => {
                       <ChevronRight size={15} />
                     </div>
                     {/* TODO: ultimately, I would have a items-with-activities view that would cover the whole element*/}
-                    <div class="activities flex h-full w-full flex-col">
-                      <div class="activities-header w-full">
-                        <ItemsActivitiesView />
-                      </div>
+                    <div class="activities flex h-[calc(100vh-210px)] w-full flex-col">
+                      <ItemsActivitiesView />
                     </div>
                   </div>
                 </div>

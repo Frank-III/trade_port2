@@ -1,6 +1,7 @@
 import { Skeleton } from "@kobalte/core";
 import { For } from "solid-js";
 import { type CollectionItemWithProperties } from "~/server/trpc/router/_app";
+import "~/components/table/skeleton.css";
 
 const headerStyle =
   "flex flex-[0.8_1_0%] items-center font-normal text-center text-base";
