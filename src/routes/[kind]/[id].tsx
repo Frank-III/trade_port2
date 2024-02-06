@@ -5,7 +5,7 @@ import {
 // import Filter from "~/components/collections/filter";
 import Nav from "~/components/nav";
 import { trpc } from "~/utils/trpc";
-import { ChevronLeft, ChevronRight } from "lucide-solid";
+import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-solid";
 import CollectionItemsTabView from "~/components/collection-items/colllection-items-tab-view";
 // const CollectionItemsTabView = lazy(
 // 	() => import("~/components/collection-items/colllection-items-tab-view"),
@@ -13,17 +13,11 @@ import CollectionItemsTabView from "~/components/collection-items/colllection-it
 import { createStore, type SetStoreFunction } from "solid-js/store";
 import { createContext, createEffect, lazy, Show, Suspense } from "solid-js";
 const Filter = lazy(() => import("~/components/collections/filter"));
-import { useParams } from "solid-start";
-
-type StoreContext = {
-  filter: Record<number, Array<number>>;
-  filterSetter: SetStoreFunction<Record<number, Array<number>>>;
-};
-
-export const StoreContext = createContext<StoreContext>({
-  filter: {},
-  filterSetter: () => {},
-});
+import { unstable_clientOnly, useParams } from "solid-start";
+const ActivityChartView = unstable_clientOnly(
+  () => import("~/components/collection-items/chart-view"),
+);
+import ItemsActivitiesView from "~/components/collection-items/collection-activities";
 
 const DetailPage = () => {
   const params = useParams<{
@@ -34,7 +28,7 @@ const DetailPage = () => {
   const collectionDetailQuery =
     trpc.nftCollectionsRouter.collectionProperties.useQuery(
       () => ({
-        kind: params.kind, // could be removed
+        kind: params.kind,
         id: Number(params.id),
       }),
       () => ({
@@ -55,7 +49,7 @@ const DetailPage = () => {
   // 	),
   // );
 
-  const [filter, setFilter] = createStore({});
+  const [filter, setFilter] = createStore<Record<string, number[]>>({});
 
   createEffect(() => {
     if (collectionDetailQuery.data) {
@@ -85,33 +79,43 @@ const DetailPage = () => {
               <CollectionStats collection={collectionDetailQuery.data} />
             </div>
             <Suspense fallback={<div>Loading...</div>}>
-              <StoreContext.Provider
-                value={{ filter, filterSetter: setFilter }}
-              >
-                <div class="collection-bottom lt-lg:h-auto flex h-[calc(100vh-180px)] w-full overflow-auto">
-                  <div class="collection-filter">
-                    <div class="flex flex-row">
-                      <Filter collection={collectionDetailQuery.data} />
-                      <div class="border-1 border-border flex items-center justify-center border hover:bg-[#271C10]">
-                        <ChevronLeft />
-                      </div>
-                    </div>
-                  </div>
-                  <div class="collection-items-and-chart flex flex-grow flex-col ">
-                    <div class="collection-items border-border border-t">
-                      <CollectionItemsTabView />
-                    </div>
-                  </div>
-                  <div class="activities w-330px border-border lt-lg:hidden overflow-hidden border-y">
-                    <div class="collapse-right border-border w-20px flex h-full items-center justify-center border-r">
-                      <ChevronRight />
-                    </div>
-                    <div class="activities flex w-full flex-col">
-                      <div class="activities-header"></div>
+              <div class="collection-bottom lt-lg:h-auto flex h-[calc(100vh-180px)] w-full ">
+                <div class="collection-filter">
+                  <div class="rounded-tl-10px rounded-bl-10px flex h-full w-[280px] flex-row">
+                    <Filter
+                      collection={collectionDetailQuery.data}
+                      filter={filter}
+                      filterSetter={setFilter}
+                    />
+                    <div class="border-1 border-border flex items-center justify-center border hover:bg-[#271C10]">
+                      <ChevronLeft />
                     </div>
                   </div>
                 </div>
-              </StoreContext.Provider>
+                <div class="collection-items-and-chart flex flex-grow flex-col ">
+                  <div class="collection-items border-border border-t">
+                    <CollectionItemsTabView
+                      filter={filter}
+                      filterSetter={setFilter}
+                    />
+                  </div>
+                  <div class="items-activity-charts border-border flex h-[calc(40vh-87px)] flex-col overflow-hidden border-b border-t">
+                    <div class="collapse-right border-border py-1px flex w-full items-center justify-center border-b hover:bg-[#271C10]">
+                      <ChevronDown size={15} />
+                    </div>
+                    <ActivityChartView fallback={<div>loading</div>} />
+                  </div>
+                </div>
+                <div class="activities w-330px border-border lt-lg:hidden rounded-tr-10px rounded-br-10px flex flex-row overflow-hidden border-b border-r border-t">
+                  <div class="collapse-right border-border px-1px w-20px flex h-full items-center justify-center border-l border-r hover:bg-[#271C10]">
+                    <ChevronRight size={15} />
+                  </div>
+                  {/* TODO: ultimately, I would have a items-with-activities view that would cover the whole element*/}
+                  <div class="activities flex h-[calc(100vh-210px)] w-full flex-col">
+                    <ItemsActivitiesView />
+                  </div>
+                </div>
+              </div>
             </Suspense>
           </div>
         </div>

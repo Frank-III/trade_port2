@@ -13,8 +13,9 @@ import { setViewSort, viewSort, viewStyle, setViewStyle } from "./signals";
 import { viewSortOptions } from "./val-maps";
 import { Grid2X2, Grid3X3, List } from "lucide-solid";
 import { cn } from "~/utils/cn";
-// import  CollectionItemsView  from "./collection-items";
-const CollectionItemsView = lazy(() => import("./collection-items"));
+import { SetStoreFunction } from "solid-js/store";
+import CollectionItemsView from "./collection-items";
+// const CollectionItemsView = lazy(() => import("./collection-items"));
 
 const tabStyle =
   "bg-transparent  hover:(text-base-font-receding-color) [&[data-selected]]:(text-offwhite ) px-[12px] ";
@@ -50,7 +51,10 @@ function ViewSelector() {
   );
 }
 
-export default function CollectionItemsTabView() {
+export default function CollectionItemsTabView(props: {
+  filter: Record<string, number[]>;
+  filterSetter: SetStoreFunction<Record<string, number[]>>;
+}) {
   // const { filter, filterSetter } = useContext(StoreContext);
   const [tab, setTab] = createSignal<string>("items");
 
@@ -107,7 +111,10 @@ export default function CollectionItemsTabView() {
       </div>
       <Suspense fallback={<div>loading</div>}>
         <Tabs.Content class="h-[calc(100%-50px)]" value="items">
-          <CollectionItemsView />
+          <CollectionItemsView
+            filter={props.filter}
+            filterSetter={props.filterSetter}
+          />
         </Tabs.Content>
         <Tabs.Content class="" value="bids">
           bids

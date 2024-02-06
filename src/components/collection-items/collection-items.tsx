@@ -33,6 +33,7 @@ import { Currency } from "~/components/table/filter-valmaps";
 import { Slider } from "@kobalte/core";
 import { InstantSellGridView } from "./grid-sm-view";
 import { createIntersectionObserver } from "@solid-primitives/intersection-observer";
+import { SetStoreFunction } from "solid-js/store";
 
 const BuyItem = (props: {
   currency: "solana" | "ethereum";
@@ -141,13 +142,14 @@ const ItemsSkeleton = (props: { limits: number }) => (
 
 const id = 1;
 
-export default function CollectionItemsView() {
-  const { filter } = useContext(StoreContext);
-
+export default function CollectionItemsView(props: {
+  filter: Record<string, number[]>;
+  filterSetter: SetStoreFunction<Record<string, number[]>>;
+}) {
   const query = trpc.nftCollectionsRouter.collectionItems.useInfiniteQuery(
     () => ({
       collection: id,
-      filters: filter,
+      filters: props.filter,
       minPrice: minPrice(),
       maxPrice: maxPrice(),
       minRarity: filterRarityMin(),

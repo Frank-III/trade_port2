@@ -26,7 +26,6 @@ import {
 import { PocketKnife, Search, Tags } from "lucide-solid";
 import { type CollectionWithProperties } from "~/server/trpc/router/_app";
 import "./filter.css";
-import { StoreContext } from "~/routes/next";
 
 export function TwowaySlider(props: {
   title?: string;
@@ -68,6 +67,8 @@ export function TwowaySlider(props: {
 // TODO: figure this out: Should I make it a Record<string, {search:"", selected:[]}> or keep it this way?
 interface FilterProps {
   collection: CollectionWithProperties;
+  filter: Record<string, number[]>;
+  filterSetter: SetStoreFunction<Record<string, number[]>>;
 }
 interface FilterItemProps extends ComponentProps<"div"> {
   title: string;
@@ -108,7 +109,7 @@ function FilterItem(props: FilterItemProps) {
 }
 
 export default function Filter(props: FilterProps) {
-  const { filter, filterSetter } = useContext(StoreContext);
+  // const { filter, filterSetter } = useContext(StoreContext);
 
   const [searchStore, setSearchStore] = createStore<string[]>(
     props.collection?.attributes!.map(() => ""),
@@ -122,7 +123,10 @@ export default function Filter(props: FilterProps) {
   );
   const statusChanged = createMemo(() => status() !== "all");
   const filterChanged = createMemo(() =>
-    Object.values(filter).reduce((acc, curr) => acc || curr.length > 0, false),
+    Object.values(props.filter).reduce(
+      (acc, curr) => acc || curr.length > 0,
+      false,
+    ),
   );
 
   return (
@@ -295,7 +299,7 @@ export default function Filter(props: FilterProps) {
               type="button"
               class="text-primary bg-transparent text-base font-normal"
               onClick={() => {
-                filterSetter((l) =>
+                props.filterSetter((l) =>
                   Object.keys(l).reduce(
                     (acc: Record<string, number[]>, curr) => {
                       acc[curr] = [];
@@ -318,66 +322,73 @@ export default function Filter(props: FilterProps) {
             </div>
           </div>
           <div class="scrollbar-hide h-[calc(100%-34px)] overflow-x-hidden pb-20">
-            <For each={props.collection?.attributes!}>
-              {(item, idx) => {
-                return (
-                  <FilterItem
-                    title={item.name}
-                    class="h-258px w-full overflow-x-hidden overflow-y-scroll"
-                    triggerStyles={idx() === 0 ? "pt-0" : ""}
-                    titleStyles={
-                      filter[item.id].length > 0 ? "text-primary" : ""
-                    }
-                  >
-                    <div class="button-default lt-smm:ml-0 h-1.8rem mx-3 mt-1 gap-0 text-sm font-normal">
-                      <Search class="text-primary rounded-full" />
-                      <input
-                        class="text-offwhite w-full min-w-0 bg-transparent text-base font-light focus:outline-none "
-                        placeholder="Search"
-                        value={searchStore[idx()]}
-                        onInput={(e) => {
-                          setSearchStore(idx(), e.currentTarget.value);
-                        }}
-                      />
-                    </div>
-                    {/* TODO: Filter Based on the Search Query */}
-                    <div class="flex w-full flex-col px-3">
-                      <For each={item.kinds}>
-                        {(i, idx_) => (
-                          <div class="flex flex-row items-center justify-between px-3">
-                            <div class="inline-flex items-center space-x-2 text-base font-normal">
-                              {/* TODO: figure out a way to make this input a comb of input and label */}
-                              <input
-                                type="checkbox"
-                                // should use id instead of name, make query easier
-                                checked={filter[item.id].includes(i.id)}
-                                onClick={(e) => {
-                                  // console.log(props.filterStore);
-                                  if (e.currentTarget.checked) {
-                                    filterSetter(item.id, (l) => [...l, i.id]);
-                                  } else {
-                                    // why I need this
-                                    filterSetter(item.id, (l: number[]) =>
-                                      l.filter((i_this) => i_this !== i.id),
-                                    );
-                                  }
-                                }}
-                              />
-                              <span class="overflow-hidden text-ellipsis whitespace-nowrap text-base font-light text-neutral-400">
-                                {i.name}
+            <Show when={Object.keys(props.filter).length > 0}>
+              <For each={props.collection?.attributes!}>
+                {(item, idx) => {
+                  return (
+                    <FilterItem
+                      title={item.name}
+                      class="h-258px w-full overflow-x-hidden overflow-y-scroll"
+                      triggerStyles={idx() === 0 ? "pt-0" : ""}
+                      titleStyles={
+                        props.filter[item.id].length > 0 ? "text-primary" : ""
+                      }
+                    >
+                      <div class="button-default lt-smm:ml-0 h-1.8rem mx-3 mt-1 gap-0 text-sm font-normal">
+                        <Search class="text-primary rounded-full" />
+                        <input
+                          class="text-offwhite w-full min-w-0 bg-transparent text-base font-light focus:outline-none "
+                          placeholder="Search"
+                          value={searchStore[idx()]}
+                          onInput={(e) => {
+                            setSearchStore(idx(), e.currentTarget.value);
+                          }}
+                        />
+                      </div>
+                      {/* TODO: Filter Based on the Search Query */}
+                      <div class="flex w-full flex-col px-3">
+                        <For each={item.kinds}>
+                          {(i, idx_) => (
+                            <div class="flex flex-row items-center justify-between px-3">
+                              <div class="inline-flex items-center space-x-2 text-base font-normal">
+                                {/* TODO: figure out a way to make this input a comb of input and label */}
+                                <input
+                                  type="checkbox"
+                                  // should use id instead of name, make query easier
+                                  checked={props.filter[item.id].includes(i.id)}
+                                  onClick={(e) => {
+                                    // console.log(props.filterStore);
+                                    if (e.currentTarget.checked) {
+                                      props.filterSetter(
+                                        item.id,
+                                        (l: number[]) => [...l, i.id],
+                                      );
+                                    } else {
+                                      // why I need this
+                                      props.filterSetter(
+                                        item.id,
+                                        (l: number[]) =>
+                                          l.filter((i_this) => i_this !== i.id),
+                                      );
+                                    }
+                                  }}
+                                />
+                                <span class="overflow-hidden text-ellipsis whitespace-nowrap text-base font-light text-neutral-400">
+                                  {i.name}
+                                </span>
+                              </div>
+                              <span class="text-base font-normal text-neutral-300">
+                                {i.value}
                               </span>
                             </div>
-                            <span class="text-base font-normal text-neutral-300">
-                              {i.value}
-                            </span>
-                          </div>
-                        )}
-                      </For>
-                    </div>
-                  </FilterItem>
-                );
-              }}
-            </For>
+                          )}
+                        </For>
+                      </div>
+                    </FilterItem>
+                  );
+                }}
+              </For>
+            </Show>
           </div>
         </div>
       </div>
