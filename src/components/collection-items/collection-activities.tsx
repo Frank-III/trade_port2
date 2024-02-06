@@ -70,8 +70,8 @@ export function ActivitySkeleton(props: { limits: number }) {
     <For each={Array(props.limits).fill("")}>
       {(_) => (
         <div class="border-border min-h-70px px-10px relative flex flex-row items-center space-x-5 border-b">
-          <Skeleton.Root class="skeleton" radius={5} style={extraStyles}>
-            <div class="activity-left flex w-full flex-1 items-center justify-between overflow-hidden">
+          <div class="activity-left flex w-full flex-1 items-center justify-between overflow-hidden">
+            <Skeleton.Root class="skeleton" radius={5} style={extraStyles}>
               <Image.Root fallbackDelay={300} class="">
                 <Image.Img
                   class="h-55px w-55px rounded-lg object-fill"
@@ -80,28 +80,39 @@ export function ActivitySkeleton(props: { limits: number }) {
                 />
                 <Image.Fallback>JD</Image.Fallback>
               </Image.Root>
-              <div class="flex w-full flex-col justify-between overflow-hidden text-ellipsis text-nowrap">
+            </Skeleton.Root>
+            <div class="flex w-full flex-col justify-between overflow-hidden text-ellipsis text-nowrap">
+              <Skeleton.Root class="skeleton" radius={5} style={extraStyles}>
                 <span class={textStyle}>Frank</span>
+              </Skeleton.Root>
+
+              <Skeleton.Root class="skeleton" radius={5} style={extraStyles}>
                 <div class={`${textStyle} inline-flex`}>
                   <div class="i-material-symbols-star text-offwhite text-13px" />
                   {3145}
                 </div>
+              </Skeleton.Root>
+              <Skeleton.Root class="skeleton" radius={5} style={extraStyles}>
                 <div class={`${textStyle} inline-flex`}>
                   {/* <ActivityIcon size={13} /> */}
                   {"all"}
                 </div>
-              </div>
+              </Skeleton.Root>
             </div>
-          </Skeleton.Root>
-          <Skeleton.Root class="skeleton" radius={5} style={extraStyles}>
-            <div class="flex-end flex flex-col justify-between">
+          </div>
+          <div class="flex-end flex flex-col justify-between">
+            <Skeleton.Root class="skeleton" radius={5} style={extraStyles}>
               <div class={textStyle} />
+            </Skeleton.Root>
+            <Skeleton.Root class="skeleton" radius={5} style={extraStyles}>
               <span class={textStyle}>20 minutes ago</span>
+            </Skeleton.Root>
+            <Skeleton.Root class="skeleton" radius={5} style={extraStyles}>
               <span class="max-w-70px truncate text-nowrap  text-sm font-normal">
                 6ac193e8-2126-4b3f-8711-6d746bb9beff
               </span>
-            </div>
-          </Skeleton.Root>
+            </Skeleton.Root>
+          </div>
         </div>
       )}
     </For>

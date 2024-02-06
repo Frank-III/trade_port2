@@ -22,15 +22,15 @@ export function CollectionItemListView(props: {
   item: CollectionItemWithProperties;
 }) {
   return (
-    <div class="border-border pl-27px flex items-center justify-between  py-2">
+    <div class="border-border pl-27px hover:bg-dark-gray group flex items-center justify-between py-2">
       <div class={`${headerStyle} flex-[2_1_0%]`}>
         <div class="text-table flex flex-row items-center space-x-3">
           <img
-            class="h-[42px] w-[42px] rounded-lg"
+            class="hover:(border-primary border-1) h-[42px] w-[42px] rounded-lg "
             alt="nft item avatar"
             src={props.item.image || ""}
           />
-          <span class="text-table">{props.item.name}</span>
+          <span class="text-table hover:text-primary">{props.item.name}</span>
         </div>
       </div>
       <div class={headerStyle}>
@@ -46,7 +46,15 @@ export function CollectionItemListView(props: {
         <div class="text-table truncate pr-4">{props.item.owner}</div>
       </div>
       <div class={`${headerStyle} flex-[1_1_0%]`}>
-        <div class="text-table">{props.item.lastAction}</div>
+        <div class="text-table group-hover:hidden">{props.item.lastAction}</div>
+        <div class="space-x-5px hidden flex-row items-center justify-center group-hover:flex">
+          <button class="button-primary h-auto text-base font-normal">
+            Buy
+          </button>
+          <button class="button-secondary h-auto text-base font-normal">
+            Bid
+          </button>
+        </div>
       </div>
     </div>
   );
