@@ -108,8 +108,10 @@ export function ActivitySkeleton(props: { limits: number }) {
   );
 }
 
-export default function ItemsActivitiesView(props: { itemIdx?: number[] }) {
-  const { filter } = useContext(StoreContext);
+export default function ItemsActivitiesView(props: {
+  itemIdx?: number[];
+  filter: Record<string, number[]>;
+}) {
   let activityListRef: HTMLDivElement | null;
   //FIXME: do I really have itemIdx here??
   const activitiesQuery = trpc.nftItemsRouter.itemActivities.useInfiniteQuery(
@@ -180,7 +182,7 @@ export default function ItemsActivitiesView(props: { itemIdx?: number[] }) {
               </Show>
             </div>
           </Match>
-          {/* <Match
+          <Match
             when={
               activitiesQuery.isLoading && !activitiesQuery.isFetchingNextPage
             }
@@ -189,7 +191,7 @@ export default function ItemsActivitiesView(props: { itemIdx?: number[] }) {
           </Match>
           <Match when={activitiesQuery.isError}>
             <div>Error</div>
-          </Match> */}
+          </Match>
         </Switch>
       </Suspense>
     </div>

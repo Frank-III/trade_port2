@@ -65,7 +65,7 @@ export default function ActivityChartView() {
           type="bar"
           options={options()}
           series={series()}
-          height={320}
+          height={"100%"}
         />
       </Tabs.Content>
       <Tabs.Content class="" value="floors">

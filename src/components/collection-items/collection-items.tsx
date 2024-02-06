@@ -140,15 +140,15 @@ const ItemsSkeleton = (props: { limits: number }) => (
   </Switch>
 );
 
-const id = 1;
+//FIXME: wtf, change this!!
 
 export default function CollectionItemsView(props: {
   filter: Record<string, number[]>;
-  filterSetter: SetStoreFunction<Record<string, number[]>>;
+  collectionId: number;
 }) {
   const query = trpc.nftCollectionsRouter.collectionItems.useInfiniteQuery(
     () => ({
-      collection: id,
+      collection: props.collectionId,
       filters: props.filter,
       minPrice: minPrice(),
       maxPrice: maxPrice(),

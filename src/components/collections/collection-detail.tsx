@@ -30,7 +30,7 @@ const VerifiedBadge = () => {
 
 export function CollectionDetail(props: CollectionDetailProps) {
   return (
-    <div class="button-default p-10px justify-unset rounded-16px hover:bg-background-body h-auto w-full flex-[415px]">
+    <div class="button-default p-8px justify-unset rounded-16px hover:bg-background-body h-auto w-full flex-[415px]">
       <div class="text-table flex flex-row items-center space-x-3 ">
         <Image.Root
           fallbackDelay={300}

@@ -4,13 +4,19 @@ import { trpc } from "~/utils/trpc";
 import Nav from "~/components/nav";
 import { TableView } from "~/components/table/table-view";
 import "./index.module.css";
-import { useNavigate } from "solid-start";
+import { useLocation, useNavigate } from "solid-start";
 import { Badge } from "~/components/badge";
 
 const Home: VoidComponent = () => {
   const navigate = useNavigate();
   // const params = useParams();
-  const hello = trpc.example.hello.useQuery(() => ({ name: "from tRPC" }));
+  //
+  const handleBuyOrSell = () => {
+    window.scrollTo({
+      top: document.body.scrollHeight / 2,
+      behavior: "smooth",
+    });
+  };
   return (
     <main>
       <Nav />
@@ -37,12 +43,16 @@ const Home: VoidComponent = () => {
                 <button
                   class="button-primary"
                   type="button"
-                  onClick={() => navigate("/next")}
+                  onClick={handleBuyOrSell}
                 >
                   Buy NFTs
                 </button>
-                <button class="button-secondary" type="button">
-                  Buy NFTs
+                <button
+                  class="button-secondary"
+                  type="button"
+                  onClick={handleBuyOrSell}
+                >
+                  Sell NFTs
                 </button>
               </div>
             </div>

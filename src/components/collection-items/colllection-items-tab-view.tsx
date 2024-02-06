@@ -14,8 +14,8 @@ import { viewSortOptions } from "./val-maps";
 import { Grid2X2, Grid3X3, List } from "lucide-solid";
 import { cn } from "~/utils/cn";
 import { SetStoreFunction } from "solid-js/store";
-import CollectionItemsView from "./collection-items";
-// const CollectionItemsView = lazy(() => import("./collection-items"));
+// import CollectionItemsView from "./collection-items";
+const CollectionItemsView = lazy(() => import("./collection-items"));
 
 const tabStyle =
   "bg-transparent  hover:(text-base-font-receding-color) [&[data-selected]]:(text-offwhite ) px-[12px] ";
@@ -53,10 +53,24 @@ function ViewSelector() {
 
 export default function CollectionItemsTabView(props: {
   filter: Record<string, number[]>;
-  filterSetter: SetStoreFunction<Record<string, number[]>>;
+  collectionId: number;
 }) {
-  // const { filter, filterSetter } = useContext(StoreContext);
-  const [tab, setTab] = createSignal<string>("items");
+  const [tabs, setTabs] = createSignal([
+    {
+      id: "items",
+      title: "Items",
+      component: () => (
+        <CollectionItemsView
+          filter={props.filter}
+          collectionId={props.collectionId}
+        />
+      ),
+    },
+    { id: "bids", title: "Bids", component: () => <div>Tab body 2</div> },
+    { id: "holders", title: "Holders", component: () => <div>Tab body 3</div> },
+  ]);
+
+  const [curTab, setCurTab] = createSignal<string>("items");
 
   // const collectionItemsQuery = trpc.nftRouter.collectionItems.useInfiniteQuery(
   // 	() => ({
@@ -80,25 +94,23 @@ export default function CollectionItemsTabView(props: {
     <Tabs.Root
       aria-label="Table Item View"
       class="lt-lg:h-[100vh-80px] h-[calc(60vh-78px)]"
-      value={tab()}
-      onChange={setTab}
+      value={curTab()}
+      onChange={setCurTab}
     >
       <div class="border-b-base-font-more-receding-color border-b-1 border-border flex flex-row justify-between space-y-1 pb-1">
         <Tabs.List class="relative flex flex-row justify-between">
           <div class="text-base-font-more-receding-color inline-flex text-[20px] font-normal">
-            <Tabs.Trigger class={tabStyle} value="items">
-              Items
-            </Tabs.Trigger>
-            <Tabs.Trigger class={tabStyle} value="bids">
-              Bids
-            </Tabs.Trigger>
-            <Tabs.Trigger class={tabStyle} value="holders">
-              Holders
-            </Tabs.Trigger>
+            <For each={tabs()}>
+              {(tab) => (
+                <Tabs.Trigger value={tab.id} class={tabStyle}>
+                  {tab.title}
+                </Tabs.Trigger>
+              )}
+            </For>
             <Tabs.Indicator class="tabs-indicator transition-250 bg-primary absolute bottom--1 h-0.5 transition transition-all " />
           </div>
         </Tabs.List>
-        <Show when={tab() === "items"}>
+        <Show when={curTab() === "items"}>
           <div class="flex flex-row space-x-3">
             <ViewSelector />
             <GenericSelect2<string>
@@ -110,10 +122,17 @@ export default function CollectionItemsTabView(props: {
         </Show>
       </div>
       <Suspense fallback={<div>loading</div>}>
-        <Tabs.Content class="h-[calc(100%-50px)]" value="items">
+        <For each={tabs()}>
+          {(tab) => (
+            <Tabs.Content class="h-[calc(100%-50px)]" value={tab.id}>
+              <tab.component />
+            </Tabs.Content>
+          )}
+        </For>
+        {/* <Tabs.Content class="h-[calc(100%-50px)]" value="items">
           <CollectionItemsView
             filter={props.filter}
-            filterSetter={props.filterSetter}
+            collectionId={props.collectionId}
           />
         </Tabs.Content>
         <Tabs.Content class="" value="bids">
@@ -121,7 +140,7 @@ export default function CollectionItemsTabView(props: {
         </Tabs.Content>
         <Tabs.Content class="" value="holders">
           holders
-        </Tabs.Content>
+        </Tabs.Content> */}
       </Suspense>
     </Tabs.Root>
   );

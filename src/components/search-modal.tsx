@@ -19,7 +19,7 @@ export default function SearchModal() {
         <Dialog.Overlay class="z-60 w-100% h-100% pt-5px fixed left-0 top-0 flex justify-center bg-[hsla(0,5%,4%,.5)] shadow">
           <div
             id="searchScroll"
-            class="ml--20px bg-background border-primary z-1000 lt-mdd:(max-w-[97vw] max-h-[80vh]) rounded-10px w-100% relative flex max-h-[60vh] max-w-[900px] justify-center overflow-auto overflow-x-hidden border "
+            class="bg-background border-primary z-1000 lt-mdd:(max-w-[97vw] max-h-[80vh]) rounded-10px w-100% relative flex max-h-[60vh] max-w-[900px] justify-center overflow-auto overflow-x-hidden border "
           >
             <Dialog.Content class="w-100% " id="searchDialog">
               <div class="search-header py-7px px-10px relative flex items-center">
