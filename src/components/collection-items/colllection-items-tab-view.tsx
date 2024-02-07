@@ -10,10 +10,10 @@ import { For, createSignal, useContext, Suspense, lazy, Show } from "solid-js";
 // } from "~/components/collections/signals";
 import { GenericSelect2 } from "../generic-select";
 import { setViewSort, viewSort, viewStyle, setViewStyle } from "./signals";
+import { leftDrawerOpen, setLeftDrawerOpen } from "~/components/global-signals";
 import { viewSortOptions } from "./val-maps";
 import { Grid2X2, Grid3X3, List } from "lucide-solid";
 import { cn } from "~/utils/cn";
-import { SetStoreFunction } from "solid-js/store";
 // import CollectionItemsView from "./collection-items";
 const CollectionItemsView = lazy(() => import("./collection-items"));
 
@@ -100,6 +100,12 @@ export default function CollectionItemsTabView(props: {
       <div class="border-b-base-font-more-receding-color border-b-1 border-border flex flex-row justify-between space-y-1 pb-1">
         <Tabs.List class="relative flex flex-row justify-between">
           <div class="text-base-font-more-receding-color inline-flex text-[20px] font-normal">
+            <div
+              class="lgg:hidden i-mdi-filter-outline text-primary text-20px items-center"
+              onClick={() => {
+                setLeftDrawerOpen(!leftDrawerOpen());
+              }}
+            />
             <For each={tabs()}>
               {(tab) => (
                 <Tabs.Trigger value={tab.id} class={tabStyle}>

@@ -123,13 +123,13 @@ export default function ItemsActivitiesView(props: {
   itemIdx?: number[];
   filter: Record<string, number[]>;
 }) {
-  let activityListRef: HTMLDivElement | null;
   //FIXME: do I really have itemIdx here??
   const activitiesQuery = trpc.nftItemsRouter.itemActivities.useInfiniteQuery(
     () => ({
       itemIdx: props.itemIdx ?? undefined,
       activityKind: activityKind(),
       limit: 20,
+      cursor: null,
     }),
     () => ({
       getNextPageParam: (lastPage) => lastPage.nextCursor,
@@ -138,6 +138,7 @@ export default function ItemsActivitiesView(props: {
     }),
   );
 
+  let activityListRef: HTMLDivElement | null;
   const handleScroll = (event) => {
     const { scrollTop, clientHeight, scrollHeight } = event.currentTarget;
     const isAtBottom = scrollTop + clientHeight >= scrollHeight - 1;
@@ -172,15 +173,15 @@ export default function ItemsActivitiesView(props: {
           setVal={setActivityKind}
         />
       </div>
-      <Suspense fallback={<ActivitySkeleton limits={20} />}>
-        <Switch>
-          <Match when={activitiesQuery.data}>
-            <div
-              class="activities-container flex h-full flex-col overflow-auto overflow-x-hidden overflow-y-scroll"
-              ref={(el) => {
-                activityListRef = el;
-              }}
-            >
+      <div
+        ref={(el) => {
+          activityListRef = el;
+        }}
+        class="activities-container scrollbar-hide flex h-full flex-col overflow-auto overflow-x-hidden overflow-y-scroll"
+      >
+        <Suspense fallback={<ActivitySkeleton limits={20} />}>
+          <Switch>
+            <Match when={activitiesQuery.data}>
               <For each={activitiesQuery.data?.pages}>
                 {(page) => (
                   <For each={page.items}>
@@ -191,20 +192,20 @@ export default function ItemsActivitiesView(props: {
               <Show when={activitiesQuery.isFetchingNextPage}>
                 <ActivitySkeleton limits={10} />
               </Show>
-            </div>
-          </Match>
-          <Match
-            when={
-              activitiesQuery.isLoading && !activitiesQuery.isFetchingNextPage
-            }
-          >
-            <ActivitySkeleton limits={20} />
-          </Match>
-          <Match when={activitiesQuery.isError}>
-            <div>Error</div>
-          </Match>
-        </Switch>
-      </Suspense>
+            </Match>
+            <Match
+              when={
+                activitiesQuery.isLoading && !activitiesQuery.isFetchingNextPage
+              }
+            >
+              <ActivitySkeleton limits={10} />
+            </Match>
+            <Match when={activitiesQuery.isError}>
+              <div>Error</div>
+            </Match>
+          </Switch>
+        </Suspense>
+      </div>
     </div>
   );
 }

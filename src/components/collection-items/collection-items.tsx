@@ -6,7 +6,6 @@ import {
   Switch,
   createMemo,
   createSignal,
-  useContext,
   onMount,
   onCleanup,
 } from "solid-js";
@@ -21,7 +20,6 @@ import {
   marketPlace,
 } from "~/components/collections/signals";
 import { type CollectionItemWithProperties } from "~/server/trpc/router/_app";
-import { StoreContext } from "~/routes/next";
 import {
   CollectionItemListHeader,
   ItemsListSkeleton,
@@ -32,8 +30,6 @@ import { cn } from "~/utils/cn";
 import { Currency } from "~/components/table/filter-valmaps";
 import { Slider } from "@kobalte/core";
 import { InstantSellGridView } from "./grid-sm-view";
-import { createIntersectionObserver } from "@solid-primitives/intersection-observer";
-import { SetStoreFunction } from "solid-js/store";
 
 const BuyItem = (props: {
   currency: "solana" | "ethereum";
@@ -82,7 +78,7 @@ const Sweeper = (props: { maxSelected: number }) => {
         class="button-default h-[30px] w-[50px] text-base font-normal"
         value={sweep()}
         onChange={(e) => {
-          setSweepValue(e.currentTarget.value);
+          setSweepValue(parseInt(e.currentTarget.value));
         }}
       />
       <Slider.Root
@@ -179,7 +175,7 @@ export default function CollectionItemsView(props: {
   };
   onMount(() => {
     if (filteredItemsListRef) {
-      console.log(filteredItemsListRef);
+      // console.log(filteredItemsListRef);
       filteredItemsListRef.addEventListener("scroll", handleScroll);
     }
   });
@@ -215,42 +211,44 @@ export default function CollectionItemsView(props: {
   return (
     <div class="flex h-[calc(100%)] flex-col">
       {/* <Switch fallback={<ItemsSkeleton limits={20} />}> */}
-      <Switch>
-        <Match when={query.data}>
-          <div
-            class={itemsContainerStyle()}
-            ref={(el) => {
-              filteredItemsListRef = el;
-            }}
-          >
-            <Show when={viewStyle() === "list"}>
-              <CollectionItemListHeader />
-            </Show>
-            <InstantSellView />
-            <For
-              each={query.data?.pages}
-              fallback={<ItemsSkeleton limits={15} />}
-            >
-              {(page) => (
-                <For each={page.items}>
-                  {(item: CollectionItemWithProperties) => (
-                    <CollectionItemView item={item} />
-                  )}
-                </For>
-              )}
-            </For>
-          </div>
-          <Show when={query.isFetchingNextPage}>
-            <ItemsSkeleton limits={15} />
-          </Show>
-        </Match>
-        <Match when={query.isLoading}>
-          <ItemsSkeleton limits={15} />
-        </Match>
-        <Match when={query.isError}>
-          <div>Error</div>
-        </Match>
-      </Switch>
+      <div
+        ref={(el) => {
+          filteredItemsListRef = el;
+        }}
+        class={itemsContainerStyle()}
+      >
+        <Suspense fallback={<ItemsSkeleton limits={20} />}>
+          <Switch>
+            <Match when={query.data}>
+              <Show when={viewStyle() === "list"}>
+                <CollectionItemListHeader />
+              </Show>
+              <InstantSellView />
+              <For
+                each={query.data?.pages}
+                fallback={<ItemsSkeleton limits={15} />}
+              >
+                {(page) => (
+                  <For each={page.items}>
+                    {(item: CollectionItemWithProperties) => (
+                      <CollectionItemView item={item} />
+                    )}
+                  </For>
+                )}
+              </For>
+              <Show when={query.isFetchingNextPage}>
+                <ItemsSkeleton limits={15} />
+              </Show>
+            </Match>
+            <Match when={query.isLoading}>
+              <ItemsSkeleton limits={15} />
+            </Match>
+            <Match when={query.isError}>
+              <div>Error</div>
+            </Match>
+          </Switch>
+        </Suspense>
+      </div>
       <div class="tabebed-container-action h-52px px-10px bg-background-body border-border flex items-center justify-between border-t">
         <BuyItem totalPrice={totalPrice() || 0} currency="solana" />
         <Sweeper maxSelected={totalItems() || 0} />

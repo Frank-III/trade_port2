@@ -6,6 +6,7 @@ import { TableView } from "~/components/table/table-view";
 import "./index.module.css";
 import { useLocation, useNavigate } from "solid-start";
 import { Badge } from "~/components/badge";
+import { Footer } from "~/components/footer";
 
 const Home: VoidComponent = () => {
   const navigate = useNavigate();
@@ -61,6 +62,7 @@ const Home: VoidComponent = () => {
         </div>
       </div>
       <TableView />
+      <Footer />
     </main>
   );
 };

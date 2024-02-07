@@ -58,8 +58,14 @@ export function TableView() {
           />
         </div>
       </div>
-      <Tabs.Content class="" value="trending">
-        <TrendTable fallback={<div>is loading</div>} />
+      <Tabs.Content class="h-[100%]" value="trending">
+        <TrendTable
+          fallback={
+            <div class="flex h-[100%] w-full items-center justify-center">
+              is loading
+            </div>
+          }
+        />
       </Tabs.Content>
       <Tabs.Content class="" value="minting">
         <MintTable fallback={<div>is loading</div>} />

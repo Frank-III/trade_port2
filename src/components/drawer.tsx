@@ -1,13 +1,14 @@
 import { Dialog } from "@kobalte/core";
-
-export function LeftDrawer() {
+import Filter, { type FilterProps } from "~/components/collections/filter";
+import { leftDrawerOpen, setLeftDrawerOpen } from "./global-signals";
+export function LeftDrawer(props: FilterProps) {
   return (
-    <Dialog.Root>
-      <Dialog.Trigger class="lgg:hidden">
+    <Dialog.Root open={leftDrawerOpen()} onOpenChange={setLeftDrawerOpen}>
+      {/* <Dialog.Trigger class="lgg:hidden">
         <div class="i-mdi-filter-outline text-primary text-20px " />
-      </Dialog.Trigger>
+      </Dialog.Trigger> */}
       <Dialog.Portal>
-        <Dialog.Overlay class="fixed top-0 left-0 bg-[#171717] border border-border shadow h-100vh w-full max-w-420px overflow-auto z-200 overflow-y-scroll overflow-x-hidden">
+        <Dialog.Overlay class="border-border h-100vh max-w-420px z-200 fixed left-0 top-0 w-full overflow-auto overflow-x-hidden overflow-y-scroll border bg-[#171717] shadow">
           <Dialog.Content class="w-full">
             <div class="flex justify-between">
               <div class="flex">
@@ -18,6 +19,11 @@ export function LeftDrawer() {
                 <div class="i-mdi-close icon-default" />
               </Dialog.CloseButton>
             </div>
+            <Filter
+              collection={props.collection}
+              filter={props.filter}
+              filterSetter={props.filterSetter}
+            />
           </Dialog.Content>
         </Dialog.Overlay>
       </Dialog.Portal>

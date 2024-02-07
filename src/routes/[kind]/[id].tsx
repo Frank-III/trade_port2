@@ -18,6 +18,7 @@ const ActivityChartView = unstable_clientOnly(
   () => import("~/components/collection-items/chart-view"),
 );
 import ItemsActivitiesView from "~/components/collection-items/collection-activities";
+import { LeftDrawer } from "~/components/drawer";
 
 const DetailPage = () => {
   const params = useParams<{
@@ -95,20 +96,20 @@ const DetailPage = () => {
                 </div>
               </div>
               <div class="collection-items-and-chart flex flex-grow flex-col ">
-                <div class="collection-items border-border border-t">
+                <div class="collection-items border-border lt-lgg:rounded-tl-10px border-l border-t ">
                   <CollectionItemsTabView
                     filter={filter}
                     collectionId={collectionDetailQuery.data?.id!}
                   />
                 </div>
-                <div class="items-activity-charts border-border flex h-[calc(40vh-87px)] flex-col overflow-hidden border-b border-t">
+                <div class="items-activity-charts border-border flex h-[calc(40vh-87px)] flex-col overflow-hidden border-b border-l border-t">
                   <div class="collapse-right border-border py-1px flex w-full items-center justify-center border-b hover:bg-[#271C10]">
                     <ChevronDown size={15} />
                   </div>
                   <ActivityChartView fallback={<div>loading</div>} />
                 </div>
               </div>
-              <div class="activities w-330px border-border lt-lg:hidden rounded-tr-10px rounded-br-10px flex flex-row overflow-hidden border-b border-r border-t">
+              <div class="activities w-330px border-border lt-lg:hidden rounded-tr-10px rounded-br-10px flex flex-row overflow-hidden border-b border-l border-r border-t">
                 <div class="collapse-right border-border px-1px w-20px flex h-full items-center justify-center border-l border-r hover:bg-[#271C10]">
                   <ChevronRight size={15} />
                 </div>
@@ -120,6 +121,11 @@ const DetailPage = () => {
             </div>
           </div>
         </div>
+        <LeftDrawer
+          collection={collectionDetailQuery.data}
+          filter={filter}
+          filterSetter={setFilter}
+        />
       </Show>
     </main>
   );
