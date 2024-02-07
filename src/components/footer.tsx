@@ -12,7 +12,7 @@ export function Footer() {
             <span class="mr-5px text-sm font-normal">Powered By</span>
             <div class="i-twemoji:baby-chick text-18px" />
             <span class="text-offwhite text-base text-sm font-normal">
-              &nbspFrankCorp
+              FrankCorp
             </span>
           </div>
         </div>

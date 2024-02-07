@@ -47,11 +47,9 @@ export function CollectionItemListView(props: {
       </div>
       <div class={`${headerStyle} flex-[1_1_0%]`}>
         <div class="text-table group-hover:hidden">{props.item.lastAction}</div>
-        <div class="space-x-5px hidden flex-row items-center justify-center group-hover:flex">
-          <button class="button-primary h-auto text-base font-normal">
-            Buy
-          </button>
-          <button class="button-secondary h-auto text-base font-normal">
+        <div class="space-x-1px hidden flex-row items-center justify-center group-hover:flex">
+          <button class="button-primary h-auto text-sm font-normal">Buy</button>
+          <button class="button-secondary h-auto text-sm font-normal">
             Bid
           </button>
         </div>

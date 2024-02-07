@@ -39,7 +39,7 @@ export default function Root() {
                   <FileRoutes />
                 </Routes>
               </trpc.Provider>
-              {/* <SolidQueryDevtools initialIsOpen={false} /> */}
+              <SolidQueryDevtools initialIsOpen={false} />
             </QueryClientProvider>
           </ErrorBoundary>
         </Suspense>

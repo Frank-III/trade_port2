@@ -26,8 +26,8 @@ const MoreDropdown = (props: ComponentProps<"div">) => {
         <DropdownMenu.Content class="dropdown-menu__content bg-background text-popover-foreground z-50 max-h-[90vh] w-screen min-w-[8rem] overflow-auto rounded-md border border-neutral-700 p-1 shadow-md">
           <span class="left-0 top-0 text-sm font-normal">Profile</span>
           <DropdownMenu.Item>
-            <button class="button-primary text-base" type="button">
-              Connect Wallet
+            <button class="button-primary text-primary text-base" type="button">
+              <span>Connect Wallet</span>
             </button>
           </DropdownMenu.Item>
           <DropdownMenu.Separator class="border-border m-6px " />
@@ -104,7 +104,10 @@ export default function Nav() {
           <button class="button-default px-3 text-sm " type="button">
             <span class="text-offwhite lt-sm:hidden">FeedBack</span> ?
           </button>
-          <button class="button-primary lt-sm:hidden text-sm " type="button">
+          <button
+            class="button-primary lt-sm:hidden text-primary text-sm"
+            type="button"
+          >
             Connect Wallet
           </button>
           <MoreDropdown />

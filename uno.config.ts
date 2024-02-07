@@ -70,11 +70,11 @@ export default defineConfig({
     breakpoints: {
       xss: "445px",
       smm: "500px",
-      sm: "750px",
-      mdd: "950px",
-      lg: "1000px",
-      lgg: "1190px",
-      xll: "1330px",
+      sm: "751px",
+      mdd: "951px",
+      lg: "1001px",
+      lgg: "1191px",
+      xll: "1331px",
     },
   },
   presets: [

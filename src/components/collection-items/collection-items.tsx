@@ -8,6 +8,7 @@ import {
   createSignal,
   onMount,
   onCleanup,
+  batch,
 } from "solid-js";
 import { viewStyle, selectedItems, setSelectedItems } from "./signals";
 import { trpc } from "~/utils/trpc";
@@ -46,7 +47,7 @@ const BuyItem = (props: {
         disabled={noSelected()}
       >
         <span class="text-offwhite text-base font-normal">
-          Buy {`${selectedItems.length} `}Items
+          Buy {`${selectedItems().length} `}Items
         </span>
         <Show when={!noSelected()}>
           <div class="button-default h-auto">
@@ -67,8 +68,10 @@ const BuyItem = (props: {
 const Sweeper = (props: { maxSelected: number }) => {
   const [sweep, setSweep] = createSignal<number>(0);
   const setSweepValue = (v: number) => {
-    setSweep(v);
-    setSelectedItems(Array.from({ length: v }, (v, i) => i + 1));
+    batch(() => {
+      setSweep(v);
+      setSelectedItems(Array.from({ length: v }, (v, i) => i + 1));
+    });
   };
 
   return (
