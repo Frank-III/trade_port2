@@ -72,7 +72,7 @@ export default function SearchTable() {
         ref={(el) => {
           tableListRef = el;
         }}
-        class="lt-lg:m-h-[calc(80vh-80px)] scrollbar-hide h-[calc(100%-32px)] max-h-[calc(60vh-80px)] overflow-x-hidden overflow-y-scroll"
+        class="lt-lg:max-h-[calc(80vh-75px)] scrollbar-hide h-[calc(100%-32px)] max-h-[calc(60vh-80px)] overflow-x-hidden overflow-y-scroll"
       >
         <Suspense fallback={<TableRowSkeleton limits={15} />}>
           <Switch>

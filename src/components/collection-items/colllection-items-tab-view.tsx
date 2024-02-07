@@ -22,9 +22,8 @@ import { setViewSort, viewSort, viewStyle, setViewStyle } from "./signals";
 import { leftDrawerOpen, setLeftDrawerOpen } from "~/components/global-signals";
 import { viewSortOptions } from "./val-maps";
 import { Grid2X2, Grid3X3, List } from "lucide-solid";
-import { cn } from "~/utils/cn";
-// import CollectionItemsView from "./collection-items";
-const CollectionItemsView = lazy(() => import("./collection-items"));
+import CollectionItemsView from "./collection-items";
+// const CollectionItemsView = lazy(() => import("./collection-items"));
 
 const tabStyle =
   "bg-transparent  hover:(text-base-font-receding-color) [&[data-selected]]:(text-offwhite ) px-[12px] ";
@@ -44,10 +43,10 @@ function ViewSelector() {
         {([key, icon]) => (
           <button
             type="button"
-            class={cn(
-              "button-default border-none",
-              viewStyle() === key && "text-primary",
-            )}
+            class="button-default border-none"
+            classList={{
+              "text-primary": viewStyle() === key,
+            }}
             onClick={() => {
               setViewStyle(key);
             }}
@@ -141,9 +140,10 @@ export default function CollectionItemsTabView(props: {
       class="lt-lg:h-[calc(100vh-250px)] h-[calc(60vh-78px)] "
       value={curTab()}
       onChange={setCurTab}
+      defaultValue={tabs()[0].id}
     >
-      <div class="border-b-base-font-more-receding-color border-b-1 border-border px-5px lt-smm:overflow-x-scroll flex flex-row justify-between space-y-1 pb-1">
-        <Tabs.List class="relative flex flex-row justify-between">
+      <div class="border-b-1 border-border px-5px lt-smm:overflow-x-scroll flex flex-row justify-between space-y-1 pb-1">
+        <Tabs.List class="relative flex flex-row justify-between ">
           <div class="text-base-font-more-receding-color inline-flex text-[20px] font-normal">
             <button
               type="button"
@@ -187,15 +187,16 @@ export default function CollectionItemsTabView(props: {
           </div>
         </Show>
       </div>
-      <Suspense fallback={<div>loading</div>}>
-        <For each={tabs()}>
-          {(tab) => (
-            <Tabs.Content class="h-[calc(100%-50px)]" value={tab.id}>
-              <tab.component />
-            </Tabs.Content>
-          )}
-        </For>
-      </Suspense>
+      {/* TODO: should I need to remove this Suspense */}
+      {/* <Suspense fallback={<div>loading tab components</div>}> */}
+      <For each={tabs()}>
+        {(tab) => (
+          <Tabs.Content class="h-[calc(100%-50px)]" value={tab.id}>
+            {tab.component()}
+          </Tabs.Content>
+        )}
+      </For>
+      {/* </Suspense> */}
     </Tabs.Root>
   );
 }

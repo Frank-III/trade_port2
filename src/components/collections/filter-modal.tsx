@@ -19,7 +19,9 @@ export function FilterDialog(props: FilterDialogProps) {
       {/* TODO: make use of checkbox input and label and use ::before tag to make it with the use of signal */}
       <Dialog.Trigger>
         <button
-          class={cn("", filterDialogOpen() && "text-primary")}
+          classList={{
+            "text-primary": filterDialogOpen(),
+          }}
           type="button"
         >
           <FilterIcon size={20} />

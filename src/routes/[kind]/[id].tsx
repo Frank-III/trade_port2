@@ -72,7 +72,7 @@ const DetailPage = () => {
         when={collectionDetailQuery.data && Object.keys(filter).length > 0}
         fallback={
           <div class="jusity-center flex h-full w-full items-center">
-            loading
+            filter not ready yet
           </div>
         }
       >

@@ -145,13 +145,13 @@ async function getFilterItems(props: {
     .groupBy(items.id);
 }
 
-console.log(
-  await getFilterItems({
-    col_id: 1,
-    filter: {},
-    // filter: {
-    //   1: [1, 2, 3],
-    //   2: [10, 20, 30],
-    // },
-  }),
-);
+// console.log(
+//   await getFilterItems({
+//     col_id: 1,
+//     filter: {},
+//     // filter: {
+//     //   1: [1, 2, 3],
+//     //   2: [10, 20, 30],
+//     // },
+//   }),
+// );
