@@ -70,6 +70,7 @@ export default defineConfig({
     breakpoints: {
       xss: "445px",
       smm: "500px",
+      smmm: "530px",
       sm: "751px",
       mdd: "951px",
       lg: "1001px",

@@ -59,7 +59,7 @@ export default function SearchTable() {
   return (
     <div class="mx-auto h-full text-nowrap" id="tableListRef">
       {/* Table Header */}
-      <div class="bg-background border-border flex h-[32px] items-center justify-between border-b-[1px] border-t p-[0_0_0_15px]">
+      <div class="bg-background border-border lt-smmm:hidden flex h-[32px] items-center justify-between border-b-[1px] border-t p-[0_0_0_15px]">
         <div class="text-table flex flex-[3_1_0%] items-center">COLLECTION</div>
         <div class="text-table flex flex-[1_1_0%] items-center">FLOOR</div>
         <div class="text-table flex flex-[1_1_0%] items-center">VOLUME</div>
@@ -99,8 +99,8 @@ export default function SearchTable() {
 
 function TableRow(props: { item: any } & ComponentProps<"div">) {
   return (
-    <A href="#">
-      <div class="border-border-color hover:bg-background-hover relative flex flex items-center border-b-[1px] p-[6.5px_0px_6.5px_15px] pt-[8px]">
+    <A href="#" class="">
+      <div class="border-border-color hover:bg-background-hover lt-smmm:hidden relative flex flex items-center border-b-[1px] p-[6.5px_0px_6.5px_15px] pt-[8px]">
         <div class="text-table flex-[3_1_0%] overflow-hidden">
           <div class="text-table flex flex-row items-center space-x-3 ">
             <Image.Root fallbackDelay={300} class="h-[42px] w-[42px] ">
@@ -127,48 +127,137 @@ function TableRow(props: { item: any } & ComponentProps<"div">) {
         <div class="text-table flex-[1_1_0%]">{props.item.volume}</div>
         <div class="text-table flex-[1_1_0%]">{props.item.volume_usd}</div>
       </div>
+      <div class="lt-smmm:flex border-b-1 border-border px-5px py-5px hover:bg-background-hover hidden flex-row items-center space-x-5 text-sm font-normal">
+        <Image.Root fallbackDelay={300} class="h-55px w-55px">
+          <Image.Img
+            class="hover:(border-1 border-primary) rounded-lg object-fill"
+            src={props.item.collection.avatar || ""}
+            alt="nft collection avatar"
+          />
+          <Image.Fallback>
+            {props.item.collection.name.slice(0, 1)}
+          </Image.Fallback>
+        </Image.Root>
+        <div class="flex w-full flex-col justify-between ">
+          <div class="hover:text-primary inline-flex text-sm">
+            {props.item.collection.name}
+            <div class="i-codicon-verified-filled text-20px text-primary" />
+          </div>
+          <div class="flex flex-row justify-between">
+            <div class="flex flex-col items-start text-sm font-normal">
+              <span>Supply: {props.item.collection.supply}</span>
+              <span>Floor: {props.item.floor}</span>
+            </div>
+            <div class="flex flex-col items-start text-sm font-normal">
+              <span>Volume: {props.item.volume}</span>
+              <span>Vol USD: {props.item.volume_usd}</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </A>
   );
 }
 
 export function TableRowSkeleton(props: { limits: number }) {
+  const extraStyles = { width: "60%", height: "60%" };
   return (
     <For each={Array.from({ length: props.limits }, (_, i) => i)}>
       {(item, idx) => (
-        <div
-          id={idx.toString()}
-          class="border-border-color relative flex flex items-center border-b-[solid_1px] p-[6.5px_0px_6.5px_15px] pt-[8px]"
-        >
-          <div class="flex-[3_1_0%] overflow-hidden ">
-            <Skeleton.Root class="skeleton" radius={5}>
-              <div class="flex flex-row items-center space-x-3">
-                <img
-                  class="h-[42px] w-[42px] rounded-full"
-                  alt="nft collection avatar"
-                />
-                <div class="flex flex-col">
-                  <div class="text-table">name</div>
-                  <div class="text-table text-xs">supply</div>
+        <>
+          <div
+            id={idx.toString()}
+            class="border-border-color lt-smmm:hidden relative flex flex items-center border-b-[solid_1px] p-[6.5px_0px_6.5px_15px] pt-[8px]"
+          >
+            <div class="flex-[3_1_0%] overflow-hidden ">
+              <Skeleton.Root class="skeleton" radius={5}>
+                <div class="flex flex-row items-center space-x-3">
+                  <img
+                    class="h-[42px] w-[42px] rounded-full"
+                    alt="nft collection avatar"
+                  />
+                  <div class="flex flex-col">
+                    <div class="text-table">name</div>
+                    <div class="text-table text-xs">supply</div>
+                  </div>
+                </div>
+              </Skeleton.Root>
+            </div>
+            <div class="flex-[1_1_0%]">
+              <Skeleton.Root class="skeleton" radius={5}>
+                <div class="text-table">100 SOL</div>
+              </Skeleton.Root>
+            </div>
+            <div class="flex-[1_1_0%]">
+              <Skeleton.Root class="skeleton" radius={5}>
+                <div class="text-table">100 SOL</div>
+              </Skeleton.Root>
+            </div>
+            <div class="flex-[1_1_0%]">
+              <Skeleton.Root class="skeleton" radius={5}>
+                <div class="text-table">100 NFTs</div>
+              </Skeleton.Root>
+            </div>
+          </div>
+          <div class="lt-smmm:flex border-b-1 border-border py-5px px-5px hidden flex-row items-center space-x-5 text-sm font-normal">
+            <Skeleton.Root
+              class="skeleton"
+              radius={5}
+              style={{ width: "auto", height: "auto" }}
+            >
+              <img
+                class="h-[55px] w-[55px] rounded-full"
+                alt="nft collection avatar"
+              />
+            </Skeleton.Root>
+            <div class="flex w-full flex-col justify-between">
+              <Skeleton.Root
+                class="skeleton mb-5px"
+                radius={5}
+                style={{ width: "50%" }}
+              >
+                <div class="hover:text-primary inline-flex text-sm">
+                  name
+                  <div class="i-codicon-verified-filled text-20px text-primary" />
+                </div>
+              </Skeleton.Root>
+              <div class="flex flex-row justify-between">
+                <div class="space-y-3px flex flex-col items-start text-sm font-normal">
+                  <Skeleton.Root
+                    class="skeleton"
+                    radius={5}
+                    style={extraStyles}
+                  >
+                    <span>Floor:100 NFTs</span>
+                  </Skeleton.Root>
+                  <Skeleton.Root
+                    class="skeleton"
+                    radius={5}
+                    style={extraStyles}
+                  >
+                    <span>Market Cap: 100 NFTs</span>
+                  </Skeleton.Root>
+                </div>
+                <div class="space-y-3px flex flex-col items-end text-sm font-normal">
+                  <Skeleton.Root
+                    class="skeleton"
+                    radius={5}
+                    style={extraStyles}
+                  >
+                    <span>Volume: 100 NFTs</span>
+                  </Skeleton.Root>
+                  <Skeleton.Root
+                    class="skeleton"
+                    radius={5}
+                    style={extraStyles}
+                  >
+                    <span>Vol USD: 100 NFTs</span>
+                  </Skeleton.Root>
                 </div>
               </div>
-            </Skeleton.Root>
+            </div>
           </div>
-          <div class="flex-[1_1_0%]">
-            <Skeleton.Root class="skeleton" radius={5}>
-              <div class="text-table">100 SOL</div>
-            </Skeleton.Root>
-          </div>
-          <div class="flex-[1_1_0%]">
-            <Skeleton.Root class="skeleton" radius={5}>
-              <div class="text-table">100 SOL</div>
-            </Skeleton.Root>
-          </div>
-          <div class="flex-[1_1_0%]">
-            <Skeleton.Root class="skeleton" radius={5}>
-              <div class="text-table">100 NFTs</div>
-            </Skeleton.Root>
-          </div>
-        </div>
+        </>
       )}
     </For>
   );

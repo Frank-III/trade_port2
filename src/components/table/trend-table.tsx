@@ -49,8 +49,8 @@ export default function TrendTable2() {
   let tableHeaderRef: HTMLDivElement | undefined;
   const handleScroll = () => {
     const currentScrollY = window.scrollY;
-    if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 1) {
-      console.log("fetch next");
+    if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 3) {
+      // console.log("fetch next");
       query.fetchNextPage();
     } else {
       if (currentScrollY < lastScrollY()) {

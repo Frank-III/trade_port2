@@ -6,10 +6,10 @@ import {
 import Nav from "~/components/nav";
 import { trpc } from "~/utils/trpc";
 import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-solid";
-import CollectionItemsTabView from "~/components/collection-items/colllection-items-tab-view";
-// const CollectionItemsTabView = lazy(
-// 	() => import("~/components/collection-items/colllection-items-tab-view"),
-// );
+// import CollectionItemsTabView from "~/components/collection-items/colllection-items-tab-view";
+const CollectionItemsTabView = lazy(
+  () => import("~/components/collection-items/colllection-items-tab-view"),
+);
 import { createStore, type SetStoreFunction } from "solid-js/store";
 import { createContext, createEffect, lazy, Show, Suspense } from "solid-js";
 const Filter = lazy(() => import("~/components/collections/filter"));
@@ -25,7 +25,7 @@ const DetailPage = () => {
     kind: "all" | "solana" | "ethereum";
     id: string;
   }>();
-  console.log(params);
+  console.log(params.kind, params.id);
   const collectionDetailQuery =
     trpc.nftCollectionsRouter.collectionProperties.useQuery(
       () => ({
@@ -66,7 +66,7 @@ const DetailPage = () => {
   });
 
   return (
-    <main>
+    <main class="">
       <Nav />
       <Show
         when={collectionDetailQuery.data && Object.keys(filter).length > 0}
