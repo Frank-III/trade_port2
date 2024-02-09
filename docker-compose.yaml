@@ -1,0 +1,12 @@
+version: "3.0"
+name: tradeport_clone
+services:
+  db:
+    image: mysql:latest
+    volumes:
+      - ./../.air/mysql:/var/lib/mysql
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: yes
+      MYSQL_DATABASE: tradeport
+    ports:
+      - 3306:3306
