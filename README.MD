@@ -2,9 +2,11 @@ This project was created using [Create JD App](https://github.com/OrJDev/create-
 
 
 TODO LIST:
-1. make a layout 
-2. make database work
-
+1. make a layout
+2. make database work -- done
+3. make filter searchable
+4. make a login modal
+5. make sell modal
 
 ## Start Dev Server
 
