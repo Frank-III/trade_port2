@@ -1,5 +1,6 @@
 // import { faker } from "@faker-js/faker";
-// import { db } from "./db/index";
+// import { db } from "~/libs/db/index";
+// import { chunk } from "lodash";
 // import {
 //   collections as collectionTable,
 //   collectionAttributes as collectionAttributesTable,
@@ -9,7 +10,7 @@
 //   trending as trendingTable,
 //   minting as mintingTable,
 //   itemActivities as itemActivitiesTable,
-// } from "./db/schema";
+// } from "~/libs/db/schema.mysql";
 
 // const collectionTotal = 800;
 
@@ -69,7 +70,7 @@
 //   // Promise.all preserve the order of the array
 //   const propertiesAndKinds = await Promise.all(
 //     properties.map(async (prop, idx) => {
-//       const pps = Array(14).fill(0).map(genOneProperty);
+//       const pps = Array(20).fill(0).map(genOneProperty);
 //       // Insert collection attribute kinds:
 //       // for each property, insert 20 kinds: return the kind_id
 //       const kind_ids = await db
@@ -172,10 +173,17 @@
 //   return addedCollection[0].collectionId;
 // }
 
+// // make sure not memory issue
+// const collectionIdx: Array<number> = [];
+// for (const arr_chunk of chunk(Array(collectionTotal).fill(""), 20)) {
+//   const chunk_idx = await Promise.all(arr_chunk.map(createCollectionAndItems));
+//   collectionIdx.push(...chunk_idx);
+// }
+
 // // const collectionIdx = await Promise.all(
 // //   Array(collectionTotal).fill(0).map(createCollectionAndItems),
 // // );
-// const collectionIdx = Array.from({ length: collectionTotal }, (x, i) => i + 1);
+// // const collectionIdx = Array.from({ length: collectionTotal }, (x, i) => i + 1);
 // const trendings = collectionIdx.map((id) => {
 //   return {
 //     collection_id: id,
