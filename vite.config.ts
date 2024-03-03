@@ -1,12 +1,12 @@
 import UnoCSS from "unocss/vite";
-import solid from "solid-start/vite";
-import { defineConfig } from "vite";
+import { defineConfig } from "@solidjs/start/config";
 
-export default defineConfig(() => {
-	return {
-		plugins: [UnoCSS(), solid({ ssr: true, prerenderRoutes: [] })],
-		ssr: {
-			noExternal: ["@kobalte/core", "@internationalized/message"],
-		},
-	};
+export default defineConfig({
+  plugins: [UnoCSS()],
+  start: {
+    ssr: true,
+  },
+  ssr: {
+    noExternal: ["@kobalte/core", "@internationalized/message"],
+  },
 });

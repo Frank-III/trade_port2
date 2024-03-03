@@ -1,5 +1,5 @@
 import { Bell, Menu } from "lucide-solid";
-import { A, useLocation } from "solid-start";
+import { A, useLocation } from "@solidjs/router";
 import { cn } from "~/utils/cn";
 import logo from "/logo-icon.svg";
 import {

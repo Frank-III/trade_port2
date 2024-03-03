@@ -13,8 +13,9 @@ const CollectionItemsTabView = lazy(
 import { createStore, type SetStoreFunction } from "solid-js/store";
 import { createContext, createEffect, lazy, Show, Suspense } from "solid-js";
 const Filter = lazy(() => import("~/components/collections/filter"));
-import { unstable_clientOnly, useParams } from "solid-start";
-const ActivityChartView = unstable_clientOnly(
+import { clientOnly } from "@solidjs/start";
+import { useParams } from "@solidjs/router";
+const ActivityChartView = clientOnly(
   () => import("~/components/collection-items/chart-view"),
 );
 import ItemsActivitiesView from "~/components/collection-items/collection-activities";

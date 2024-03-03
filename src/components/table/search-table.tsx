@@ -13,7 +13,7 @@ import {
 } from "solid-js";
 import { trpc } from "~/utils/trpc";
 import { Image, Skeleton } from "@kobalte/core";
-import { A } from "solid-start";
+import { A } from "@solidjs/router";
 import { cat, currency, search, ts } from "./signals";
 import { Properties } from "solid-js/web";
 

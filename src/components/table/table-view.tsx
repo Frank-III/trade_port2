@@ -1,14 +1,15 @@
 import { createSignal } from "solid-js";
 import { Tabs } from "@kobalte/core";
-import { useLocation, unstable_clientOnly } from "solid-start";
+import { clientOnly } from "@solidjs/start";
+import { useLocation } from "@solidjs/router";
 import { GenericSelect2 } from "../generic-select";
 import { ArrowDownWideNarrow, TimerReset } from "lucide-solid";
 import { CurrencyToggleGroup, catOptions, tsOptions } from "./filter-valmaps";
 import SniperTable from "./sniper-table";
 import { cat, setCat, setTS, ts } from "./signals";
 // import TrendTable from "./trend-table";
-const TrendTable = unstable_clientOnly(() => import("./trend-table"));
-const MintTable = unstable_clientOnly(() => import("./mint-table"));
+const TrendTable = clientOnly(() => import("./trend-table"));
+const MintTable = clientOnly(() => import("./mint-table"));
 // outline-offset-6 border-b-1 border-primary
 const tabStyle =
   "bg-transparent  hover:(text-base-font-receding-color) [&[data-selected]]:(text-offwhite ) px-[12px] ";

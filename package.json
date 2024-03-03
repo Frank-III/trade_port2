@@ -1,9 +1,9 @@
 {
   "name": "trade_port2",
   "scripts": {
-    "dev": "solid-start dev --port 3000",
-    "start": "solid-start start --port 3000",
-    "build": "solid-start build",
+    "dev": "vinxi dev",
+    "build": "vinxi build",
+    "start": "vinxi start",
     "lint": "eslint --fix \"**/*.{ts,tsx,js,jsx}\"",
     "generate": "drizzle-kit generate:better-sqlite"
   },
@@ -22,23 +22,23 @@
     "drizzle-kit": "^0.20.13",
     "eslint": "^8.34.0",
     "eslint-plugin-solid": "^0.9.4",
-    "solid-start-node": "0.3.7",
     "typescript": "^4.9.5",
     "unocss": "^0.58.0",
-    "vite": "^4.1.2"
+    "vite": "^4.4.9"
   },
   "dependencies": {
     "@kobalte/core": "^0.11.2",
     "@modular-forms/solid": "^0.20.0",
-    "@solid-mediakit/trpc": "^1.0.2",
+    "@solid-mediakit/trpc": "^2.0.2",
     "@solid-primitives/resize-observer": "^2.0.23",
-    "@solidjs/meta": "^0.29.1",
-    "@solidjs/router": "^0.8.3",
+    "@solidjs/router": "^0.11.2",
+    "@solidjs/start": "^0.5.2",
+    "@solidjs/meta": "^0.29.3",
     "@tanstack/solid-query": "^5.0.0",
     "@tanstack/solid-query-devtools": "^5.14.6",
     "@tanstack/solid-virtual": "^3.0.1",
-    "@trpc/client": "^10.41.0",
-    "@trpc/server": "^10.41.0",
+    "@trpc/client": "^10.45.1",
+    "@trpc/server": "^10.45.1",
     "@unocss/reset": "^0.58.0",
     "apexcharts": "^3.45.2",
     "better-sqlite3": "^9.2.2",
@@ -47,11 +47,9 @@
     "lodash": "^4.17.21",
     "lucide-solid": "^0.299.0",
     "solid-apexcharts": "^0.3.3",
-    "solid-js": "^1.8.3",
-    "solid-start": "0.3.9",
-    "solid-start-trpc": "^0.0.16",
+    "solid-js": "^1.8.14",
     "tailwind-merge": "^2.1.0",
-    "undici": "5.20.0",
+    "vinxi": "^0.2.1",
     "zod": "^3.20.6"
   },
   "engines": {
